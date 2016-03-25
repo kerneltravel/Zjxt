@@ -1,0 +1,216 @@
+﻿<Window x:Class="中医证治智能系统.WesternMedicine_manage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="中医证治智能系统【西医证治管理】" Height="650" Width="900" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <StackPanel Height="70" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Background="{DynamicResource ButtonNormalBackground}">
+            <Button Name="button_add" Width="55" RenderTransformOrigin="0.505,0.355" Height="60" Click="Button_Click_Add">
+                <Grid Height="55" Width="49">
+                    <Image HorizontalAlignment="Left" Height="30" Margin="9,0,0,0" VerticalAlignment="Top" Width="30" Source="Resources/plus.ico"/>
+                    <Label Content="添加" Margin="0,30,0,0" Height="25" Width="49" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Button>
+            <Button Name="button_modify" Width="55" RenderTransformOrigin="0.505,0.355" Height="60" Click="button_modify_Click">
+                <Grid Height="55" Width="49">
+                    <Image HorizontalAlignment="Left" Height="30" Margin="6,4,0,0" VerticalAlignment="Top" Width="37" Source="Resources/arrow_up.ico"/>
+                    <Label Content="修改" Margin="0,30,0,0" Height="25" Width="49" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Button>
+            <Button Name="button_delete" Width="55" RenderTransformOrigin="0.505,0.355" Height="60" Click="Button_Click_Delete">
+                <Grid Height="55" Width="49">
+                    <Image HorizontalAlignment="Left" Height="8" Margin="10,17,0,0" VerticalAlignment="Top" Width="33" Source="Resources/minus.ico"/>
+                    <Label Content="删除" Margin="0,30,0,0" Height="25" Width="49" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Button>
+            <Button Name="button_save" Width="55" RenderTransformOrigin="0.505,0.355" Height="60" Click="Button_Click_Save">
+                <Grid Height="55" Width="49">
+                    <Image HorizontalAlignment="Left" Height="30" Margin="9,0,0,0" VerticalAlignment="Top" Width="30" Source="Resources/save.ico"/>
+                    <Label Content="保存" Margin="0,30,0,0" Height="25" Width="49" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Button>
+            <Button Name="button_back" Width="55" RenderTransformOrigin="0.505,0.355" Height="60" Click="Button_Click_back">
+                <Grid Height="55" Width="49">
+                    <Image HorizontalAlignment="Left" Height="31" Margin="9,2,0,0" VerticalAlignment="Top" Width="30" Source="Resources/home.ico"/>
+                    <Label Content="返回" Margin="0,30,0,0" Height="25" Width="49" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Button>
+        </StackPanel>
+        <TabControl Name="ti" Grid.Row="0" Grid.Column="0" Margin="0,70,0,0" SelectionChanged="TabControl_SelectionChanged">
+            <TabItem Header="西医病名录入">
+                <Grid Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Margin="-4" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="65"/>
+                        <RowDefinition Height="561*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="333.75"/>
+                        <ColumnDefinition Width="516.25"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="西医病名类型：" Grid.Row="0" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Height="26" Width="94"/>
+                    <ComboBox Name="combobox_xybmlx_types_input"  Grid.Row="0" HorizontalAlignment="Left" Margin="109,22,0,0" VerticalAlignment="Top" Width="120" Height="24" DropDownOpened="combobox_xybmlx_types_input_DropDownOpened"  DropDownClosed="combobox_xybmlx_types_input_DropDownClosed"/>
+                    <Button x:Name="fresh" Grid.Row="0" Margin="264,20,9.75,15" HorizontalAlignment="Center" Width="60" Click="fresh_Click">
+                        <Grid Height="30" Width="55" >
+                            <Image HorizontalAlignment="Left" Margin="0,1,0,8" Width="21" Source="Resources/refresh.png" VerticalAlignment="Center" Height="21"/>
+                            <Label Content="刷新" Margin="0,0,0,10" HorizontalAlignment="Right" VerticalAlignment="Center" Width="38" Height="24" />
+                        </Grid>
+                    </Button>
+                    <TreeView Name ="treeview1" Margin="0,0,516,0" Grid.Column="0" Grid.Row="1" SelectedItemChanged="treeview1_SelectedItemChanged" Grid.ColumnSpan="2">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image VerticalAlignment="Center" Source="{Binding ImageNode}"/>
+                                    <TextBlock Text="{Binding Path = Name}"/>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                    <Grid Grid.RowSpan="2" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Margin="0,0,-38,-5" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="65"/>
+                            <RowDefinition Height="100"/>
+                            <RowDefinition Height="60"/>
+                            <RowDefinition Height="60"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Content="西 医 病 名 信 息 录 入" Grid.Row="0" HorizontalAlignment="Center" Margin="144,0,162,0" FontSize="20" FontWeight="SemiBold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="210"/>
+                        <Label Content="西医病名类型：" Grid.Row="1" HorizontalAlignment="Left" Margin="10,18,0,0" VerticalAlignment="Top" Height="25"/>
+                        <TextBox LostFocus="XyBmLx_LostFocus" Name="XyBmLx" Grid.Row="1" HorizontalAlignment="Left" Height="25" Margin="99,18,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="435"/>
+                        <Label Content="西医病名编号：" Grid.Row="2" HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top" Height="25"/>
+                        <TextBox Name="XyBmBh" Grid.Row="2" HorizontalAlignment="Left" Height="25" Margin="99,19,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+                        <Button Name="addxybmbh" Click="add_Click" Content="新增" HorizontalAlignment="Right" Margin="0,19,81,0" Grid.Row="2" VerticalAlignment="Top" Width="58" Height="25"/>
+                        <Button Name="del_xybmbh" Click="delete_Click" Content="删除" HorizontalAlignment="Right" Margin="0,19,21,0" Grid.Row="2" VerticalAlignment="Top" Width="55" Height="25"/>
+                        <Label Content="西医病名名称：" Grid.Row="3" HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top" Height="25"/>
+                        <TextBox Name="XyBmMc" LostFocus="XyBmMc_LostFocus" Grid.Row="3" HorizontalAlignment="Left" Height="25" Margin="99,19,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="435"/>
+                        <Button Name="editxybmbh" Click="editxybmbh_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="236,21,0,0" Grid.Row="2" VerticalAlignment="Top" Width="36" Height="19">
+                            <Image Height="13" Width="31" Source="Resources/arrow_up.ico"/>
+                        </Button>
+                        <Button Name="savexybmbh" Click="savexybmbh_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="277,21,0,0" Grid.Row="2" VerticalAlignment="Top" Width="36" Height="19">
+                            <Image Height="13" Width="31" Source="Resources/correct.ico"/>
+                        </Button>
+                        <Button Name="backxybmbh" Click="backxybmbh_Click" HorizontalAlignment="Left" Margin="318,21,0,0" Grid.Row="2" VerticalAlignment="Top" Width="36" Height="19">
+                            <Image Height="13" Width="31" Source="Resources/error.ico"/>
+                        </Button>
+                        <Button Name="refxybmbh" Click="refxybmbh_Click" HorizontalAlignment="Left" Margin="359,21,0,0" Grid.Row="2" VerticalAlignment="Top" Width="36" Height="19">
+                            <Image Height="13" Width="31" Source="Resources/curve.ico"/>
+                        </Button>
+                        <Button Name="xybmlxsy" Click="xybmlxsy_Click" IsEnabled="False" HorizontalAlignment="Right" Margin="0,60,408.75,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
+                            <Image Height="13" Width="31" Source="Resources/beginning.ico"/>
+                        </Button>
+                        <Button Name="xybmlxback" Click="xybmlxback_Click" IsEnabled="False" HorizontalAlignment="Right" Margin="0,60,367.75,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
+                            <Image Height="13" Width="31" Source="Resources/angle_left.ico"/>
+                        </Button>
+                        <Button Name="xybmlxfront" Click="xybmlxfront_Click" HorizontalAlignment="Right" Margin="0,60,326.75,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
+                            <Image Height="13" Width="31" Source="Resources/angle_right.ico"/>
+                        </Button>
+                        <Button Name="xybmlxwy" Click="xybmlxwy_Click" HorizontalAlignment="Right" Margin="0,60,285.75,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
+                            <Image Height="13" Width="31" Source="Resources/last.ico"/>
+                        </Button>
+                        <Button Name="addxybmlx" Click="addxybmlx_Click"  HorizontalAlignment="Right" Margin="0,60,244.75,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
+                            <Image Height="13" Width="31" Source="Resources/plus.ico"/>
+                        </Button>
+                        <Button Name="editxybmlx" Click="editxybmlx_Click" HorizontalAlignment="Right" Margin="0,60,203.75,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
+                            <Image Height="13" Width="15" Source="Resources/arrow_up.ico"/>
+                        </Button>
+                        <Button Name="savexybmlx" Click="savexybmlx_Click" IsEnabled="False" HorizontalAlignment="Right" Margin="0,60,162.75,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
+                            <Image Height="13" Width="31" Source="Resources/correct.ico"/>
+                        </Button>
+                        <Button Name="backxybmlx" Click="backxybmlx_Click" IsEnabled="False" HorizontalAlignment="Right" Margin="0,60,121.75,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19" RenderTransformOrigin="1.841,0.472">
+                            <Image Height="13" Width="31" Source="Resources/error.ico" RenderTransformOrigin="2.427,0.752"/>
+                        </Button>
+                        <Button Name="shuaxinxybmlx" Click="shuaxinxybmlx_Click" Margin="0,60,80.75,0" Grid.Row="1" VerticalAlignment="Top" Height="19" RenderTransformOrigin="1.197,0.539" HorizontalAlignment="Right" Width="36">
+                            <Image Height="13" Width="31" Source="Resources/curve.ico"/>
+                        </Button>
+                        <Button Name="del_xybmlx" Click="del_xybmlx_Click" Content="删除" HorizontalAlignment="Right" Margin="0,57,19,0" Grid.Row="1" VerticalAlignment="Top" Width="57" Height="25"/>
+                        <ListView Name="lv" HorizontalAlignment="Left" Height="217" Margin="19,19,0,0" Grid.Row="4" VerticalAlignment="Top" Width="517" SelectionChanged="ListView_SelectionChanged">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="True">
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=WesternMedicineType}" Header="西医病名类型" Width="150"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=WesternMedicineNumber}" Header="西医病名编号" Width="150"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=WesternMedicineName}" Header="西医病名名称" Width="200"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="西医证名录入">
+                <Grid Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Margin="-4" Height="526" VerticalAlignment="Bottom" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="0*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Grid.RowSpan="3" Height="90" Width="890">
+                        <Label Content="西医证名信息录入" HorizontalAlignment="Left" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="892" Foreground="#FF1414FD" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="90"/>
+                    </StackPanel>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="892" Height="209" Margin="-1,0,-1,252" Grid.RowSpan="2" Grid.Row="2">
+                        <GroupBox Header="录入框：" HorizontalAlignment="Right"   Height="234" Width="892" FontSize="14">
+                            <Grid Height="198" VerticalAlignment="Bottom">
+                                <Label Content="西医证名编号：" HorizontalAlignment="Left" Margin="38,10,0,0" VerticalAlignment="Top" Height="31" Width="118" VerticalContentAlignment="Center" />
+                                <Label Content="西医治法：" Margin="38,77,724,89" VerticalContentAlignment="Center" RenderTransformOrigin="0.54,0.96"/>
+                                <Label Content="西医证名名称：" Margin="38,46,724,121"/>
+                                <Label Content="西医处方名称：" Margin="38,110,724,57"/>
+                                <Label Content="服法：" Margin="38,141,686,29"/>
+                                <TextBox  x:Name="text_box_xyzmbh" HorizontalAlignment="Left" Height="31" Margin="156,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="232" IsEnabled="False"/>
+                                <TextBox  x:Name="text_box_xyzmmc" HorizontalAlignment="Left" Height="29" Margin="156,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="608" LostFocus="text_box_xyzmmc_LostFocus"/>
+                                <TextBox  x:Name="text_box_xyzf" HorizontalAlignment="Left" Height="28" Margin="156,78,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="608" LostFocus="text_box_xyzf_LostFocus"/>
+                                <TextBox  x:Name="text_box_xycfmc" HorizontalAlignment="Left" Height="27" Margin="156,110,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="608" LostFocus="text_box_xycfmc_LostFocus"/>
+                                <TextBox  x:Name="text_box_ff" HorizontalAlignment="Left" Height="28" Margin="156,142,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="608" LostFocus="text_box_ff_LostFocus"/>
+                            </Grid>
+                        </GroupBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Width="892" Height="262" Margin="-1,174,-1,0" >
+                        <ListView x:Name="lv1" HorizontalAlignment="Left" Height="223" Margin="32,29,0,0" VerticalAlignment="Top" Width="829" SelectionChanged="lv1_SelectionChanged" IsSynchronizedWithCurrentItem="False" >
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="True">
+                                    <GridViewColumn Header="西医证名编号" DisplayMemberBinding="{Binding Path=XYZMBH}" Width="130"/>
+                                    <GridViewColumn Header="西医证名名称" DisplayMemberBinding="{Binding Path=XYZMMC}" Width="180"/>
+                                    <GridViewColumn Header="西医治法"  DisplayMemberBinding="{Binding Path=XYZF}" Width="180" />
+                                    <GridViewColumn Header="西医处方名称"  DisplayMemberBinding="{Binding Path=XYCFMC}" Width="180" />
+                                    <GridViewColumn Header="服法"  DisplayMemberBinding="{Binding Path=FF}" Width="150" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="西医病名-证名录入">
+                <Grid Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Margin="-4" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="1*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Grid.RowSpan="3">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="890"/>
+                            <ColumnDefinition Width="0*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="西医证名名称：" HorizontalAlignment="Left" Margin="246,85,0,0" VerticalAlignment="Top" Height="26" Width="94"/>
+                        <Label Content="西医病名名称：" HorizontalAlignment="Left" Margin="246,131,0,0" VerticalAlignment="Top" Height="26" Width="94"/>
+                        <ComboBox Name="combobox_xyzmmc_input"  Grid.Row="0" HorizontalAlignment="Left" Margin="345,85,0,0" VerticalAlignment="Top" Width="250" Height="24" DropDownOpened="combobox_xyzmmc_input_DropDownOpened"  DropDownClosed="combobox_xyzmmc_input_DropDownClosed"/>
+                        <TextBox Name="bmmc" IsEnabled="False" HorizontalAlignment="Left" Height="24" Margin="345,133,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="250"/>
+                        <Button Name="btn_bmmc" Content=". . ." HorizontalAlignment="Left" Margin="609,131,0,0" VerticalAlignment="Top" Width="40" Height="24" Click="btn_bmmc_Click"/>
+                        <ListView Name="lv2" HorizontalAlignment="Left" Height="293" Margin="43,208,0,0" VerticalAlignment="Top" Width="804" SelectionChanged="lv2_SelectionChanged">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=JibzmNumber}" Header="西医证名编号" Width="100"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=JibzmName}" Header="西医证名名称" Width="300"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=BingmNumber}" Header="西医病名编号" Width="100"/>
+                                    <GridViewColumn DisplayMemberBinding="{Binding Path=BingmName}" Header="西医病名名称" Width="300"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Label Content="西 医 病 名 信 息 录 入" HorizontalAlignment="Left" Margin="345,21,0,0" VerticalAlignment="Top" FontSize="20" Height="36" Width="211"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

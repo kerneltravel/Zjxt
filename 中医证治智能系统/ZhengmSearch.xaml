@@ -1,0 +1,40 @@
+﻿<Window x:Class="中医证治智能系统.ZhengmSearch"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="中医证治智能系统-【病名检索证明信息管理】" Height="650" Width="900" WindowStartupLocation="CenterScreen">
+    <Grid Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="87"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Content="查询条件" Background="{DynamicResource TabItemHotBackground}" VerticalAlignment="Top"/>
+        <Label Content="病名名称：" HorizontalAlignment="Left" Margin="24,43,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="bmmc" HorizontalAlignment="Left" Height="24" Margin="99,45,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="300"/>
+        <Button Name="btn_bmmc" Content=". . ." Height="24" HorizontalAlignment="Left" Margin="420,45,0,0" VerticalAlignment="Top" Width="40" Click="btn_bmmc_Click"/>
+        <Button Name="back" HorizontalAlignment="Left" Width="66" Margin="529,43,0,0" VerticalAlignment="Top" Click="back_Click">
+            <Grid Height="24" Width="59" >
+                <Image HorizontalAlignment="Left" Margin="3,4,0,3" Width="18" Source="Resources/home.ico" VerticalAlignment="Center" Height="17"/>
+                <Label Content="返回" Margin="0,0,4,0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+            </Grid>
+        </Button>
+        <Grid HorizontalAlignment="Left" Grid.Row="1" Width="892" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}">
+            <ListView Name="lv" HorizontalAlignment="Left" Margin="30,46,0,10" Width="823">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=BmNumber}"  Header="病人编号" Width="150"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=BmName}"  Header="病人名称" Width="250"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=BasiczmNumber}"  Header="基本证名编号" Width="150"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=BasiczmName}"  Header="基本证明名称" Width="250"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Button Name="display" Margin="749,10,0,0" HorizontalAlignment="Left" Width="104" Height="31" VerticalAlignment="Top" Click="display_Click">
+                <Grid Height="26" Width="94" >
+                    <Image HorizontalAlignment="Left" Margin="6,2,0,0" Width="28" Source="Resources/search.ico" VerticalAlignment="Center" Height="24"/>
+                    <Label Content="显示全部" Margin="0,0,4,2" HorizontalAlignment="Right" VerticalAlignment="Center" Width="64" Height="24" />
+                </Grid>
+            </Button>
+        </Grid>
+
+    </Grid>
+</Window>

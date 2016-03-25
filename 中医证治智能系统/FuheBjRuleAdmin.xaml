@@ -1,0 +1,171 @@
+﻿<Window x:Class="中医证治智能系统.FuheBjRuleAdmin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="中医证治智能系统【复合病机规则管理】" Height="700" Width="900" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="670"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="364"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid HorizontalAlignment="Left" Height="36" VerticalAlignment="Top" Width="365" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" Margin="-1,78,0,0">
+            <Button Name="expand_all" Grid.Column="0" Margin="2,3,274,3" HorizontalAlignment="Center" Width="86" Click="expand_all_Click">
+                <Grid Height="26" Width="80" >
+                    <Image HorizontalAlignment="Left" Width="25" Source="Resources/Expansion.ico" VerticalAlignment="Center" Height="26"/>
+                    <Label Content="全部展开" Margin="0,0,0,2" HorizontalAlignment="Right" VerticalAlignment="Center" Width="57" Height="24" />
+                </Grid>
+            </Button>
+            <Button Name="collapse_all" Grid.Column="0" Margin="93,3,183,3" HorizontalAlignment="Center" Width="86" Click="collapse_all_Click">
+                <Grid Height="26" Width="80" >
+                    <Image HorizontalAlignment="Left" Width="25" Source="Resources/Contraction.ico" VerticalAlignment="Center" Height="26"/>
+                    <Label Content="全部收缩" Margin="0,0,0,2" HorizontalAlignment="Right" VerticalAlignment="Center" Width="57" Height="24" />
+                </Grid>
+            </Button>
+            <Button Name="refresh" Grid.Column="0" Margin="184,3,92,3" HorizontalAlignment="Center" Width="86" Click="refresh_Click">
+                <Grid Height="26" Width="80" >
+                    <Image HorizontalAlignment="Left" Width="24" Source="Resources/refresh.png" VerticalAlignment="Center" Height="20" Margin="14,4,0,2"/>
+                    <Label Content="刷新" Margin="0,0,10,2" HorizontalAlignment="Right" VerticalAlignment="Center" Width="36" Height="24" />
+                </Grid>
+            </Button>
+        </Grid>
+        <TreeView Name="treeview" HorizontalAlignment="Left" Width="365" Grid.Column="0" VerticalAlignment="Top" Height="546" Grid.ColumnSpan="2" Margin="0,114,0,0">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image VerticalAlignment="Center" Source="{Binding ImageNode}"/>
+                        <TextBlock Text="{Binding Path = Name}"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <Grid Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="528" Height="670">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Content="复合病机规则录入" HorizontalAlignment="Left" Margin="193,10,0,0" VerticalAlignment="Top" Width="178" FontSize="20"/>
+            <Label Content="方法数：" HorizontalAlignment="Left" Margin="98,92,0,0" VerticalAlignment="Top"/>
+            <Label Content="条件数：" HorizontalAlignment="Left" Margin="98,121,0,0" VerticalAlignment="Top"/>
+            <Label Content="组别数：" HorizontalAlignment="Left" Margin="98,152,0,0" VerticalAlignment="Top"/>
+            <Label Content="规则：" HorizontalAlignment="Left" Margin="98,183,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.109,0.654"/>
+            <Label Content="条件阈值：" HorizontalAlignment="Left" Margin="210,183,0,0" VerticalAlignment="Top"/>
+            <Label Content="组内阈值：" HorizontalAlignment="Left" Margin="210,214,0,0" VerticalAlignment="Top"/>
+            <Label Content="条件名称：" HorizontalAlignment="Left" Margin="98,275,0,0" VerticalAlignment="Top"/>
+            <ComboBox Name="comb_ffs" HorizontalAlignment="Left" Margin="210,92,0,0" VerticalAlignment="Top" Width="140" Height="24" DropDownClosed="comb_ffs_DropDownClosed">
+                <ComboBoxItem>--请选择方法数--</ComboBoxItem>
+            </ComboBox>
+            <ComboBox Name="comb_tjs" HorizontalAlignment="Left" Margin="210,121,0,0" VerticalAlignment="Top" Width="140" Height="24" DropDownClosed="comb_tjs_DropDownClosed">
+                <ComboBoxItem>--请选择条件数--</ComboBoxItem>
+            </ComboBox>
+            <ComboBox Name="comb_zbs" HorizontalAlignment="Left" Margin="210,152,0,0" VerticalAlignment="Top" Width="140" Height="24" DropDownClosed="comb_zbs_DropDownClosed" SelectionChanged="comb_zbs_SelectionChanged">
+                <ComboBoxItem>--请选择组别数--</ComboBoxItem>
+            </ComboBox>
+            <ComboBox Name="comb_tjfz" HorizontalAlignment="Left" Margin="285,183,0,0" VerticalAlignment="Top" Width="96" Height="24" RenderTransformOrigin="0.483,0.292">
+                <ComboBoxItem>1</ComboBoxItem>
+                <ComboBoxItem>2</ComboBoxItem>
+                <ComboBoxItem>3</ComboBoxItem>
+                <ComboBoxItem>4</ComboBoxItem>
+                <ComboBoxItem>5</ComboBoxItem>
+                <ComboBoxItem>6</ComboBoxItem>
+                <ComboBoxItem>7</ComboBoxItem>
+                <ComboBoxItem>8</ComboBoxItem>
+                <ComboBoxItem>9</ComboBoxItem>
+                <ComboBoxItem>10</ComboBoxItem>
+                <ComboBoxItem>11</ComboBoxItem>
+                <ComboBoxItem>12</ComboBoxItem>
+                <ComboBoxItem>13</ComboBoxItem>
+                <ComboBoxItem>14</ComboBoxItem>
+                <ComboBoxItem>15</ComboBoxItem>
+                <ComboBoxItem>16</ComboBoxItem>
+                <ComboBoxItem>17</ComboBoxItem>
+                <ComboBoxItem>18</ComboBoxItem>
+                <ComboBoxItem>19</ComboBoxItem>
+            </ComboBox>
+            <Button Name="btn_ffs" Margin="355,92,147,554" HorizontalAlignment="Center" Width="26" Height="24" Click="btn_ffs_Click">
+                <Grid Height="17" Width="21" >
+                    <Image HorizontalAlignment="Left" Width="19" Source="Resources/plus.ico" VerticalAlignment="Center" Height="17" Margin="1,0,0,0" OpacityMask="{DynamicResource TabItemHotBackground}"/>
+                </Grid>
+            </Button>
+            <Button Name="btn_tjs" Margin="355,121,147,525" HorizontalAlignment="Center" Width="26" Height="24" Click="btn_tjs_Click">
+                <Grid Height="17" Width="21" >
+                    <Image HorizontalAlignment="Left" Width="19" Source="Resources/plus.ico" VerticalAlignment="Center" Height="17" Margin="1,0,0,0"/>
+                </Grid>
+            </Button>
+            <Button  Name="btn_zbs" Margin="355,152,147,494" HorizontalAlignment="Center" Width="26" Height="24" Click="btn_zbs_Click">
+                <Grid Height="17" Width="21" >
+                    <Image HorizontalAlignment="Left" Width="19" Source="Resources/plus.ico" VerticalAlignment="Center" Height="17" Margin="1,0,0,0"/>
+                </Grid>
+            </Button>
+            <ComboBox Name="comb_zlfz" HorizontalAlignment="Left" Margin="285,214,0,0" VerticalAlignment="Top" Width="96" Height="24">
+                <ComboBoxItem>1</ComboBoxItem>
+                <ComboBoxItem>2</ComboBoxItem>
+                <ComboBoxItem>3</ComboBoxItem>
+                <ComboBoxItem>4</ComboBoxItem>
+                <ComboBoxItem>5</ComboBoxItem>
+                <ComboBoxItem>6</ComboBoxItem>
+                <ComboBoxItem>7</ComboBoxItem>
+                <ComboBoxItem>8</ComboBoxItem>
+                <ComboBoxItem>9</ComboBoxItem>
+                <ComboBoxItem>10</ComboBoxItem>
+                <ComboBoxItem>11</ComboBoxItem>
+                <ComboBoxItem>12</ComboBoxItem>
+                <ComboBoxItem>13</ComboBoxItem>
+                <ComboBoxItem>14</ComboBoxItem>
+                <ComboBoxItem>15</ComboBoxItem>
+                <ComboBoxItem>16</ComboBoxItem>
+                <ComboBoxItem>17</ComboBoxItem>
+                <ComboBoxItem>18</ComboBoxItem>
+                <ComboBoxItem>19</ComboBoxItem>
+            </ComboBox>
+            <TextBox Name="tjmc" HorizontalAlignment="Left" Height="24" Margin="210,277,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="140"/>
+            <Button  Name="btn_tjmc" Margin="355,277,147,369" HorizontalAlignment="Center" Width="26" Height="24" Click="btn_tjmc_Click">
+                <Grid Height="17" Width="21" >
+                    <Image HorizontalAlignment="Left" Width="19" Source="Resources/plus.ico" VerticalAlignment="Center" Height="17" Margin="1,0,0,0"/>
+                </Grid>
+            </Button>
+            <Button Name="btn_add" Grid.Column="0" Margin="164,317,278,323" HorizontalAlignment="Center" Width="86" Click="btn_add_Click">
+                <Grid Height="26" Width="80" >
+                    <Image HorizontalAlignment="Left" Width="22" Source="Resources/add.ico" VerticalAlignment="Center" Height="24" Margin="14,0,0,2"/>
+                    <Label Content="添加" Margin="0,0,10,2" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                </Grid>
+            </Button>
+            <Button Name="btn_delete" Grid.Column="0" Margin="285,317,157,323" HorizontalAlignment="Center" Width="86" Click="btn_delete_Click">
+                <Grid Height="26" Width="80" >
+                    <Image HorizontalAlignment="Left" Width="17" Source="Resources/minus.ico" VerticalAlignment="Center" Height="6" Margin="14,10,0,10"/>
+                    <Label Content="删除" Margin="0,0,10,2" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                </Grid>
+            </Button>
+            <TreeView Name="treeview1" HorizontalAlignment="Left" Height="308" Width="464" VerticalAlignment="Top" Margin="33,352,0,0">
+                <TreeView.ItemTemplate>
+                    <HierarchicalDataTemplate ItemsSource="{Binding Nodes}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image VerticalAlignment="Center" Source="{Binding ImageNode}"/>
+                            <TextBlock Text="{Binding Path = Name}"/>
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+            <Label Content="复合病机名称：" HorizontalAlignment="Left" Margin="98,61,0,0" VerticalAlignment="Top"/>
+            <TextBox Name="fhbjmc_1" HorizontalAlignment="Left" Height="24" Margin="210,63,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="171"/>
+            <Label Content="条件类型：" HorizontalAlignment="Left" Margin="98,244,0,0" VerticalAlignment="Top"/>
+            <ComboBox Name="comb_tjlx" HorizontalAlignment="Left" Margin="210,248,0,0" VerticalAlignment="Top" Width="140" DropDownClosed="comb_tjlx_DropDownClosed">
+                <ComboBoxItem>--请选择条件类型--</ComboBoxItem>
+            </ComboBox>
+            <ComboBox x:Name="tjmc_xi" HorizontalAlignment="Left" Margin="210,277,0,0" VerticalAlignment="Top" Width="140" Height="24" DropDownClosed="tjmc_xi_DropDownClosed"/>
+        </Grid>
+        <Label Content="查询条件" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="364" Background="{DynamicResource TabItemHotBackground}"/>
+        <Grid HorizontalAlignment="Left" Height="50" Margin="-1,28,0,0" VerticalAlignment="Top" Width="365" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}">
+            <Label Content="复合病机名称：" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+            <TextBox Name="fhbjmc" HorizontalAlignment="Left" Height="24" Margin="103,12,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
+            <Button Name="btn_fhbjmc" Content=". . ." HorizontalAlignment="Left" Margin="228,12,0,0" VerticalAlignment="Top" Width="40" Height="24" Click="btn_fhbjmc_Click"/>
+            <Button Name="back" Grid.Column="0" Margin="284,12,18,14" HorizontalAlignment="Center" Width="63" Height="24" Click="back_Click">
+                <Grid Height="20" Width="57" >
+                    <Image HorizontalAlignment="Left" Width="19" Source="Resources/home.ico" VerticalAlignment="Center" Height="23" Margin="4,-2,0,-1"/>
+                    <Label Content="返回" Margin="0,-4,0,0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                </Grid>
+            </Button>
+        </Grid>
+
+    </Grid>
+</Window>

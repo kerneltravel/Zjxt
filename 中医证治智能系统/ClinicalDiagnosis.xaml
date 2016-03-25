@@ -1,0 +1,54 @@
+﻿<Window x:Class="中医证治智能系统.ClinicalDiagnosis"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="中医证治智能系统【临床诊断】" Height="650" Width="860" WindowStartupLocation="CenterScreen">
+    <StackPanel Background="{DynamicResource ButtonNormalBackground}">
+        <Grid >
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="450"/>
+                <RowDefinition Height="40"/>
+            </Grid.RowDefinitions>
+            <Button Name="newDiagnosis" Content="新建诊断" FontSize="16"  Grid.Row="0" Margin="10,10,0,10" HorizontalAlignment="Left" Click="newDiagnosis_Click" Width="74" />
+            <Button x:Name="Diagnosis" Content="诊断" FontSize="16" Grid.Row="0" Margin="106,10,0,10" HorizontalAlignment="Left" Click="Diagnosis_Click" Width="54" />
+            <Button x:Name="clear" Content="清除" FontSize="16" Grid.Row="0" Margin="184,10,0,10" HorizontalAlignment="Left" Click="clear_Click" Width="54" />
+            <Button x:Name="back" Content="退出" FontSize="16" Grid.Row="0" Margin="255,10,0,10" HorizontalAlignment="Left" Click="back_Click" Width="51" />
+            <Label Content="病 人 信 息 录 入" FontSize="18" Grid.Row="1"  HorizontalContentAlignment="Center"  Width="852" Margin="0,0,0,45"/>
+            <Label Content="病人编号：" FontSize="20" Grid.Row="1" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="10,29,0,0"/>
+            <Label Content="姓名：" FontSize="20" HorizontalAlignment="Left" Margin="359,37,0,0" Grid.Row="1" VerticalAlignment="Top" Height="40" VerticalContentAlignment="Center" RenderTransformOrigin="0.971,1.242"/>
+            <TextBox Name="xm" IsEnabled="False" HorizontalAlignment="Left" Height="28" Margin="434,43,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="172"/>
+            <Button Name="search" Content="病人信息提取" FontSize="18" Grid.Row="1" Margin="657,37,0,8" HorizontalAlignment="Left" Click="search_Click" Width="130" />
+            <TextBox x:Name="brbh" IsEnabled="False" HorizontalAlignment="Left" Height="28" Margin="125,43,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="181"/>
+            <Label Content="症状输入框" FontSize="20" Grid.Row="1" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="10,69,0,375" Grid.RowSpan="2"/>
+            <Label Content="症状选择框" FontSize="20" Grid.Row="2" VerticalContentAlignment="Center" HorizontalAlignment="Left" Margin="10,91,0,295"/>
+            <TextBox x:Name="zzsr" HorizontalAlignment="Left" Height="21" Margin="10,70,0,0" Grid.Row="2" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="181"  TextChanged="zzsr_TextChanged"/>
+            <Button x:Name="nowzz" Content=">>现症状" FontSize="18" Grid.Row="2" Margin="222,17,0,402" HorizontalAlignment="Left" Click="nowzz_Click" Width="113" />
+            <Button x:Name="firstzz" Content=">>初期症状" FontSize="18" Grid.Row="2" Margin="222,62,0,359" HorizontalAlignment="Left" Click="firstzz_Click" Width="113" />
+            <Button x:Name="zstime" Content=">>主诉时间" FontSize="18" Grid.Row="2" Margin="222,108,0,312" HorizontalAlignment="Left" Click="zstime_Click" Width="113" />
+            <Button x:Name="zs" Content=">>主诉" FontSize="18" Grid.Row="2" Margin="222,155,0,263" HorizontalAlignment="Left" Click="zs_Click" Width="113" />
+            <Button x:Name="delete" Content="删除" FontSize="18" Grid.Row="2" Margin="222,202,0,214" HorizontalAlignment="Left" Click="delete_Click" Width="113" />
+            <Button x:Name="selectbs" Content="选择病史" FontSize="18" Grid.Row="2" Margin="222,252,0,165" HorizontalAlignment="Left" Click="selectbs_Click" Width="113" />
+            <Button x:Name="selxybm" Content="选择西医病名" FontSize="18" Grid.Row="2" Margin="222,351,0,64" HorizontalAlignment="Left" Click="selxybm_Click" Width="113" />
+            <ListView Name="lv" Margin="340,17,5,0" Grid.Row="2" AllowDrop="True" SelectionChanged="lv_SelectionChanged" VerticalAlignment="Top" Height="463" Grid.RowSpan="2">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=WesternMedicineType}" Header="信息类型" Width="150"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=WesternMedicineName}" Header="信息名称" Width="330"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <ListView Name="lv1" Margin="10,155,661,54" Grid.Row="2">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=XYZMBH}" Width="160"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <RadioButton Content="自动生成季节" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="22,412,0,0" Grid.Row="2" Height="26" Width="118"/>
+            <TextBox x:Name="jjxs" Background="{DynamicResource ButtonNormalBackground}" HorizontalAlignment="Left" Height="30" Margin="10,0,0,0" Grid.Row="3" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="330" IsReadOnly="True" />
+
+        </Grid>
+    </StackPanel>
+</Window>

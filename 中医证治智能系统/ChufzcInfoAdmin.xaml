@@ -1,0 +1,85 @@
+﻿<Window x:Class="中医证治智能系统.ChufzcInfoAdmin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="中医证治智能系统【处方组成信息管理】" Height="650" Width="860" WindowStartupLocation="CenterScreen">
+    <TabControl>
+        <TabItem Header="处方组成信息检索及录入">
+            <Grid Background="#FFE5E5E5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="415"/>
+                    <ColumnDefinition Width="355"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="55"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button x:Name="add" Margin="1,0,355,0" HorizontalAlignment="Center" Width="59" Click="add_Click">
+                    <Grid Height="51" Width="55" >
+                        <Image HorizontalAlignment="Left" Margin="10,0,0,19" Width="35" Source="Resources/plus.ico" VerticalAlignment="Center" Height="32"/>
+                        <Label Content="增加" Margin="0,27,11,0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                    </Grid>
+                </Button>
+                <Button x:Name="delete" Margin="60,0,296,0" HorizontalAlignment="Center" Width="59" Click="delete_Click">
+                    <Grid Height="51" Width="55" >
+                        <Image HorizontalAlignment="Left" Margin="13,4,0,15" Width="28" Source="Resources/minus.ico" VerticalAlignment="Center" Height="32"/>
+                        <Label Content="删除" Margin="0,27,11,0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                    </Grid>
+                </Button>
+                <Button x:Name="cancel" Margin="178,0" HorizontalAlignment="Center" Width="59" Click="cancel_Click">
+                    <Grid Height="51" Width="55" >
+                        <Image HorizontalAlignment="Left" Margin="13,4,0,19" Width="31" Source="Resources/error.ico" VerticalAlignment="Center" Height="28"/>
+                        <Label Content="取消" Margin="0,27,11,0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                    </Grid>
+                </Button>
+                <Button x:Name="back" Margin="237,0,119,0" HorizontalAlignment="Center" Width="59" Click="back_Click">
+                    <Grid Height="51" Width="55" >
+                        <Image HorizontalAlignment="Left" Margin="10,0,0,19" Width="35" Source="Resources/home.ico" VerticalAlignment="Center" Height="32"/>
+                        <Label Content="返回" Margin="0,27,11,0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                    </Grid>
+                </Button>
+                <Grid Grid.Row="1" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="833"/>
+                        <ColumnDefinition Width="9*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="基本处方名称：" HorizontalAlignment="Left" Margin="60,25,0,0" VerticalAlignment="Top"/>
+                    <Label Content="药物名称：" HorizontalAlignment="Left" Margin="60,56,0,0" VerticalAlignment="Top"/>
+                    <Label Content="药物剂量：" HorizontalAlignment="Left" Margin="60,87,0,0" VerticalAlignment="Top"/>
+                    <Label Content="备注：" HorizontalAlignment="Left" Margin="60,118,0,0" VerticalAlignment="Top"/>
+                    <TextBox Name="bz" HorizontalAlignment="Left" Height="91" Margin="159,124,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="604"/>
+                    <TextBox Name="cfmc" HorizontalAlignment="Left" Height="24" Margin="159,25,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="200"/>
+                    <TextBox  Name="ywmc" HorizontalAlignment="Left" LostFocus="ywmc_LostFocus" Height="24" Margin="159,58,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="200" />
+                    <TextBox  Name="ywjl" HorizontalAlignment="Left" LostFocus="ywjl_LostFocus" Height="24" Margin="159,89,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="ywjl_TextChanged"/>
+                    <Button Content=". . ." HorizontalAlignment="Left" Margin="364,25,0,0" VerticalAlignment="Top" Width="40" Height="24" Click="Button_Click"/>
+                    <Button Content=". . ." HorizontalAlignment="Left" Margin="364,58,0,0" VerticalAlignment="Top" Width="40" Height="24" Click="Button_Click_1"/>
+                    <ComboBox  Name="dw" HorizontalAlignment="Left" LostFocus="dw_LostFocus"  Margin="294,89,0,0" VerticalAlignment="Top" Width="65" Height="24">
+                        <ComboBoxItem>克</ComboBoxItem>
+                        <ComboBoxItem>枚</ComboBoxItem>
+                        <ComboBoxItem>片</ComboBoxItem>
+                        <ComboBoxItem>丸</ComboBoxItem>
+                        <ComboBoxItem>毫升</ComboBoxItem>
+
+                    </ComboBox>
+                    <ListView Name="lv" HorizontalAlignment="Left" Height="292" Margin="60,231,0,0" VerticalAlignment="Top" Width="703" SelectionChanged="lv_SelectionChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="处方编号" DisplayMemberBinding="{Binding Path=CfNumber}"  Width="100"/>
+                                <GridViewColumn Header="处方名称"  DisplayMemberBinding="{Binding Path=CfName}" Width="200"/>
+                                <GridViewColumn Header="药物名称"  DisplayMemberBinding="{Binding Path=YwName}" Width="200"/>
+                                <GridViewColumn Header="药物剂量" DisplayMemberBinding="{Binding Path=Ywjl}" Width="150"/>
+                                <GridViewColumn Header="单位"  DisplayMemberBinding="{Binding Path=Dw}" Width="50"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+                <Button x:Name="save" Margin="119,0,237,0" HorizontalAlignment="Center" Width="59" Click="save_Click">
+                    <Grid Height="51" Width="55" >
+                        <Image HorizontalAlignment="Left" Margin="10,0,0,19" Width="35" Source="Resources/correct.ico" VerticalAlignment="Center" Height="32"/>
+                        <Label Content="保存" Margin="0,27,11,0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                    </Grid>
+                </Button>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</Window>

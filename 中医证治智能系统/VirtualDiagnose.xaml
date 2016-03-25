@@ -1,0 +1,52 @@
+﻿<Window x:Class="中医证治智能系统.VirtualDiagnose"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="中医证治智能系统—【模拟诊断】" Height="700" Width="860" WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <StackPanel HorizontalAlignment="Left" Height="37" VerticalAlignment="Top" Orientation="Horizontal" Width="852" Background="{DynamicResource ButtonNormalBackground}"/>
+        <Button Content="退出" HorizontalAlignment="Left" Margin="362,0,0,0" VerticalAlignment="Top" Width="40" Height="37" Click="Button_Click"/>
+        <Button Content="新建拷贝诊断" HorizontalAlignment="Left" Margin="266,0,0,0" VerticalAlignment="Top" Width="84" Height="37" Click="Button_Click_copyzd"/>
+        <Button Content="病历提取" HorizontalAlignment="Left" Margin="189,0,0,0" VerticalAlignment="Top" Width="63" Height="37" Click="Button_Click_bltq"/>
+        <Button Content="清除" HorizontalAlignment="Left" Margin="133,0,0,0" VerticalAlignment="Top" Width="41" Height="37" Click="Button_Click_clear"/>
+        <Button Content="诊断" HorizontalAlignment="Left" Margin="77,0,0,0" VerticalAlignment="Top" Width="43" Height="37" Click="Button_Click_zd" RenderTransformOrigin="0.256,0.486"/>
+        <Button  Name="zd" Content="新建诊断" HorizontalAlignment="Left" VerticalAlignment="Top" Width="62" Height="37" Click="Button_Click_new"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="43" Margin="0,37,0,0" VerticalAlignment="Top" Width="852" Background="{DynamicResource ButtonNormalBackground}">
+            <TextBlock TextWrapping="Wrap" Text="病历检索信息：" Width="93" RenderTransformOrigin="0.667,0.5" Margin="0,14,0,13" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+            <TextBox  Name="bljs" TextWrapping="Wrap" Text="" Width="498" Margin="0,10"/>
+            <TextBlock TextWrapping="Wrap" Text="（建议格式：病名。证名。序号）" Width="257" Margin="0,10" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFEA2032"/>
+        </StackPanel>
+        <Grid  HorizontalAlignment="Left" Height="590" Margin="0,80,0,0" VerticalAlignment="Top" Width="283" Background="{DynamicResource TabItemDisabledBackground}" >
+            <TextBlock Text="症状输入框" HorizontalAlignment="Left" Width="95" Margin="10,0,0,570"/>
+            <TextBox  Name="zz" TextWrapping="Wrap" Text="" Margin="26,30,83,538" TextChanged="zz_TextChanged"/>
+            <Button Content=">> 删除" Margin="207,227,5,340" RenderTransformOrigin="0.453,1" Click="Button_Click_delete"/>
+            <Button Content="选择病史" Margin="207,276,5,290" RenderTransformOrigin="0.453,1" Click="Button_Click_selectbs"/>
+            <Button Content="选择西医病名" Margin="173,450,5,118" RenderTransformOrigin="0.453,1" Click="Button_Click_xybm"/>
+            <Button Content=">>主诉" Margin="207,177,5,389" RenderTransformOrigin="0.453,1" Click="Button_Click_zs"/>
+            <Button Content=">>主诉时间" Margin="207,129,5,439" RenderTransformOrigin="0.453,1" Click="Button_Click_zssj"/>
+            <Button Content=">>现症状" Margin="207,30,5,0" RenderTransformOrigin="0.453,1" Height="22" VerticalAlignment="Top" Click="Button_Click_xzz"/>
+            <Button Content=">>初期症状" Margin="207,82,5,487" RenderTransformOrigin="0.453,1" Click="Button_Click_cqzz"/>
+            <ListView Name="lb" HorizontalAlignment="Left"  Height="308" Margin="28,112,0,0"  VerticalAlignment="Top" Width="174">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=ZzName}" Width="160"/>
+                    </GridView>
+                </ListView.View>
+
+
+            </ListView>
+            <TextBlock HorizontalAlignment="Left" Margin="10,69,0,0" TextWrapping="Wrap" Text="症状选择框" VerticalAlignment="Top" Width="61"/>
+            <CheckBox Content="自动生成季节" HorizontalAlignment="Left" Margin="26,561,0,0" VerticalAlignment="Top" Height="29" Width="174" FontSize="16" FontWeight="Bold"/>
+        </Grid>
+        <ListView  Name="lv" HorizontalAlignment="Left" Height="590" Margin="283,85,0,-5" VerticalAlignment="Top" Width="569">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=XxLx}" Header="信息类型" Width="100"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding Path=XxName}" Header="信息名称" Width="200"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+
+    </Grid>
+</Window>

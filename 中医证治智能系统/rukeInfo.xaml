@@ -1,0 +1,80 @@
+﻿<Window x:Class="中医证治智能系统.rukeInfo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="中医证治智能系统-【入科信息管理】" Height="700" Width="900" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="122*"/>
+            <RowDefinition Height="133*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Height="70" VerticalAlignment="Top" Orientation="Horizontal" Background="{DynamicResource ButtonNormalBackground}">
+            <Button Name="button_add" Width="55" RenderTransformOrigin="0.505,0.355" Height="60" Click="button_add_Click" >
+                <Grid Height="55" Width="49">
+                    <Image HorizontalAlignment="Left" Height="31" Margin="9,2,0,0" VerticalAlignment="Top" Width="30" Source="Resources/plus.ico"/>
+                    <Label Content="增加" Margin="0,30,0,0" Height="25" Width="49" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Button>
+            <Button Name="button_delete" Width="55" RenderTransformOrigin="0.505,0.355" Height="60" Click="button_delete_Click">
+                <Grid Height="55" Width="49">
+                    <Image HorizontalAlignment="Left" Height="5" Margin="10,16,0,0" VerticalAlignment="Top" Width="29" Source="Resources/minus.ico"/>
+                    <Label Content="删除" Margin="0,30,0,0" Height="25" Width="49" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Button>
+            <Button Name="button_modify" Width="55" RenderTransformOrigin="0.505,0.355" Height="60" Click="button_modify_Click" >
+                <Grid Height="55" Width="49">
+                    <Image HorizontalAlignment="Left" Height="35" Margin="6,6,0,0" VerticalAlignment="Top" Width="37" Source="Resources/arrow_up.ico"/>
+                    <Label Content="修改" Margin="0,30,0,0" Height="25" Width="49" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Button>
+            <Button Name="button_save" Width="55" RenderTransformOrigin="0.505,0.355" Height="60" Click="button_save_Click" >
+                <Grid Height="55" Width="49">
+                    <Image HorizontalAlignment="Left" Height="30" Margin="10,0,0,0" VerticalAlignment="Top" Width="30" Source="Resources/save.ico" RenderTransformOrigin="0.567,0.5"/>
+                    <Label Content="保存" Margin="0,30,0,0" Height="25" Width="49" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Button>
+            <Button Name="button_cancel" Width="55" RenderTransformOrigin="0.505,0.355" Height="60" Click="button_cancel_Click" >
+                <Grid Height="55" Width="49">
+                    <Image HorizontalAlignment="Left" Height="26" Margin="11,4,0,0" VerticalAlignment="Top" Width="28" Source="Resources/error.ico"/>
+                    <Label Content="取消" Margin="0,30,0,0" Height="25" Width="49" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Button>
+            <Button Name="button_back" Width="55" RenderTransformOrigin="0.505,0.355" Height="60" Click="button_back_Click" >
+                <Grid Height="55" Width="49">
+                    <Image HorizontalAlignment="Left" Height="34" Margin="8,0,0,0" VerticalAlignment="Top" Width="33" Source="Resources/home.ico"/>
+                    <Label Content="返回" Margin="0,30,0,0" Height="25" Width="49" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                </Grid>
+            </Button>
+        </StackPanel>
+        <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Label Content="入 科 信 息 录 入" HorizontalAlignment="Left" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top" Width="892" Foreground="#FF1414FD" FontSize="36" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="90"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Width="892" Height="244">
+            <GroupBox Header="录入框：" HorizontalAlignment="Left" Margin="90,0,0,0" VerticalAlignment="Top" Height="223" Width="720" FontSize="14">
+                <Grid>
+                    <Label Content="入科名称：" HorizontalAlignment="Left" Margin="38,10,0,0" VerticalAlignment="Top" Height="31" Width="79" VerticalContentAlignment="Center"/>
+                    <Label Content="备注：" Margin="38,65,591,101" VerticalContentAlignment="Center" RenderTransformOrigin="0.54,0.96"/>
+                    <Label Content="入科编号：" Margin="318,10,311,156"/>
+                    <TextBox  Name="text_box_xmc" HorizontalAlignment="Left" Height="25" Margin="122,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="177" LostFocus="text_box_xmc_LostFocus"/>
+                    <TextBlock  Name="text_block_xbh" HorizontalAlignment="Left" Background="{DynamicResource ButtonNormalBackground}" Height="25" Margin="415,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="177" LostFocus="text_box_bz_LostFocus"/>
+                    <TextBox  Name="text_box_bz" Margin="122,71,116,10"/>
+                </Grid>
+            </GroupBox>
+        </StackPanel>
+        <StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Center" Width="892" Height="266" >
+            <ListView x:Name="lv1" HorizontalAlignment="Left" Height="200" Margin="90,29,0,0" VerticalAlignment="Top" Width="719" SelectionChanged="lv1_SelectionChanged" IsSynchronizedWithCurrentItem="False" >
+                <ListView.View>
+                    <GridView AllowsColumnReorder="True">
+                        <GridViewColumn Header="入科编号" DisplayMemberBinding="{Binding Path=XiNumber}" Width="60"/>
+                        <GridViewColumn Header="入科名称" DisplayMemberBinding="{Binding Path=XiName}" Width="150"/>
+                        <GridViewColumn Header="备注"  DisplayMemberBinding="{Binding Path=BeiZu}" Width="482" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
+    </Grid>
+</Window>

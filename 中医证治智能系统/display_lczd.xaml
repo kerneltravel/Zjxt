@@ -1,0 +1,12 @@
+﻿<Window x:Class="中医证治智能系统.display_lczd"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="中医证治智能系统【诊断结果显示】" Height="500" Width="600">
+    <Grid Margin="0,0,517,438">
+        <Button Name="dayin" Content="打印" Margin="39,10,-39,-10" Click="dayin_Click"/>
+        <Button Name="zuofei" Content="作废" Margin="233,11,-233,-11" Click="zuofei_Click" />
+        <Button Name="save" Content="保存退出" Margin="449,11,-449,-11" Click="save_Click" />
+        <TextBox Name="jinsidu" Text="近似度：" FontSize="14" Foreground="Red" Margin="-1,52,-287,-52" IsReadOnly="True"/>
+        <TextBox Name="jieguo" TextWrapping="Wrap" AcceptsReturn="true" Margin="-1,89,-517,-438" IsReadOnly="True"/>
+    </Grid>
+</Window>

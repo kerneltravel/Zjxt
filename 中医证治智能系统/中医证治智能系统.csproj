@@ -1,0 +1,723 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{40EE47F9-F573-4BE3-81BD-1CECB018F54F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>中医证治智能系统</RootNamespace>
+    <AssemblyName>中医证治智能系统</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>E:\VS\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>E580877D375CE95DA9BD607C6F1C2EB98AD7F132</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>中医证治智能系统_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="BasicBingji.xaml.cs">
+      <DependentUpon>BasicBingji.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BasicBjRuleAdmin.xaml.cs">
+      <DependentUpon>BasicBjRuleAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BasicZhengm.xaml.cs">
+      <DependentUpon>BasicZhengm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BasicZhengmbmRuleAdmin.xaml.cs">
+      <DependentUpon>BasicZhengmbmRuleAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BasicZmRuleAdmin.xaml.cs">
+      <DependentUpon>BasicZmRuleAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BingmRuleAdmin.xaml.cs">
+      <DependentUpon>BingmRuleAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChufzcInfoAdmin.xaml.cs">
+      <DependentUpon>ChufzcInfoAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClassiccaseSearch.xaml.cs">
+      <DependentUpon>ClassiccaseSearch.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClinicalcaseSearch.xaml.cs">
+      <DependentUpon>ClinicalcaseSearch.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ClinicalDiagnosis.xaml.cs">
+      <DependentUpon>ClinicalDiagnosis.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DiseaseInfoAdmin.xaml.cs">
+      <DependentUpon>DiseaseInfoAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="display_bl.xaml.cs">
+      <DependentUpon>display_bl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="display_bl1.xaml.cs">
+      <DependentUpon>display_bl1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="display_fywcl.xaml.cs">
+      <DependentUpon>display_fywcl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="display_fywclxz.xaml.cs">
+      <DependentUpon>display_fywclxz.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="display_lczd.xaml.cs">
+      <DependentUpon>display_lczd.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="djfhbjInfo.xaml.cs">
+      <DependentUpon>djfhbjInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DuizBasiccfRuleAdmin.xaml.cs">
+      <DependentUpon>DuizBasiccfRuleAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DuojifuheBjRule.xaml.cs">
+      <DependentUpon>DuojifuheBjRule.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FanywRuleAdmin.xaml.cs">
+      <DependentUpon>FanywRuleAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FuheBingji.xaml.cs">
+      <DependentUpon>FuheBingji.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FuheBjRuleAdmin.xaml.cs">
+      <DependentUpon>FuheBjRuleAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Info_Symptom.xaml.cs">
+      <DependentUpon>Info_Symptom.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="JibenCF.xaml.cs">
+      <DependentUpon>JibenCF.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MedicineInfoAdmin.xaml.cs">
+      <DependentUpon>MedicineInfoAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ModifycfRuleAdmin.xaml.cs">
+      <DependentUpon>ModifycfRuleAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ModifyywRuleAdmin.xaml.cs">
+      <DependentUpon>ModifyywRuleAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PatientinfoSearch.xaml.cs">
+      <DependentUpon>PatientinfoSearch.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="QxAdmin.xaml.cs">
+      <DependentUpon>QxAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Referral.xaml.cs">
+      <DependentUpon>Referral.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Resource1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
+    <Compile Include="PersonInfoManagement.xaml.cs">
+      <DependentUpon>PersonInfoManagement.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="rukeInfo.xaml.cs">
+      <DependentUpon>rukeInfo.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RukeRule.xaml.cs">
+      <DependentUpon>RukeRule.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Season.xaml.cs">
+      <DependentUpon>Season.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="selectbs.xaml.cs">
+      <DependentUpon>selectbs.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserManagement.xaml.cs">
+      <DependentUpon>UserManagement.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VirtualDiagnose.xaml.cs">
+      <DependentUpon>VirtualDiagnose.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WaigRuleAdmin.xaml.cs">
+      <DependentUpon>WaigRuleAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WesternMedicine_manage.xaml.cs">
+      <DependentUpon>WesternMedicine_manage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XiInfoAdmin.xaml.cs">
+      <DependentUpon>XiInfoAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XiRuleAdmin.xaml.cs">
+      <DependentUpon>XiRuleAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="XYBMsel.xaml.cs">
+      <DependentUpon>XYBMsel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ZhengmhbRuleAdmin.xaml.cs">
+      <DependentUpon>ZhengmhbRuleAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ZhengmldSearch.xaml.cs">
+      <DependentUpon>ZhengmldSearch.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ZhengmSearch.xaml.cs">
+      <DependentUpon>ZhengmSearch.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ZhengybjRule.xaml.cs">
+      <DependentUpon>ZhengybjRule.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="zybjInfo.xaml.cs">
+      <DependentUpon>zybjInfo.xaml</DependentUpon>
+    </Compile>
+    <Page Include="BasicBingji.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BasicBjRuleAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BasicZhengm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BasicZhengmbmRuleAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BasicZmRuleAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BingmRuleAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ButtonResource.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="caidangeshi.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ChufzcInfoAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ClassiccaseSearch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ClinicalcaseSearch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ClinicalDiagnosis.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DiseaseInfoAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="display_bl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="display_bl1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="display_fywcl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="display_fywclxz.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="display_lczd.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="djfhbjInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DuizBasiccfRuleAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DuojifuheBjRule.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FanywRuleAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FuheBingji.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FuheBjRuleAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Info_Symptom.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="JibenCF.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainInterface.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainInterface.xaml.cs">
+      <DependentUpon>MainInterface.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="MedicineInfoAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ModifycfRuleAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ModifyywRuleAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PatientinfoSearch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="QxAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Referral.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="rukeInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RukeRule.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Season.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="selectbs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="sysbutton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PersonInfoManagement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="tabcontrolDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserManagement.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VirtualDiagnose.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WaigRuleAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WesternMedicine_manage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="XiInfoAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="XiRuleAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="XYBMsel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ZhengmhbRuleAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ZhengmldSearch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ZhengmSearch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ZhengybjRule.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="zybjInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resource1.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <None Include="中医证治智能系统_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\user.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\lock.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\frame.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\HumanGl.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Key2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\season.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\2.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\BOOK1.ICO" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\3.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CustomerGetINput.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\4.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Checkbook.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\5.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\zd48.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\095.GIF" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\browse.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\7.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\doctor.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\background.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\btbg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\btfg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\M.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MAX.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\MNI.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\toolbar_hover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\toolbar_pushed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\x1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\back.GIF" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\delete.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\modify.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\search.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\home.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\check.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\last.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\beginning.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\angle_left.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\angle_right.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\minus.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\correct.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\curve.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\error.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\plus.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\arrow_down.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\arrow_up.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\save.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Contraction.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Expansion.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\add.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\setting.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\diagnosis.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logoff.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\shutdown.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\R.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\C.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\I.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\users.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\person.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\quanxian.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\books.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\edit.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\prescription.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\doctor.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\management.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

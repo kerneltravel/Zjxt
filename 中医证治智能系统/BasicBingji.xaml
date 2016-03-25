@@ -1,0 +1,124 @@
+﻿<Window x:Class="中医证治智能系统.BasicBingji"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="中医证治智能系统-【基本病机信息管理】" Height="650" Width="860" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <TabControl Name="tabControl1"  >
+            <TabItem Header="基本病机信息检索" Margin="0,0,-4,-3">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0"/>
+                        <ColumnDefinition Width="842"/>
+                        <ColumnDefinition Width="0*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Label Content="查询条件" Background="{DynamicResource TabItemHotBackground}" Grid.ColumnSpan="2"/>
+                    <Label Content="基本病机名称：" HorizontalAlignment="Left" Margin="134,0,0,0" Grid.Row="1" VerticalAlignment="Top" Height="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Width="89" Grid.Column="1"/>
+                    <TextBox  Name="text_box_bjmc"  HorizontalAlignment="Left" Height="24" Margin="239,11,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="186" Grid.Column="1"/>
+                    <Button x:Name="search" Grid.Row="1" Grid.Column="1" Margin="621,11,161,4" HorizontalAlignment="Center" Width="60" Click="search_Click">
+                        <Grid Height="36" Width="55" >
+                            <Image HorizontalAlignment="Left" Margin="0,0,0,16" Width="21" Source="Resources/search.ico" VerticalAlignment="Center" Height="18"/>
+                            <Label Content="查找" Margin="0,-3,0,15" HorizontalAlignment="Right" VerticalAlignment="Center" Width="38" Height="24" />
+                        </Grid>
+                    </Button>
+                    <Label Content="查询结果" Background="{DynamicResource TabItemHotBackground}" Grid.ColumnSpan="2" Grid.Row="2"/>
+                    <Button x:Name="select_search" Grid.Row="3" Grid.Column="1" Margin="202,5,578,5" HorizontalAlignment="Center" Width="62" Click="select_search_Click">
+                        <Grid Height="34" Width="55" >
+                            <Image HorizontalAlignment="Left" Margin="0,3,0,10" Width="21" Source="Resources/check.ico" VerticalAlignment="Center"/>
+                            <Label Content="选定" Margin="0,0,0,10" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                        </Grid>
+                    </Button>
+                    <Button x:Name="delete_search" Grid.Row="3" Grid.Column="1" Margin="308,5,472,5" HorizontalAlignment="Center" Width="62" Click="delete_search_Click">
+                        <Grid Height="34" Width="55" >
+                            <Image HorizontalAlignment="Left" Margin="5,5,0,12" Width="16" Source="Resources/error.ico" VerticalAlignment="Center" Height="17"/>
+                            <Label Content="删除" Margin="0,0,0,10" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                        </Grid>
+                    </Button>
+                    <Button x:Name="modify_search" Grid.Row="3" Grid.Column="1" Margin="416,5,364,5" HorizontalAlignment="Center" Width="62" Click="modify_search_Click">
+                        <Grid Height="34" Width="55" >
+                            <Image HorizontalAlignment="Left" Margin="2,3,0,13" Width="22" Source="Resources/arrow_up.ico" VerticalAlignment="Center" Height="18"/>
+                            <Label Content="修改" Margin="0,0,0,7" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="27" />
+                        </Grid>
+                    </Button>
+                    <Button x:Name="back_search" Grid.Row="3" Grid.Column="1" Margin="532,5,250,5" HorizontalAlignment="Center" Width="60" Click="back_search_Click">
+                        <Grid Height="34" Width="55" >
+                            <Image HorizontalAlignment="Left" Margin="0,3,0,10" Width="21" Source="Resources/home.ico" VerticalAlignment="Center"/>
+                            <Label Content="返回" Margin="0,0,0,10" HorizontalAlignment="Right" VerticalAlignment="Center" Width="37" Height="24" />
+                        </Grid>
+                    </Button>
+                    <ListView  Name="lv" Grid.Row="4" Margin="0,0,6,0" Grid.ColumnSpan="2" SelectionChanged="lv_SelectionChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn  DisplayMemberBinding="{Binding Path=BingjiNumber}" Header="基本病机编号" Width="150"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=BingjiName}" Header="基本病机名称" Width="300"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=Beizu}" Header="备注" Width="400"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                </Grid>
+            </TabItem>
+            <TabItem Name="tabItem1" Header="基本病机信息录入" Margin="5,0,-5,-3" HorizontalAlignment="Left" Width="110" >
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="320"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="55"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button x:Name="add_input" Margin="0,0,261,0" HorizontalAlignment="Center" Width="59" Click="add_input_Click">
+                        <Grid Height="51" Width="55" >
+                            <Image HorizontalAlignment="Left" Margin="10,0,0,19" Width="35" Source="Resources/plus.ico" VerticalAlignment="Center" Height="32"/>
+                            <Label Content="增加" Margin="0,27,11,0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                        </Grid>
+                    </Button>
+                    <Button x:Name="modify_input" Margin="64,0,197,0" HorizontalAlignment="Center" Width="59" Click="modify_input_Click">
+                        <Grid Height="51" Width="55" >
+                            <Image HorizontalAlignment="Left" Margin="10,0,0,19" Width="35" Source="Resources/arrow_up.ico" VerticalAlignment="Center" Height="32"/>
+                            <Label Content="修改" Margin="0,27,11,0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                        </Grid>
+                    </Button>
+                    <Button x:Name="save_input" Margin="128,0,133,0" HorizontalAlignment="Center" Width="59" Click="save_input_Click">
+                        <Grid Height="51" Width="55" >
+                            <Image HorizontalAlignment="Left" Margin="10,0,0,19" Width="35" Source="Resources/correct.ico" VerticalAlignment="Center" Height="32"/>
+                            <Label Content="保存" Margin="0,27,11,0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                        </Grid>
+                    </Button>
+                    <Button x:Name="cancel_input" Margin="192,0,69,0" HorizontalAlignment="Center" Width="59" Click="cancel_input_Click">
+                        <Grid Height="51" Width="55" >
+                            <Image HorizontalAlignment="Left" Margin="13,4,0,19" Width="31" Source="Resources/error.ico" VerticalAlignment="Center" Height="28"/>
+                            <Label Content="取消" Margin="0,27,11,0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                        </Grid>
+                    </Button>
+                    <Button x:Name="back_input" Margin="256,0,5,0" HorizontalAlignment="Center" Width="59" Click="back_input_Click">
+                        <Grid Height="51" Width="55" >
+                            <Image HorizontalAlignment="Left" Margin="10,0,0,19" Width="35" Source="Resources/home.ico" VerticalAlignment="Center" Height="32"/>
+                            <Label Content="返回" Margin="0,27,11,0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+                        </Grid>
+                    </Button>
+                    <Grid Grid.Row="1" Grid.ColumnSpan="2" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="842"/>
+                            <ColumnDefinition Width="0*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="基 本 病 机 信 息 录 入" Grid.Column="0" HorizontalAlignment="Left" Margin="344,30,0,0" VerticalAlignment="Top" FontSize="20" RenderTransformOrigin="0.794,-0.333" Foreground="#FF1B1BE2" Height="36" Width="211"/>
+                        <Label Content="基本病机编号：" HorizontalAlignment="Left" Margin="78,114,0,0" VerticalAlignment="Top" Width="108" Height="26"/>
+                        <TextBox  Name="text_bjbh" HorizontalAlignment="Left" Margin="191,114,0,0" VerticalAlignment="Top" Width="202" Height="24"  IsEnabled="False"/>
+                        <Label Content="基本病机名称：" HorizontalAlignment="Left" Margin="420,112,0,0" VerticalAlignment="Top" Width="108" Height="26" />
+                        <TextBox Name="text_bjmc"  LostFocus="text_bjmc_LostFocus" HorizontalAlignment="Left" Height="24" Margin="518,112,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="202"/>
+                        <Label Content="备注：" HorizontalAlignment="Left" Margin="78,202,0,0" VerticalAlignment="Top" Height="26" Width="46"/>
+                        <TextBox Name="text_bz" LostFocus="text_bz_LostFocus" HorizontalAlignment="Left" Height="179" Margin="191,202,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="529"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

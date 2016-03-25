@@ -1,0 +1,120 @@
+﻿<Window x:Class="中医证治智能系统.QxAdmin"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
+        mc:Ignorable="d"
+        Title="中医证治智能系统【权限组管理】" Height="700" Width="900" WindowStartupLocation="CenterScreen">
+    <Grid Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+        <ListBox Name="listbox" HorizontalAlignment="Left" Width="100" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" Margin="0,26,0,0" SelectionChanged="listbox_SelectionChanged">
+        </ListBox>
+        <Label Content="权限组名称" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-0.65,0.038" Width="100" Background="{DynamicResource TabItemHotBackground}" HorizontalContentAlignment="Center" BorderBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}"/>
+        <Grid Margin="100,0,0,0">
+            <Label Content="权限组管理" HorizontalAlignment="Left" Margin="347,10,0,0" VerticalAlignment="Top" FontSize="20"/>
+            <Label Content="权限组名称：" HorizontalAlignment="Left" Margin="44,63,0,0" VerticalAlignment="Top" Height="24"/>
+            <TextBox Name="txt_qxzmc" HorizontalAlignment="Left" Height="24" Margin="131,63,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="553"/>
+            <Button x:Name="add" Margin="80,114,0,0" HorizontalAlignment="Left" Width="66" Height="24" VerticalAlignment="Top" Click="add_Click">
+                <Grid Height="17" Width="54" >
+                    <Image HorizontalAlignment="Left" Width="17" Source="Resources/plus.ico" VerticalAlignment="Center" Height="17" Margin="3,0,0,0"/>
+                    <Label Content="添加" HorizontalAlignment="Right" VerticalAlignment="Center" Width="43" Height="25" Margin="0,-5,-9,-3" />
+                </Grid>
+            </Button>
+            <Button x:Name="delete" Margin="206,114,0,0" HorizontalAlignment="Left" Width="66" Height="24" VerticalAlignment="Top" Click="delete_Click">
+                <Grid Height="17" Width="54" >
+                    <Image HorizontalAlignment="Left" Width="16" Source="Resources/minus.ico" VerticalAlignment="Center" Height="3" Margin="4,7,0,7"/>
+                    <Label Content="删除" HorizontalAlignment="Right" VerticalAlignment="Top" Width="43" Height="25" Margin="0,-5,-9,-3" />
+                </Grid>
+            </Button>
+            <Button x:Name="modify" Margin="334,114,0,0" HorizontalAlignment="Left" Width="66" Height="24" VerticalAlignment="Top" Click="modify_Click">
+                <Grid Height="17" Width="54" >
+                    <Image HorizontalAlignment="Left" Width="18" Source="Resources/arrow_up.ico" VerticalAlignment="Center" Height="16" Margin="3,0,0,1"/>
+                    <Label Content="修改" HorizontalAlignment="Right" VerticalAlignment="Center" Width="43" Height="26" Margin="0,-6,-12,-3" />
+                </Grid>
+            </Button>
+            <Button x:Name="save" Margin="454,114,0,0" HorizontalAlignment="Left" Width="66" Height="24" VerticalAlignment="Top" Click="save_Click">
+                <Grid Height="17" Width="54" >
+                    <Image HorizontalAlignment="Left" Width="16" Source="Resources/save.ico" VerticalAlignment="Bottom" Height="17" Margin="4,0,0,0"/>
+                    <Label Content="保存" VerticalAlignment="Center" Height="25" Margin="20,-5,-9,-3" />
+                </Grid>
+            </Button>
+            <Button x:Name="back" HorizontalAlignment="Left" Width="66" Margin="569,114,0,0" VerticalAlignment="Top" Height="24" Click="back_Click">
+                <Grid Height="24" Width="59" >
+                    <Image HorizontalAlignment="Left" Margin="3,0,0,7" Width="18" Source="Resources/home.ico" VerticalAlignment="Center" Height="17"/>
+                    <Label Content="返回" Margin="23,-4,2,4" VerticalAlignment="Center" Height="24" />
+                </Grid>
+            </Button>
+            <Grid HorizontalAlignment="Left" Height="22" Margin="80,156,0,0" VerticalAlignment="Top" Width="189" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}">
+                <CheckBox Name="checkbox1_1" Content="全选" HorizontalAlignment="Left" Margin="10,4,0,3" VerticalAlignment="Center" Height="15" Checked="checkbox1_1_Checked"/>
+                <CheckBox Name="checkbox1_2" Content="全不选" HorizontalAlignment="Left" Margin="72,4,0,3" VerticalAlignment="Center" Height="15" Checked="checkbox1_2_Checked"/>
+            </Grid>
+            <Grid HorizontalAlignment="Left" Height="22" Margin="298,156,0,0" VerticalAlignment="Top" Width="189" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}">
+                <CheckBox Name="checkbox2_1" Content="全选" HorizontalAlignment="Left" Margin="10,4,0,3" VerticalAlignment="Center" Height="15" Checked="checkbox2_1_Checked"/>
+                <CheckBox Name="checkbox2_2" Content="全不选" HorizontalAlignment="Left" Margin="72,4,0,3" VerticalAlignment="Center" Height="15" Checked="checkbox2_2_Checked"/>
+            </Grid>
+            <Grid HorizontalAlignment="Left" Height="22" Margin="514,156,0,0" VerticalAlignment="Top" Width="189" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}">
+                <CheckBox Name="checkbox3_1" Content="全选" HorizontalAlignment="Left" Margin="10,4,0,3" VerticalAlignment="Center" Height="15" Checked="checkbox3_1_Checked"/>
+                <CheckBox Name="checkbox3_2" Content="全不选" HorizontalAlignment="Left" Margin="72,4,0,3" VerticalAlignment="Center" Height="15" Checked="checkbox3_2_Checked"/>
+            </Grid>
+            <Grid HorizontalAlignment="Left" Height="22" Margin="80,409,0,0" VerticalAlignment="Top" Width="189" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}">
+                <CheckBox Name="checkbox4_1" Content="全选" HorizontalAlignment="Left" Margin="10,4,0,3" VerticalAlignment="Center" Height="15" Checked="checkbox4_1_Checked"/>
+                <CheckBox Name="checkbox4_2" Content="全不选" HorizontalAlignment="Left" Margin="72,4,0,3" VerticalAlignment="Center" Height="15" Checked="checkbox4_2_Checked"/>
+            </Grid>
+            <Grid HorizontalAlignment="Left" Height="22" Margin="298,409,0,0" VerticalAlignment="Top" Width="189" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}">
+                <CheckBox Name="checkbox5_1" Content="全选" HorizontalAlignment="Left" Margin="10,4,0,3" VerticalAlignment="Center" Height="15" Checked="checkbox5_1_Checked"/>
+                <CheckBox Name="checkbox5_2" Content="全不选" HorizontalAlignment="Left" Margin="72,4,0,3" VerticalAlignment="Center" Height="15" Checked="checkbox5_2_Checked"/>
+            </Grid>
+            <Grid HorizontalAlignment="Left" Height="22" Margin="514,409,0,0" VerticalAlignment="Top" Width="188" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}">
+                <CheckBox Name="checkbox6_1" Content="全选" HorizontalAlignment="Left" Margin="10,4,0,3" VerticalAlignment="Center" Height="15" Checked="checkbox6_1_Checked"/>
+                <CheckBox Name="checkbox6_2" Content="全不选" HorizontalAlignment="Left" Margin="72,4,0,3" VerticalAlignment="Center" Height="15" Checked="checkbox6_2_Checked"/>
+            </Grid>
+        </Grid>
+        <ListBox x:Name="listbox_1" Style="{DynamicResource UserItemContainerStyle}" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="190" Margin="180,192,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" IsSynchronizedWithCurrentItem="True" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+            <CheckBox Content="用户管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="个人信息管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="用户权限组管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="季节管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        </ListBox>
+        <ListBox x:Name="listbox_2" Style="{DynamicResource UserItemContainerStyle}" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="190" Margin="398,192,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" IsSynchronizedWithCurrentItem="True" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}">
+            <CheckBox Content="症象信息管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="系信息管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="病名信息管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="基本病机信息管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="复合病机信息管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="基本证名信息管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="西医证治管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        </ListBox>
+        <ListBox x:Name="listbox_3" Style="{DynamicResource UserItemContainerStyle}" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="190" Margin="614,192,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" IsSynchronizedWithCurrentItem="True" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}">
+            <CheckBox Content="外感规则管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="系规则管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="病名规则管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="基本病机规则管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="复合病机规则管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="基本证名规则管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="证名合并规则管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="基本证名－病名管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        </ListBox>
+        <ListBox x:Name="listbox_4" Style="{DynamicResource UserItemContainerStyle}" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="190" Margin="180,447,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" IsSynchronizedWithCurrentItem="True" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}">
+            <CheckBox Content="基本处方信息管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="药物信息管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="处方组成信息管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="对证基本处方规则管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="反药物规则管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="修改处方规则管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="修改药物规则管理" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        </ListBox>
+        <ListBox x:Name="listbox_5" Style="{DynamicResource UserItemContainerStyle}" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="190" Margin="398,447,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" IsSynchronizedWithCurrentItem="True" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}">
+            <CheckBox Content="临床诊断" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="复诊" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="模拟诊断" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="教学诊断" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}"/>
+        </ListBox>
+        <ListBox x:Name="listbox_6" Style="{DynamicResource UserItemContainerStyle}" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="190" Margin="614,447,0,0" BorderBrush="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" IsSynchronizedWithCurrentItem="True" Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}">
+            <CheckBox Content="经典案例检索" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="病人信息查询" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="临床病历检索" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="病名下证名查询" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <CheckBox Content="基本证名联动查询" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        </ListBox>
+
+    </Grid>
+</Window>
