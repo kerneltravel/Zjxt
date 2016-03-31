@@ -513,7 +513,6 @@ namespace 中医证治智能系统
             }
             dr.Close();
             conn.Close();
-
             // 清空
             nodes.Clear();
             // 判断是否存在该病名的推理规则
@@ -521,8 +520,12 @@ namespace 中医证治智能系统
             conn.Open();
             comm = new SqlCommand(sql, conn);
             int count = (int)comm.ExecuteScalar();
-            if (count == 0)
+            if (count == 0) {
+                // 清空treeview，先清空结点，再调用创建树函数
+                nodes.Clear();
+                BuildENTree();
                 MessageBox.Show("不存在该病名的推理规则，请录入！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
             conn.Close();
             // 若存在该病名的推理规则，显示 treeview
             if (count > 0)
@@ -1215,250 +1218,267 @@ namespace 中医证治智能系统
             comb_zbs.SelectedIndex = 0;
             // 清空
             nodes.Clear();
-            // 将数据库数据写入 List 集合
-            // 一级树写入 【方法】（ff）          
-            string sql = String.Format("select distinct ff from t_rule_fhbj where fhbjbh = '{0}'", m_fhbjbh);
+            // 判断是否存在该病名的推理规则
+            string sql = String.Format("select count(*) from t_rule_fhbj where fhbjbh = '{0}'", m_fhbjbh);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
-            SqlDataReader dr = comm.ExecuteReader();
-            while (dr.Read())
+            int count = (int)comm.ExecuteScalar();
+            if (count == 0)
             {
-                nodes.Add(new Node { ID = Convert.ToInt32(dr["ff"]), Name = fhbjmc.Text.Trim() + "的推理规则方法" + numbertochinese(dr["ff"].ToString()) + "（规则：所有条件均成立）" });
+                // 清空treeview，先清空结点，再调用创建树函数
+                nodes.Clear();
+                BuildENTree();
+                MessageBox.Show("不存在该病名的推理规则，请录入！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-            dr.Close();
             conn.Close();
-
-            // 二级树写入【条件】（blgz）
-            sql = String.Format("select ff, blgz, gzfz from t_rule_fhbj where fhbjbh = '{0}' group by ff, blgz, gzfz", m_fhbjbh);
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            dr = comm.ExecuteReader();
-            while (dr.Read())
+            // 若存在该病名的推理规则，显示 treeview
+            if (count > 0)
             {
-                nodes.Add(new Node
+                // 将数据库数据写入 List 集合
+                // 一级树写入 【方法】（ff）          
+                sql = String.Format("select distinct ff from t_rule_fhbj where fhbjbh = '{0}'", m_fhbjbh);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                SqlDataReader dr = comm.ExecuteReader();
+                while (dr.Read())
                 {
-                    ID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString()),
-                    Name = "条件" + numbertochinese(dr["blgz"].ToString()) + "（规则：任" + numbertochinese(dr["gzfz"].ToString()) + "组成立）",
-                    ParentID = Convert.ToInt32(dr["ff"])
-                });
-            }
-            dr.Close();
-            conn.Close();
+                    nodes.Add(new Node { ID = Convert.ToInt32(dr["ff"]), Name = fhbjmc.Text.Trim() + "的推理规则方法" + numbertochinese(dr["ff"].ToString()) + "（规则：所有条件均成立）" });
+                }
+                dr.Close();
+                conn.Close();
 
-            // 三级树写入【组别】（tjzb）
-            sql = String.Format("select ff, blgz, tjzb, znfz from t_rule_fhbj where fhbjbh = '{0}' group by ff, blgz, tjzb, znfz ", m_fhbjbh);
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                nodes.Add(new Node
+                // 二级树写入【条件】（blgz）
+                sql = String.Format("select ff, blgz, gzfz from t_rule_fhbj where fhbjbh = '{0}' group by ff, blgz, gzfz", m_fhbjbh);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                dr = comm.ExecuteReader();
+                while (dr.Read())
                 {
-                    ID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString()),
-                    Name = "组别" + numbertochinese(dr["tjzb"].ToString()) + "（规则：任" + numbertochinese(dr["znfz"].ToString()) + "症成立）",
-                    ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString())
-                });
-            }
-            dr.Close();
-            conn.Close();
+                    nodes.Add(new Node
+                    {
+                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString()),
+                        Name = "条件" + numbertochinese(dr["blgz"].ToString()) + "（规则：任" + numbertochinese(dr["gzfz"].ToString()) + "组成立）",
+                        ParentID = Convert.ToInt32(dr["ff"])
+                    });
+                }
+                dr.Close();
+                conn.Close();
 
-            // 四级树写入【病名】（四种病名）
-            // 先取出条件类型并存入数组
-            //【tjlx】0：症象 1：系 2：基本病机 3：病名
-            string[] m_tjlx = new string[4] { "", "", "", "" };
-            int i = 0;
-            sql = String.Format("select distinct tjlx from t_rule_fhbj where fhbjbh = '{0}'", m_fhbjbh);
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                m_tjlx[i] = dr["tjlx"].ToString();
-                i++;
-            }
-            dr.Close();
-            conn.Close();
-
-            for (i = 0; m_tjlx[i] != ""; i++)
-            {
-                switch (m_tjlx[i])
+                // 三级树写入【组别】（tjzb）
+                sql = String.Format("select ff, blgz, tjzb, znfz from t_rule_fhbj where fhbjbh = '{0}' group by ff, blgz, tjzb, znfz ", m_fhbjbh);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                dr = comm.ExecuteReader();
+                while (dr.Read())
                 {
-                    case "0": //【症象】
-                        {
-                            sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_fhbj as t2 on t2.zxbh = t1.zxbh where fhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_fhbjbh);
-                            conn.Open();
-                            comm = new SqlCommand(sql, conn);
-                            dr = comm.ExecuteReader();
-                            while (dr.Read())
+                    nodes.Add(new Node
+                    {
+                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString()),
+                        Name = "组别" + numbertochinese(dr["tjzb"].ToString()) + "（规则：任" + numbertochinese(dr["znfz"].ToString()) + "症成立）",
+                        ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString())
+                    });
+                }
+                dr.Close();
+                conn.Close();
+
+                // 四级树写入【病名】（四种病名）
+                // 先取出条件类型并存入数组
+                //【tjlx】0：症象 1：系 2：基本病机 3：病名
+                string[] m_tjlx = new string[4] { "", "", "", "" };
+                int i = 0;
+                sql = String.Format("select distinct tjlx from t_rule_fhbj where fhbjbh = '{0}'", m_fhbjbh);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                dr = comm.ExecuteReader();
+                while (dr.Read())
+                {
+                    m_tjlx[i] = dr["tjlx"].ToString();
+                    i++;
+                }
+                dr.Close();
+                conn.Close();
+
+                for (i = 0; m_tjlx[i] != ""; i++)
+                {
+                    switch (m_tjlx[i])
+                    {
+                        case "0": //【症象】
                             {
-                                nodes.Add(new Node
-                                {
-                                    ID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString()),
-                                    Name = dr["zxbh"].ToString() + "  " + dr[4].ToString() + "【症象】",
-                                    ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
-                                });
-                            }
-                            dr.Close();
-                            conn.Close();
-                        }
-                        break;
-                    case "1": //【系】
-                        {
-                            sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.xbh, min(t1.xmc) from t_info_x as t1 inner join t_rule_fhbj as t2 on t2.xbh = t1.xbh where fhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.xbh", m_fhbjbh);
-                            conn.Open();
-                            comm = new SqlCommand(sql, conn);
-                            dr = comm.ExecuteReader();
-                            while (dr.Read())
-                            {
-                                nodes.Add(new Node
-                                {
-                                    ID = Convert.ToInt32(dr["ff"].ToString() + dr["xbh"].ToString()),
-                                    Name = dr["xbh"].ToString() + "  " + dr[4].ToString() + "【系】",
-                                    ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
-                                });
-                            }
-                            dr.Close();
-                            conn.Close();
-                        }
-                        break;
-                    case "2": //【基本病机】
-                        {
-                            sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh, min(t1.jbbjmc) from t_info_jbbj as t1 inner join t_rule_fhbj as t2 on t2.jbbjbh = t1.jbbjbh where fhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh", m_fhbjbh);
-                            conn.Open();
-                            comm = new SqlCommand(sql, conn);
-                            dr = comm.ExecuteReader();
-                            while (dr.Read())
-                            {
-                                nodes.Add(new Node
-                                {
-                                    ID = Convert.ToInt32(dr["ff"].ToString() + dr["jbbjbh"].ToString()),
-                                    Name = dr["jbbjbh"].ToString() + "  " + dr[4].ToString() + "【基本病机】",
-                                    ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
-                                });
-                            }
-                            dr.Close();
-                            conn.Close();
-                        }
-                        break;
-                    case "3": //【病名】
-                        {
-                            sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx, min(t1.bmmc) from t_info_bm as t1 inner join t_rule_fhbj as t2 on t2.bmbh = t1.bmbh where fhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx", m_fhbjbh);
-                            conn.Open();
-                            comm = new SqlCommand(sql, conn);
-                            dr = comm.ExecuteReader();
-                            while (dr.Read())
-                            {
-                                if (dr["bmlx"].ToString() == "0")
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_fhbj as t2 on t2.zxbh = t1.zxbh where fhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_fhbjbh);
+                                conn.Open();
+                                comm = new SqlCommand(sql, conn);
+                                dr = comm.ExecuteReader();
+                                while (dr.Read())
                                 {
                                     nodes.Add(new Node
                                     {
-                                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["bmbh"].ToString()),
-                                        Name = dr["bmbh"].ToString() + "  " + dr[5].ToString() + "【外感病名】",
+                                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString()),
+                                        Name = dr["zxbh"].ToString() + "  " + dr[4].ToString() + "【症象】",
                                         ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
                                     });
                                 }
-                                if (dr["bmlx"].ToString() == "1")
+                                dr.Close();
+                                conn.Close();
+                            }
+                            break;
+                        case "1": //【系】
+                            {
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.xbh, min(t1.xmc) from t_info_x as t1 inner join t_rule_fhbj as t2 on t2.xbh = t1.xbh where fhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.xbh", m_fhbjbh);
+                                conn.Open();
+                                comm = new SqlCommand(sql, conn);
+                                dr = comm.ExecuteReader();
+                                while (dr.Read())
                                 {
                                     nodes.Add(new Node
                                     {
-                                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["bmbh"].ToString()),
-                                        Name = dr["bmbh"].ToString() + "  " + dr[5].ToString() + "【内伤病名】",
+                                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["xbh"].ToString()),
+                                        Name = dr["xbh"].ToString() + "  " + dr[4].ToString() + "【系】",
                                         ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
                                     });
                                 }
+                                dr.Close();
+                                conn.Close();
                             }
-                            dr.Close();
-                            conn.Close();
-                        }
-                        break;
+                            break;
+                        case "2": //【基本病机】
+                            {
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh, min(t1.jbbjmc) from t_info_jbbj as t1 inner join t_rule_fhbj as t2 on t2.jbbjbh = t1.jbbjbh where fhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh", m_fhbjbh);
+                                conn.Open();
+                                comm = new SqlCommand(sql, conn);
+                                dr = comm.ExecuteReader();
+                                while (dr.Read())
+                                {
+                                    nodes.Add(new Node
+                                    {
+                                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["jbbjbh"].ToString()),
+                                        Name = dr["jbbjbh"].ToString() + "  " + dr[4].ToString() + "【基本病机】",
+                                        ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
+                                    });
+                                }
+                                dr.Close();
+                                conn.Close();
+                            }
+                            break;
+                        case "3": //【病名】
+                            {
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx, min(t1.bmmc) from t_info_bm as t1 inner join t_rule_fhbj as t2 on t2.bmbh = t1.bmbh where fhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx", m_fhbjbh);
+                                conn.Open();
+                                comm = new SqlCommand(sql, conn);
+                                dr = comm.ExecuteReader();
+                                while (dr.Read())
+                                {
+                                    if (dr["bmlx"].ToString() == "0")
+                                    {
+                                        nodes.Add(new Node
+                                        {
+                                            ID = Convert.ToInt32(dr["ff"].ToString() + dr["bmbh"].ToString()),
+                                            Name = dr["bmbh"].ToString() + "  " + dr[5].ToString() + "【外感病名】",
+                                            ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
+                                        });
+                                    }
+                                    if (dr["bmlx"].ToString() == "1")
+                                    {
+                                        nodes.Add(new Node
+                                        {
+                                            ID = Convert.ToInt32(dr["ff"].ToString() + dr["bmbh"].ToString()),
+                                            Name = dr["bmbh"].ToString() + "  " + dr[5].ToString() + "【内伤病名】",
+                                            ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
+                                        });
+                                    }
+                                }
+                                dr.Close();
+                                conn.Close();
+                            }
+                            break;
+                    }
                 }
-            }
 
-            // 五级树写入【同一编号不同名称】
-            m_tjlx = new string[4] { "", "", "", "" };
-            i = 0;
-            sql = String.Format("select distinct tjlx from t_rule_fhbj where fhbjbh = '{0}'", m_fhbjbh);
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                m_tjlx[i] = dr["tjlx"].ToString();
-                i++;
-            }
-            dr.Close();
-            conn.Close();
-
-            for (i = 0; m_tjlx[i] != ""; i++)
-            {
-                switch (m_tjlx[i])
+                // 五级树写入【同一编号不同名称】
+                m_tjlx = new string[4] { "", "", "", "" };
+                i = 0;
+                sql = String.Format("select distinct tjlx from t_rule_fhbj where fhbjbh = '{0}'", m_fhbjbh);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                dr = comm.ExecuteReader();
+                while (dr.Read())
                 {
-                    case "0": //【症象】
-                        {
-                            sql = String.Format("select t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_fhbj as t2 on t2.zxbh = t1.zxbh where fhbjbh = '{0}' group by t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_fhbjbh);
-                            conn.Open();
-                            comm = new SqlCommand(sql, conn);
-                            dr = comm.ExecuteReader();
-                            while (dr.Read())
-                            {
-                                nodes.Add(new Node
-                                {
-                                    ID = Convert.ToInt32(dr["ff"].ToString() + dr["id"].ToString()),
-                                    Name = dr["zxbh"].ToString() + "  " + dr[5].ToString(),
-                                    ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString())
-                                });
-                            }
-                            dr.Close();
-                            conn.Close();
-                        }
-                        break;
-                    case "1": //【系】
-                        {
-                            sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.xbh, min(t1.xmc) from t_info_x as t1 inner join t_rule_fhbj as t2 on t2.xbh = t1.xbh where fhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.xbh", m_fhbjbh);
-                            conn.Open();
-                            comm = new SqlCommand(sql, conn);
-                            dr = comm.ExecuteReader();
-                            while (dr.Read())
-                            {
-                                nodes.Add(new Node
-                                {
-                                    ID = Convert.ToInt32(dr["xbh"].ToString()),
-                                    Name = dr["xbh"].ToString() + "  " + dr[4].ToString(),
-                                    ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["xbh"].ToString())
-                                });
-                            }
-                            dr.Close();
-                            conn.Close();
-                        }
-                        break;
-                    case "2": //【基本病机】
-                        {
-                            // 同一编号对应唯一名称，不需任何添加
-                        }
-                        break;
-                    case "3": //【病名】
-                        {
-                            // 同一编号对应唯一名称，不需任何添加
-                        }
-                        break;
+                    m_tjlx[i] = dr["tjlx"].ToString();
+                    i++;
                 }
-            }
-            // 调用创建树函数
-            BuildENTree();
-            // 在下拉框显示方法数
-            comb_ffs.Items.Clear();
-            comb_ffs.Items.Add("--请选择方法数--");
-            comb_ffs.SelectedIndex = 0;
-            sql = String.Format("select distinct ff from t_rule_fhbj where fhbjbh = '{0}' order by ff", m_fhbjbh);
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
-            }
-            dr.Close();
-            conn.Close();
+                dr.Close();
+                conn.Close();
+
+                for (i = 0; m_tjlx[i] != ""; i++)
+                {
+                    switch (m_tjlx[i])
+                    {
+                        case "0": //【症象】
+                            {
+                                sql = String.Format("select t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_fhbj as t2 on t2.zxbh = t1.zxbh where fhbjbh = '{0}' group by t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_fhbjbh);
+                                conn.Open();
+                                comm = new SqlCommand(sql, conn);
+                                dr = comm.ExecuteReader();
+                                while (dr.Read())
+                                {
+                                    nodes.Add(new Node
+                                    {
+                                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["id"].ToString()),
+                                        Name = dr["zxbh"].ToString() + "  " + dr[5].ToString(),
+                                        ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString())
+                                    });
+                                }
+                                dr.Close();
+                                conn.Close();
+                            }
+                            break;
+                        case "1": //【系】
+                            {
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.xbh, min(t1.xmc) from t_info_x as t1 inner join t_rule_fhbj as t2 on t2.xbh = t1.xbh where fhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.xbh", m_fhbjbh);
+                                conn.Open();
+                                comm = new SqlCommand(sql, conn);
+                                dr = comm.ExecuteReader();
+                                while (dr.Read())
+                                {
+                                    nodes.Add(new Node
+                                    {
+                                        ID = Convert.ToInt32(dr["xbh"].ToString()),
+                                        Name = dr["xbh"].ToString() + "  " + dr[4].ToString(),
+                                        ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["xbh"].ToString())
+                                    });
+                                }
+                                dr.Close();
+                                conn.Close();
+                            }
+                            break;
+                        case "2": //【基本病机】
+                            {
+                                // 同一编号对应唯一名称，不需任何添加
+                            }
+                            break;
+                        case "3": //【病名】
+                            {
+                                // 同一编号对应唯一名称，不需任何添加
+                            }
+                            break;
+                    }
+                }
+                // 调用创建树函数
+                BuildENTree();
+                // 在下拉框显示方法数
+                comb_ffs.Items.Clear();
+                comb_ffs.Items.Add("--请选择方法数--");
+                comb_ffs.SelectedIndex = 0;
+                sql = String.Format("select distinct ff from t_rule_fhbj where fhbjbh = '{0}' order by ff", m_fhbjbh);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                dr = comm.ExecuteReader();
+                while (dr.Read())
+                {
+                    comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
+                }
+                dr.Close();
+                conn.Close();
+            }          
         }
 
         /// <summary>

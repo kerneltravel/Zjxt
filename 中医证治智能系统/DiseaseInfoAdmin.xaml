@@ -148,10 +148,7 @@
                         <Label Content="内伤病名类型：" HorizontalAlignment="Left" Margin="445,188,0,0" VerticalAlignment="Top"/>
                         <ComboBox Name="input_nsbmlx" HorizontalAlignment="Left" Margin="544,188,0,0" VerticalAlignment="Top" Width="120" Height="24">
                             <ComboBoxItem>甲类病名</ComboBoxItem>
-                            <ComboBoxItem>乙1类病名</ComboBoxItem>
-                            <ComboBoxItem>乙2类病名</ComboBoxItem>
-                            <ComboBoxItem>乙3类病名</ComboBoxItem>
-                            <ComboBoxItem>乙4类病名</ComboBoxItem>
+                            <ComboBoxItem>乙类病名</ComboBoxItem>
                         </ComboBox>
                         <Label Content="备注：" HorizontalAlignment="Left" Margin="208,276,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.467,1.519"/>
                         <TextBox Name="input_bz" HorizontalAlignment="Left" Height="186" Margin="283,304,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="381"/>

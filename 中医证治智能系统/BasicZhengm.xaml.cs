@@ -214,19 +214,19 @@ namespace 中医证治智能系统
             string Xsjb = "";
             switch (index)
             {
-                case "0":
+                case "1":
                     Xsjb = "甲";
                     break;
-                case "1":
+                case "2":
                     Xsjb = "乙1";
                     break;
-                case "2":
+                case "3":
                     Xsjb = "乙2";
                     break;
-                case "3":
+                case "4":
                     Xsjb = "乙3";
                     break;
-                case "4":
+                case "5":
                     Xsjb = "乙4";
                     break;
             }

@@ -308,8 +308,12 @@ namespace 中医证治智能系统
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 int count = (int)comm.ExecuteScalar();
-                if (count == 0)
+                if (count == 0) {
+                    // 清空treeview，先清空结点，再调用创建树函数
+                    nodes.Clear();
+                    BuildENTree();
                     MessageBox.Show("不存在该病名的推理规则，请录入！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
                 conn.Close();
                 // 若存在该病名的推理规则，显示 treeview
                 if (count > 0)
@@ -423,8 +427,12 @@ namespace 中医证治智能系统
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 int count = (int)comm.ExecuteScalar();
-                if (count == 0)
+                if (count == 0) {
+                    // 清空treeview，先清空结点，再调用创建树函数
+                    nodes.Clear();
+                    BuildENTree();
                     MessageBox.Show("不存在该病名的推理规则，请录入！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
                 conn.Close();
                 // 若存在该病名的推理规则，显示 treeview
                 if (count > 0)
@@ -584,8 +592,12 @@ namespace 中医证治智能系统
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 int count = (int)comm.ExecuteScalar();
-                if (count == 0)
+                if (count == 0) {
+                    // 清空treeview，先清空结点，再调用创建树函数
+                    nodes.Clear();
+                    BuildENTree();
                     MessageBox.Show("不存在该病名的推理规则，请录入！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
                 conn.Close();
                 // 若存在该病名的推理规则，显示 treeview
                 if (count > 0)
@@ -724,8 +736,12 @@ namespace 中医证治智能系统
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 int count = (int)comm.ExecuteScalar();
-                if (count == 0)
+                if (count == 0) {
+                    // 清空treeview，先清空结点，再调用创建树函数
+                    nodes.Clear();
+                    BuildENTree();
                     MessageBox.Show("不存在该病名的推理规则，请录入！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
                 conn.Close();
                 // 若存在该病名的推理规则，显示 treeview
                 if (count > 0)

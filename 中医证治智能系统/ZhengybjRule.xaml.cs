@@ -389,7 +389,7 @@ namespace 中医证治智能系统
                             conn.Close();
                         }
                         break;
-                    case "4": //【d多级复合病机】
+                    case "4": //【多级复合病机】
                         {
                             sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.djfhbjbh, min(t1.djfhbjmc) from t_info_djfhbj as t1 inner join t_rule_zybj as t2 on t2.djfhbjbh = t1.djfhbjbh where zybjbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}'  group by t2.ff, t2.blgz, t2.tjzb, t2.djfhbjbh"
                                 , m_jbzmbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
@@ -557,7 +557,6 @@ namespace 中医证治智能系统
             while (dr.Read())
             {
                 m_jbzmbh = dr["zybjbh"].ToString();
-
             }
             dr.Close();
             conn.Close();
@@ -569,8 +568,12 @@ namespace 中医证治智能系统
             conn.Open();
             comm = new SqlCommand(sql, conn);
             int count = (int)comm.ExecuteScalar();
-            if (count == 0)
-                MessageBox.Show("不存在该病名的推理规则，请录入！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (count == 0) {
+                // 清空treeview，先清空结点，再调用创建树函数
+                nodes.Clear();
+                BuildENTree();
+                MessageBox.Show("不存在该病名的推理规则，请录入！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);            
+            }
             conn.Close();
             // 若存在该病名的推理规则，显示 treeview
             if (count > 0)
@@ -1317,8 +1320,12 @@ namespace 中医证治智能系统
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             int count = (int)comm.ExecuteScalar();
-            if (count == 0)
-                MessageBox.Show("不存在该病名的推理规则，请录入！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (count == 0) {
+                // 清空treeview，先清空结点，再调用创建树函数
+                nodes.Clear();
+                BuildENTree();
+                MessageBox.Show("不存在该病名的推理规则，请录入！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);            
+            }
             conn.Close();
             // 若存在该病名的推理规则，显示 treeview
             if (count > 0)
@@ -1479,24 +1486,24 @@ namespace 中医证治智能系统
                                 conn.Close();
                             }
                             break;
-                        case "4": //【多级复合病机】
-                            {
-                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.djfhbjbh, min(t1.djfhbjmc) from t_info_djfhbj as t1 inner join t_rule_zybj as t2 on t2.djfhbjbh = t1.djfhbjbh where zybjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.djfhbjbh", m_jbzmbh);
-                                conn.Open();
-                                comm = new SqlCommand(sql, conn);
-                                dr = comm.ExecuteReader();
-                                while (dr.Read())
+                            case "4": //【多级复合病机】
                                 {
-                                    nodes.Add(new Node
+                                    sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.djfhbjbh, min(t1.djfhbjmc) from t_info_djfhbj as t1 inner join t_rule_zybj as t2 on t2.djfhbjbh = t1.djfhbjbh where zybjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.djfhbjbh", m_jbzmbh);
+                                    conn.Open();
+                                    comm = new SqlCommand(sql, conn);
+                                    dr = comm.ExecuteReader();
+                                    while (dr.Read())
                                     {
-                                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["fhbjbh"].ToString()),
-                                        Name = dr["fhbjbh"].ToString() + "  " + dr[4].ToString() + "【多级复合病机】",
-                                        ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
-                                    });
+                                        nodes.Add(new Node
+                                        {
+                                            ID = Convert.ToInt32(dr["ff"].ToString() + dr["djfhbjbh"].ToString()),
+                                            Name = dr["djfhbjbh"].ToString() + "  " + dr[4].ToString() + "【多级复合病机】",
+                                            ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
+                                        });
+                                    }
+                                    dr.Close();
+                                    conn.Close();
                                 }
-                                dr.Close();
-                                conn.Close();
-                            }
                             break;
                     }
                 }

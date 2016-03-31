@@ -56,8 +56,9 @@
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn  DisplayMemberBinding="{Binding Path=CfNumber}" Header="基本处方编号" Width="150"/>
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=CfName}" Header="基本处方名称" Width="300"/>
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=Ff}" Header="服法" Width="400"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=CfName}" Header="基本处方名称" Width="150"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=Beizu}" Header="备注" Width="150"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=Ff}" Header="服法" Width="300"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
