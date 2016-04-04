@@ -349,7 +349,8 @@ namespace 中医证治智能系统
                 finally
                 {
                     conn.Close();
-
+                    // 刷新目录
+                    refresh();
                 }
             }
             else if (IsModify == true && IsValid == true && IsRepeat == false && text_bjbh.Text != "")
@@ -374,6 +375,8 @@ namespace 中医证治智能系统
                 finally
                 {
                     conn.Close();
+                    // 刷新目录
+                    refresh();
                     Text_Readonly();
                 }
             }
@@ -399,6 +402,8 @@ namespace 中医证治智能系统
                 finally
                 {
                     conn.Close();
+                    // 刷新目录
+                    refresh();
                     Text_Readonly();
                 }
             }
@@ -430,6 +435,48 @@ namespace 中医证治智能系统
             save_input.IsEnabled = true;
             IsModify = true;
             Text_Editable();
+        }
+
+        /// <summary>
+        /// 功能：刷新目录
+        /// </summary>
+        private void refresh()
+        {
+            if (text_box_bjmc.Text == "")
+            {
+                string sql = String.Format("select * from t_info_zybj");
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                SqlDataReader dr = comm.ExecuteReader();
+                while (dr.Read())
+                {
+                    listCustomer.Add(new UserInfo(dr["zybjbh"].ToString(), dr["zybjmc"].ToString(), dr["bz"].ToString()));
+                }
+                //lv.Items.Clear(); //关键点，指定 ItemsSource 时，该项必须得清空?
+                lv.ItemsSource = listCustomer;
+                dr.Close();
+                conn.Close();
+
+
+            }
+            else
+            {
+                string sql = String.Format("select * from t_info_zybj where zybjmc like'%{0}%'", text_box_bjmc.Text);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                SqlDataReader dr = comm.ExecuteReader();
+                listCustomer.Clear();
+                while (dr.Read())
+                {
+
+                    listCustomer.Add(new UserInfo(dr["zybjbh"].ToString(), dr["zybjmc"].ToString(), dr["bz"].ToString()));
+                }
+                lv.ItemsSource = listCustomer;
+                dr.Close();
+                conn.Close();
+
+
+            }
         }
     }
 }

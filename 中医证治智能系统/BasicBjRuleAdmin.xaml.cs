@@ -60,9 +60,9 @@ namespace 中医证治智能系统
                 this.Nodes = new List<Node>();
                 this.ParentID = -1;
             }
-            public int ID { get; set; }
+            public long ID { get; set; }
             public string Name { get; set; }
-            public int ParentID { get; set; }
+            public long ParentID { get; set; }
             public List<Node> Nodes { get; set; }
         }
 
@@ -259,6 +259,8 @@ namespace 中医证治智能系统
             comb_zbs.SelectedIndex = 0;
             comb_tjfz.SelectedIndex = -1;
             comb_zlfz.SelectedIndex = -1;
+            // 清空
+            nodes.Clear();
             // 读取病名编号和病名类型
             string sql = String.Format("select jbbjbh from t_info_jbbj where jbbjmc = '{0}'", bjmc.Text.Trim());
             conn.Open();
@@ -292,7 +294,10 @@ namespace 中医证治智能系统
                 dr = comm.ExecuteReader();
                 while (dr.Read())
                 {
-                    nodes.Add(new Node { ID = Convert.ToInt32(dr["ff"]), Name = bjmc.Text.Trim() + "的推理规则方法" + numbertochinese(dr["ff"].ToString()) + "（规则：所有条件均成立）" });
+                    nodes.Add(
+                        new Node { 
+                            ID = Convert.ToInt32(dr["ff"]), 
+                            Name = bjmc.Text.Trim() + "的推理规则方法" + numbertochinese(dr["ff"].ToString()) + "（规则：所有条件均成立）" });
                 }
                 dr.Close();
                 conn.Close();
@@ -339,7 +344,7 @@ namespace 中医证治智能系统
                 {
                     nodes.Add(new Node
                     {
-                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString()),
+                        ID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString()),
                         Name = dr["zxbh"].ToString() + "  " + dr[4].ToString() + "【症象】",
                         ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
                     });
@@ -357,7 +362,7 @@ namespace 中医证治智能系统
                     {
                         ID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["id"].ToString()),
                         Name = dr["zxmc"].ToString(),
-                        ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString())
+                        ParentID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString())
                     });
                 }
                 dr.Close();
@@ -560,7 +565,7 @@ namespace 中医证治智能系统
                 {
                     nodes.Add(new Node
                     {
-                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString()),
+                        ID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString()),
                         Name = dr["zxbh"].ToString() + "  " + dr[4].ToString() + "【症象】",
                         ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
                     });
@@ -578,7 +583,7 @@ namespace 中医证治智能系统
                     {
                         ID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["id"].ToString()),
                         Name = dr["zxmc"].ToString(),
-                        ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString())
+                        ParentID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString())
                     });
                 }
                 dr.Close();
@@ -839,6 +844,38 @@ namespace 中医证治智能系统
                         CollapseTreeviewItems(((TreeViewItem)dObject));
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// 功能：条件阀值下拉框关闭触发事件
+        /// </summary>
+        private void comb_tjfz_DropDownClosed(object sender, EventArgs e)
+        {
+            if (comb_ffs.SelectedIndex != 0 && comb_tjs.SelectedIndex != 0 && comb_zbs.SelectedIndex != 0)
+            {
+                String sql = String.Format("update t_rule_jbbj set gzfz = '{0}' where jbbjbh = '{1}' and ff = '{2}' and blgz = '{3}'"
+                    , comb_tjfz.Text, bjNumber, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                int count = comm.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+
+        /// <summary>
+        /// 功能：组内阀值下拉框关闭触发事件
+        /// </summary>
+        private void comb_zlfz_DropDownClosed(object sender, EventArgs e)
+        {
+            if (comb_ffs.SelectedIndex != 0 && comb_tjs.SelectedIndex != 0 && comb_zbs.SelectedIndex != 0)
+            {
+                String sql = String.Format("update t_rule_jbbj set znfz = '{0}' where jbbjbh = '{1}' and ff = '{2}' and tjzb = '{3}'"
+                                    , comb_zlfz.Text, bjNumber, comb_ffs.SelectedIndex, comb_zbs.SelectedIndex);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                int count = comm.ExecuteNonQuery();
+                conn.Close();
             }
         }
     }

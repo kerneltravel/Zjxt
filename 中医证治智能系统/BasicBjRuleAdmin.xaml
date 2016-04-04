@@ -62,7 +62,7 @@
                 <ComboBoxItem>--请选择组别数--</ComboBoxItem>
 
             </ComboBox>
-            <ComboBox  Name="comb_tjfz" HorizontalAlignment="Left" Margin="285,183,0,0" VerticalAlignment="Top" Width="96" Height="24" RenderTransformOrigin="0.483,0.292">
+            <ComboBox  Name="comb_tjfz" HorizontalAlignment="Left" Margin="285,183,0,0" VerticalAlignment="Top" Width="96" Height="24" RenderTransformOrigin="0.483,0.292" DropDownClosed="comb_tjfz_DropDownClosed">
                 <ComboBoxItem>1</ComboBoxItem>
                 <ComboBoxItem>2</ComboBoxItem>
                 <ComboBoxItem>3</ComboBoxItem>
@@ -98,7 +98,7 @@
                     <Image HorizontalAlignment="Left" Width="19" Source="Resources/plus.ico" VerticalAlignment="Center" Height="17" Margin="1,0,0,0"/>
                 </Grid>
             </Button>
-            <ComboBox  Name="comb_zlfz" HorizontalAlignment="Left" Margin="285,214,0,0" VerticalAlignment="Top" Width="96" Height="24">
+            <ComboBox  Name="comb_zlfz" HorizontalAlignment="Left" Margin="285,214,0,0" VerticalAlignment="Top" Width="96" Height="24" DropDownClosed="comb_zlfz_DropDownClosed">
                 <ComboBoxItem>1</ComboBoxItem>
                 <ComboBoxItem>2</ComboBoxItem>
                 <ComboBoxItem>3</ComboBoxItem>

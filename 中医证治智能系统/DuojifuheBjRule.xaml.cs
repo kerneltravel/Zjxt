@@ -24,7 +24,7 @@ using System.Windows.Markup;
 namespace 中医证治智能系统
 {
     /// <summary>
-    /// Interaction logic for FuheBjRuleAdmin.xaml
+    /// Interaction logic for DuojifuheBjRule.xaml
     /// </summary>
     public partial class DuojifuheBjRule : Window
     {
@@ -36,8 +36,8 @@ namespace 中医证治智能系统
         List<Node> nodes = new List<Node>();
         // 创建哈希表实例
         Hashtable httree = new Hashtable(1000);
-        // 全局变量，用于暂时存储【复合病机信息管理】中的复合病机编号
-        public string m_fhbjbh = "";
+        // 全局变量，用于暂时存储【多级复合病机信息管理】中的多级复合病机编号
+        public string m_djfhbjbh = "";
         // 全局变量，用于暂时存储条件编号
         public string m_tjbh = "";
         // 全局变量，判断是否可以添加保存
@@ -150,7 +150,7 @@ namespace 中医证治智能系统
             string[] m_tjlx = new string[5] { "", "", "", "", "" };
             int i = 0;
             string sql = String.Format("select distinct tjlx from t_rule_djfhbj where djfhbjbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}' "
-                , m_fhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
+                , m_djfhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             SqlDataReader dr = comm.ExecuteReader();
@@ -169,7 +169,7 @@ namespace 中医证治智能系统
                     case "0": //【症象】
                         {
                             sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_djfhbj as t2 on t2.zxbh = t1.zxbh where djfhbjbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}'  group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh"
-                                , m_fhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
+                                , m_djfhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
                             conn.Open();
                             comm = new SqlCommand(sql, conn);
                             dr = comm.ExecuteReader();
@@ -188,7 +188,7 @@ namespace 中医证治智能系统
                     case "1": //【系】
                         {
                             sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.xbh, min(t1.xmc) from t_info_x as t1 inner join t_rule_djfhbj as t2 on t2.xbh = t1.xbh where djfhbjbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}' group by t2.ff, t2.blgz, t2.tjzb, t2.xbh"
-                                , m_fhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
+                                , m_djfhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
                             conn.Open();
                             comm = new SqlCommand(sql, conn);
                             dr = comm.ExecuteReader();
@@ -207,7 +207,7 @@ namespace 中医证治智能系统
                     case "2": //【基本病机】
                         {
                             sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh, min(t1.jbbjmc) from t_info_jbbj as t1 inner join t_rule_djfhbj as t2 on t2.jbbjbh = t1.jbbjbh where djfhbjbh = '{0}'  and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}' group by t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh"
-                                , m_fhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
+                                , m_djfhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
                             conn.Open();
                             comm = new SqlCommand(sql, conn);
                             dr = comm.ExecuteReader();
@@ -226,7 +226,7 @@ namespace 中医证治智能系统
                     case "3": //【病名】
                         {
                             sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx, min(t1.bmmc) from t_info_bm as t1 inner join t_rule_djfhbj as t2 on t2.bmbh = t1.bmbh where djfhbjbh = '{0}'  and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}' group by t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx"
-                                , m_fhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
+                                , m_djfhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
                             conn.Open();
                             comm = new SqlCommand(sql, conn);
                             dr = comm.ExecuteReader();
@@ -256,7 +256,7 @@ namespace 中医证治智能系统
                     case "4": //【复合病机】
                         {
                             sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.fhbjbh, min(t1.fhbjmc) from t_info_fhbj as t1 inner join t_rule_djfhbj as t2 on t2.fhbjbh = t1.fhbjbh where djfhbjbh = '{0}'  and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}' group by t2.ff, t2.blgz, t2.tjzb, t2.fhbjbh"
-                                , m_fhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
+                                , m_djfhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
                             conn.Open();
                             comm = new SqlCommand(sql, conn);
                             dr = comm.ExecuteReader();
@@ -279,7 +279,7 @@ namespace 中医证治智能系统
             m_tjlx = new string[5] { "", "", "", "", "" };
             i = 0;
             sql = String.Format("select distinct tjlx from t_rule_djfhbj where djfhbjbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}' "
-                , m_fhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
+                , m_djfhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
@@ -298,7 +298,7 @@ namespace 中医证治智能系统
                     case "0": //【症象】
                         {
                             sql = String.Format("select t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_djfhbj as t2 on t2.zxbh = t1.zxbh where djfhbjbh = '{0}'  and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}' group by t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh"
-                                , m_fhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
+                                , m_djfhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
                             conn.Open();
                             comm = new SqlCommand(sql, conn);
                             dr = comm.ExecuteReader();
@@ -318,7 +318,7 @@ namespace 中医证治智能系统
                     case "1": //【系】
                         {
                             sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.xbh, min(t1.xmc) from t_info_x as t1 inner join t_rule_djfhbj as t2 on t2.xbh = t1.xbh where djfhbjbh = '{0}'  and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}' group by t2.ff, t2.blgz, t2.tjzb, t2.xbh"
-                                , m_fhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
+                                , m_djfhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
                             conn.Open();
                             comm = new SqlCommand(sql, conn);
                             dr = comm.ExecuteReader();
@@ -338,7 +338,7 @@ namespace 中医证治智能系统
                     case "2": //【基本病机】
                         {
                             sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh, min(t1.jbbjmc) from t_info_jbbj as t1 inner join t_rule_djfhbj as t2 on t2.jbbjbh = t1.jbbjbh where djfhbjbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}'  group by t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh"
-                                , m_fhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
+                                , m_djfhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
                             conn.Open();
                             comm = new SqlCommand(sql, conn);
                             dr = comm.ExecuteReader();
@@ -358,7 +358,7 @@ namespace 中医证治智能系统
                     case "3": //【病名】
                         {
                             sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx, min(t1.bmmc) from t_info_bm as t1 inner join t_rule_djfhbj as t2 on t2.bmbh = t1.bmbh where djfhbjbh = '{0}'  and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}' group by t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx"
-                                , m_fhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
+                                , m_djfhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
                             conn.Open();
                             comm = new SqlCommand(sql, conn);
                             dr = comm.ExecuteReader();
@@ -390,7 +390,7 @@ namespace 中医证治智能系统
                     case "4": //【复合病机】
                         {
                             sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.fhbjbh, min(t1.fhbjmc) from t_info_fhbj as t1 inner join t_rule_djfhbj as t2 on t2.fhbjbh = t1.fhbjbh where djfhbjbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}'  group by t2.ff, t2.blgz, t2.tjzb, t2.fhbjbh"
-                                , m_fhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
+                                , m_djfhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
                             conn.Open();
                             comm = new SqlCommand(sql, conn);
                             dr = comm.ExecuteReader();
@@ -466,31 +466,31 @@ namespace 中医证治智能系统
                 case "1": //【症象】
                     {
                         sql = String.Format("select count(*) from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and tjzb ='{2}'and zxbh ='{3}' and djfhbjbh = '{4}'"
-                        , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_tjbh, m_fhbjbh);
+                        , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_tjbh, m_djfhbjbh);
                     }
                     break;
                 case "2": //【系】
                     {
                         sql = String.Format("select count(*) from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and tjzb ='{2}'and xbh ='{3}' and djfhbjbh = '{4}'"
-                        , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_tjbh, m_fhbjbh);
+                        , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_tjbh, m_djfhbjbh);
                     }
                     break;
                 case "3": //【基本病机】
                     {
                         sql = String.Format("select count(*) from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and tjzb ='{2}'and jbbjbh ='{3}' and djfhbjbh = '{4}'"
-                        , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_tjbh, m_fhbjbh);
+                        , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_tjbh, m_djfhbjbh);
                     }
                     break;
                 case "4": //【病名】
                     {
                         sql = String.Format("select count(*) from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and tjzb ='{2}'and bmbh ='{3}' and djfhbjbh = '{4}'"
-                        , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_tjbh, m_fhbjbh);
+                        , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_tjbh, m_djfhbjbh);
                     }
                     break;
                 case "5": //【复合病机】
                     {
                         sql = String.Format("select count(*) from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and tjzb ='{2}'and fhbjbh ='{3}' and djfhbjbh = '{4}'"
-                        , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_tjbh, m_fhbjbh);
+                        , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_tjbh, m_djfhbjbh);
                     }
                     break;
             }
@@ -554,7 +554,7 @@ namespace 中医证治智能系统
             SqlDataReader dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                m_fhbjbh = dr["djfhbjbh"].ToString();
+                m_djfhbjbh = dr["djfhbjbh"].ToString();
             }
             dr.Close();
             conn.Close();
@@ -562,7 +562,7 @@ namespace 中医证治智能系统
             // 清空
             nodes.Clear();
             // 判断是否存在该病名的推理规则
-            sql = String.Format("select count(*) from t_rule_djfhbj where djfhbjbh = '{0}'", m_fhbjbh);
+            sql = String.Format("select count(*) from t_rule_djfhbj where djfhbjbh = '{0}'", m_djfhbjbh);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             int count = (int)comm.ExecuteScalar();
@@ -578,7 +578,7 @@ namespace 中医证治智能系统
             {
                 // 将数据库数据写入 List 集合
                 // 一级树写入 【方法】（ff）          
-                sql = String.Format("select distinct ff from t_rule_djfhbj where djfhbjbh = '{0}'", m_fhbjbh);
+                sql = String.Format("select distinct ff from t_rule_djfhbj where djfhbjbh = '{0}'", m_djfhbjbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -590,7 +590,7 @@ namespace 中医证治智能系统
                 conn.Close();
 
                 // 二级树写入【条件】（blgz）
-                sql = String.Format("select ff, blgz, gzfz from t_rule_djfhbj where djfhbjbh = '{0}' group by ff, blgz, gzfz", m_fhbjbh);
+                sql = String.Format("select ff, blgz, gzfz from t_rule_djfhbj where djfhbjbh = '{0}' group by ff, blgz, gzfz", m_djfhbjbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -607,7 +607,7 @@ namespace 中医证治智能系统
                 conn.Close();
 
                 // 三级树写入【组别】（tjzb）
-                sql = String.Format("select ff, blgz, tjzb, znfz from t_rule_djfhbj where djfhbjbh = '{0}' group by ff, blgz, tjzb, znfz ", m_fhbjbh);
+                sql = String.Format("select ff, blgz, tjzb, znfz from t_rule_djfhbj where djfhbjbh = '{0}' group by ff, blgz, tjzb, znfz ", m_djfhbjbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -628,7 +628,7 @@ namespace 中医证治智能系统
                 //【tjlx】0：症象 1：系 2：基本病机 3：病名
                 string[] m_tjlx = new string[4] { "", "", "", "" };
                 int i = 0;
-                sql = String.Format("select distinct tjlx from t_rule_djfhbj where djfhbjbh = '{0}'", m_fhbjbh);
+                sql = String.Format("select distinct tjlx from t_rule_djfhbj where djfhbjbh = '{0}'", m_djfhbjbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -646,7 +646,7 @@ namespace 中医证治智能系统
                     {
                         case "0": //【症象】
                             {
-                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_djfhbj as t2 on t2.zxbh = t1.zxbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_fhbjbh);
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_djfhbj as t2 on t2.zxbh = t1.zxbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_djfhbjbh);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
@@ -665,7 +665,7 @@ namespace 中医证治智能系统
                             break;
                         case "1": //【系】
                             {
-                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.xbh, min(t1.xmc) from t_info_x as t1 inner join t_rule_djfhbj as t2 on t2.xbh = t1.xbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.xbh", m_fhbjbh);
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.xbh, min(t1.xmc) from t_info_x as t1 inner join t_rule_djfhbj as t2 on t2.xbh = t1.xbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.xbh", m_djfhbjbh);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
@@ -684,7 +684,7 @@ namespace 中医证治智能系统
                             break;
                         case "2": //【基本病机】
                             {
-                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh, min(t1.jbbjmc) from t_info_jbbj as t1 inner join t_rule_djfhbj as t2 on t2.jbbjbh = t1.jbbjbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh", m_fhbjbh);
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh, min(t1.jbbjmc) from t_info_jbbj as t1 inner join t_rule_djfhbj as t2 on t2.jbbjbh = t1.jbbjbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh", m_djfhbjbh);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
@@ -703,7 +703,7 @@ namespace 中医证治智能系统
                             break;
                         case "3": //【病名】
                             {
-                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx, min(t1.bmmc) from t_info_bm as t1 inner join t_rule_djfhbj as t2 on t2.bmbh = t1.bmbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx", m_fhbjbh);
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx, min(t1.bmmc) from t_info_bm as t1 inner join t_rule_djfhbj as t2 on t2.bmbh = t1.bmbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx", m_djfhbjbh);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
@@ -734,7 +734,7 @@ namespace 中医证治智能系统
                             break;
                         case "4": //【复合病机】
                             {
-                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.fhbjbh,  min(t1.fhbjmc) from t_info_fhbj as t1 inner join t_rule_djfhbj as t2 on t2.fhbjbh = t1.fhbjbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.fhbjbh", m_fhbjbh);
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.fhbjbh,  min(t1.fhbjmc) from t_info_fhbj as t1 inner join t_rule_djfhbj as t2 on t2.fhbjbh = t1.fhbjbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.fhbjbh", m_djfhbjbh);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
@@ -757,7 +757,7 @@ namespace 中医证治智能系统
                 // 五级树写入【同一编号不同名称】
                 m_tjlx = new string[4] { "", "", "", "" };
                 i = 0;
-                sql = String.Format("select distinct tjlx from t_rule_djfhbj where djfhbjbh = '{0}'", m_fhbjbh);
+                sql = String.Format("select distinct tjlx from t_rule_djfhbj where djfhbjbh = '{0}'", m_djfhbjbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -775,7 +775,7 @@ namespace 中医证治智能系统
                     {
                         case "0": //【症象】
                             {
-                                sql = String.Format("select t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_djfhbj as t2 on t2.zxbh = t1.zxbh where djfhbjbh = '{0}' group by t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_fhbjbh);
+                                sql = String.Format("select t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_djfhbj as t2 on t2.zxbh = t1.zxbh where djfhbjbh = '{0}' group by t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_djfhbjbh);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
@@ -794,7 +794,7 @@ namespace 中医证治智能系统
                             break;
                         case "1": //【系】
                             {
-                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.xbh, min(t1.xmc) from t_info_x as t1 inner join t_rule_djfhbj as t2 on t2.xbh = t1.xbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.xbh", m_fhbjbh);
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.xbh, min(t1.xmc) from t_info_x as t1 inner join t_rule_djfhbj as t2 on t2.xbh = t1.xbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.xbh", m_djfhbjbh);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
@@ -835,7 +835,7 @@ namespace 中医证治智能系统
                 comb_ffs.Items.Clear();
                 comb_ffs.Items.Add("--请选择方法数--");
                 comb_ffs.SelectedIndex = 0;
-                sql = String.Format("select distinct ff from t_rule_djfhbj where djfhbjbh = '{0}' order by ff", m_fhbjbh);
+                sql = String.Format("select distinct ff from t_rule_djfhbj where djfhbjbh = '{0}' order by ff", m_djfhbjbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -863,7 +863,7 @@ namespace 中医证治智能系统
             // 在方法数选定的前提下
             if (comb_ffs.SelectedIndex > 0)
             {
-                string sql = String.Format("select distinct blgz from t_rule_djfhbj where ff = '{0}' and djfhbjbh = '{1}'", comb_ffs.SelectedIndex, m_fhbjbh);
+                string sql = String.Format("select distinct blgz from t_rule_djfhbj where ff = '{0}' and djfhbjbh = '{1}'", comb_ffs.SelectedIndex, m_djfhbjbh);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -887,7 +887,7 @@ namespace 中医证治智能系统
             comb_zbs.SelectedIndex = 0;
             if (comb_tjs.SelectedIndex > 0)
             {
-                string sql = String.Format("select gzfz, tjzb from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and djfhbjbh = '{2}' group by gzfz, tjzb", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_fhbjbh);
+                string sql = String.Format("select gzfz, tjzb from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and djfhbjbh = '{2}' group by gzfz, tjzb", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_djfhbjbh);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -909,7 +909,7 @@ namespace 中医证治智能系统
             comb_zlfz.SelectedIndex = -1;
             if (comb_zbs.SelectedIndex > 0)
             {
-                string sql = String.Format("select znfz from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and tjzb = '{2}' and djfhbjbh = '{3}' group by znfz", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_fhbjbh);
+                string sql = String.Format("select znfz from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and tjzb = '{2}' and djfhbjbh = '{3}' group by znfz", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_djfhbjbh);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -938,7 +938,7 @@ namespace 中医证治智能系统
             comb_zbs.SelectedIndex = 0;
             if (fhbjmc_1.Text != "")
             {
-                string sql = String.Format("select max(ff) from t_rule_djfhbj where djfhbjbh = '{0}'", m_fhbjbh);
+                string sql = String.Format("select max(ff) from t_rule_djfhbj where djfhbjbh = '{0}'", m_djfhbjbh);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -980,7 +980,7 @@ namespace 中医证治智能系统
             comb_zbs.SelectedIndex = 0;
             if (comb_ffs.SelectedIndex > 0)
             {
-                string sql = String.Format("select max(blgz) from t_rule_djfhbj where djfhbjbh = '{0}' and ff = '{1}'", m_fhbjbh, comb_ffs.SelectedIndex);
+                string sql = String.Format("select max(blgz) from t_rule_djfhbj where djfhbjbh = '{0}' and ff = '{1}'", m_djfhbjbh, comb_ffs.SelectedIndex);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -1019,7 +1019,7 @@ namespace 中医证治智能系统
         {
             if (comb_tjs.SelectedIndex > 0)
             {
-                string sql = String.Format("select max(tjzb) from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and djfhbjbh = '{2}'", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_fhbjbh);
+                string sql = String.Format("select max(tjzb) from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and djfhbjbh = '{2}'", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_djfhbjbh);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -1197,31 +1197,31 @@ namespace 中医证治智能系统
                     case "1": //【症象】
                         {
                             sql = String.Format("insert into t_rule_djfhbj ( ff, blgz, zxbh, tjzb, znfz, gzfz, djfhbjbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_fhbjbh, (comb_tjlx.SelectedIndex - 1).ToString());
+                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_djfhbjbh, (comb_tjlx.SelectedIndex - 1).ToString());
                         }
                         break;
                     case "2": //【系】
                         {
                             sql = String.Format("insert into t_rule_djfhbj ( ff, blgz, xbh, tjzb, znfz, gzfz, djfhbjbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_fhbjbh, (comb_tjlx.SelectedIndex - 1).ToString());
+                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_djfhbjbh, (comb_tjlx.SelectedIndex - 1).ToString());
                         }
                         break;
                     case "3": //【基本病机】
                         {
                             sql = String.Format("insert into t_rule_djfhbj ( ff, blgz, jbbjbh, tjzb, znfz, gzfz, djfhbjbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_fhbjbh, (comb_tjlx.SelectedIndex - 1).ToString());
+                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_djfhbjbh, (comb_tjlx.SelectedIndex - 1).ToString());
                         }
                         break;
                     case "4": //【病名】
                         {
                             sql = String.Format("insert into t_rule_djfhbj ( ff, blgz, bmbh, tjzb, znfz, gzfz, djfhbjbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_fhbjbh, (comb_tjlx.SelectedIndex - 1).ToString());
+                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_djfhbjbh, (comb_tjlx.SelectedIndex - 1).ToString());
                         }
                         break;
                     case "5": //【复合病机】
                         {
                             sql = String.Format("insert into t_rule_djfhbj ( ff, blgz, fhbjbh, tjzb, znfz, gzfz, djfhbjbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_fhbjbh, (comb_tjlx.SelectedIndex - 1).ToString());
+                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_djfhbjbh, (comb_tjlx.SelectedIndex - 1).ToString());
                         }
                         break;
                 }
@@ -1260,31 +1260,31 @@ namespace 中医证治智能系统
                     case "1": //【症象】
                         {
                             sql = String.Format("delete from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and zxbh = '{2}' and tjzb = '{3}' and djfhbjbh = '{4}'"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, node.ID.ToString().Substring(1), comb_zbs.SelectedIndex, m_fhbjbh);
+                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, node.ID.ToString().Substring(1), comb_zbs.SelectedIndex, m_djfhbjbh);
                         }
                         break;
                     case "2": //【系】
                         {
                             sql = String.Format("delete from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and xbh = '{2}' and tjzb = '{3}' and djfhbjbh = '{4}'"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, node.ID.ToString().Substring(1), comb_zbs.SelectedIndex, m_fhbjbh);
+                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, node.ID.ToString().Substring(1), comb_zbs.SelectedIndex, m_djfhbjbh);
                         }
                         break;
                     case "3": //【基本病机】
                         {
                             sql = String.Format("delete from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and jbbjbh = '{2}' and tjzb = '{3}' and djfhbjbh = '{4}'"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, node.ID.ToString().Substring(1), comb_zbs.SelectedIndex, m_fhbjbh);
+                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, node.ID.ToString().Substring(1), comb_zbs.SelectedIndex, m_djfhbjbh);
                         }
                         break;
                     case "4": //【病名】
                         {
                             sql = String.Format("delete from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and bmbh = '{2}' and tjzb = '{3}' and djfhbjbh = '{4}'"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, node.ID.ToString().Substring(1), comb_zbs.SelectedIndex, m_fhbjbh);
+                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, node.ID.ToString().Substring(1), comb_zbs.SelectedIndex, m_djfhbjbh);
                         }
                         break;
                     case "5": //【复合病机】
                         {
                             sql = String.Format("delete from t_rule_djfhbj where ff = '{0}' and blgz = '{1}' and fhbjbh = '{2}' and tjzb = '{3}' and djfhbjbh = '{4}'"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, node.ID.ToString().Substring(1), comb_zbs.SelectedIndex, m_fhbjbh);
+                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, node.ID.ToString().Substring(1), comb_zbs.SelectedIndex, m_djfhbjbh);
                         }
                         break;
                 }
@@ -1314,7 +1314,7 @@ namespace 中医证治智能系统
             // 清空
             nodes.Clear();
             // 判断是否存在该病名的推理规则
-            String sql = String.Format("select count(*) from t_rule_djfhbj where djfhbjbh = '{0}'", m_fhbjbh);
+            String sql = String.Format("select count(*) from t_rule_djfhbj where djfhbjbh = '{0}'", m_djfhbjbh);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             int count = (int)comm.ExecuteScalar();
@@ -1330,7 +1330,7 @@ namespace 中医证治智能系统
             {
                 // 将数据库数据写入 List 集合
                 // 一级树写入 【方法】（ff）          
-                sql = String.Format("select distinct ff from t_rule_djfhbj where djfhbjbh = '{0}'", m_fhbjbh);
+                sql = String.Format("select distinct ff from t_rule_djfhbj where djfhbjbh = '{0}'", m_djfhbjbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -1342,7 +1342,7 @@ namespace 中医证治智能系统
                 conn.Close();
 
                 // 二级树写入【条件】（blgz）
-                sql = String.Format("select ff, blgz, gzfz from t_rule_djfhbj where djfhbjbh = '{0}' group by ff, blgz, gzfz", m_fhbjbh);
+                sql = String.Format("select ff, blgz, gzfz from t_rule_djfhbj where djfhbjbh = '{0}' group by ff, blgz, gzfz", m_djfhbjbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -1359,7 +1359,7 @@ namespace 中医证治智能系统
                 conn.Close();
 
                 // 三级树写入【组别】（tjzb）
-                sql = String.Format("select ff, blgz, tjzb, znfz from t_rule_djfhbj where djfhbjbh = '{0}' group by ff, blgz, tjzb, znfz ", m_fhbjbh);
+                sql = String.Format("select ff, blgz, tjzb, znfz from t_rule_djfhbj where djfhbjbh = '{0}' group by ff, blgz, tjzb, znfz ", m_djfhbjbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -1380,7 +1380,7 @@ namespace 中医证治智能系统
                 //【tjlx】0：症象 1：系 2：基本病机 3：病名
                 string[] m_tjlx = new string[4] { "", "", "", "" };
                 int i = 0;
-                sql = String.Format("select distinct tjlx from t_rule_djfhbj where djfhbjbh = '{0}'", m_fhbjbh);
+                sql = String.Format("select distinct tjlx from t_rule_djfhbj where djfhbjbh = '{0}'", m_djfhbjbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -1398,7 +1398,7 @@ namespace 中医证治智能系统
                     {
                         case "0": //【症象】
                             {
-                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_djfhbj as t2 on t2.zxbh = t1.zxbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_fhbjbh);
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_djfhbj as t2 on t2.zxbh = t1.zxbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_djfhbjbh);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
@@ -1417,7 +1417,7 @@ namespace 中医证治智能系统
                             break;
                         case "1": //【系】
                             {
-                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.xbh, min(t1.xmc) from t_info_x as t1 inner join t_rule_djfhbj as t2 on t2.xbh = t1.xbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.xbh", m_fhbjbh);
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.xbh, min(t1.xmc) from t_info_x as t1 inner join t_rule_djfhbj as t2 on t2.xbh = t1.xbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.xbh", m_djfhbjbh);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
@@ -1436,7 +1436,7 @@ namespace 中医证治智能系统
                             break;
                         case "2": //【基本病机】
                             {
-                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh, min(t1.jbbjmc) from t_info_jbbj as t1 inner join t_rule_djfhbj as t2 on t2.jbbjbh = t1.jbbjbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh", m_fhbjbh);
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh, min(t1.jbbjmc) from t_info_jbbj as t1 inner join t_rule_djfhbj as t2 on t2.jbbjbh = t1.jbbjbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.jbbjbh", m_djfhbjbh);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
@@ -1455,7 +1455,7 @@ namespace 中医证治智能系统
                             break;
                         case "3": //【病名】
                             {
-                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx, min(t1.bmmc) from t_info_bm as t1 inner join t_rule_djfhbj as t2 on t2.bmbh = t1.bmbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx", m_fhbjbh);
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx, min(t1.bmmc) from t_info_bm as t1 inner join t_rule_djfhbj as t2 on t2.bmbh = t1.bmbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.bmbh, t1.bmlx", m_djfhbjbh);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
@@ -1486,7 +1486,7 @@ namespace 中医证治智能系统
                             break;
                         case "4": //【复合病机】
                             {
-                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.fhbjbh,  min(t1.fhbjmc) from t_info_fhbj as t1 inner join t_rule_djfhbj as t2 on t2.fhbjbh = t1.fhbjbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.fhbjbh", m_fhbjbh);
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.fhbjbh,  min(t1.fhbjmc) from t_info_fhbj as t1 inner join t_rule_djfhbj as t2 on t2.fhbjbh = t1.fhbjbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.fhbjbh", m_djfhbjbh);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
@@ -1509,7 +1509,7 @@ namespace 中医证治智能系统
                 // 五级树写入【同一编号不同名称】
                 m_tjlx = new string[4] { "", "", "", "" };
                 i = 0;
-                sql = String.Format("select distinct tjlx from t_rule_djfhbj where djfhbjbh = '{0}'", m_fhbjbh);
+                sql = String.Format("select distinct tjlx from t_rule_djfhbj where djfhbjbh = '{0}'", m_djfhbjbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -1527,7 +1527,7 @@ namespace 中医证治智能系统
                     {
                         case "0": //【症象】
                             {
-                                sql = String.Format("select t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_djfhbj as t2 on t2.zxbh = t1.zxbh where djfhbjbh = '{0}' group by t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_fhbjbh);
+                                sql = String.Format("select t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_djfhbj as t2 on t2.zxbh = t1.zxbh where djfhbjbh = '{0}' group by t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_djfhbjbh);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
@@ -1546,7 +1546,7 @@ namespace 中医证治智能系统
                             break;
                         case "1": //【系】
                             {
-                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.xbh, min(t1.xmc) from t_info_x as t1 inner join t_rule_djfhbj as t2 on t2.xbh = t1.xbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.xbh", m_fhbjbh);
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.xbh, min(t1.xmc) from t_info_x as t1 inner join t_rule_djfhbj as t2 on t2.xbh = t1.xbh where djfhbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.xbh", m_djfhbjbh);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
@@ -1586,7 +1586,7 @@ namespace 中医证治智能系统
                 comb_ffs.Items.Clear();
                 comb_ffs.Items.Add("--请选择方法数--");
                 comb_ffs.SelectedIndex = 0;
-                sql = String.Format("select distinct ff from t_rule_djfhbj where djfhbjbh = '{0}' order by ff", m_fhbjbh);
+                sql = String.Format("select distinct ff from t_rule_djfhbj where djfhbjbh = '{0}' order by ff", m_djfhbjbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -1650,6 +1650,38 @@ namespace 中医证治智能系统
                         CollapseTreeviewItems(((TreeViewItem)dObject));
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// 功能：条件阀值下拉框关闭触发事件
+        /// </summary>
+        private void comb_tjfz_DropDownClosed(object sender, EventArgs e)
+        {
+            if (comb_ffs.SelectedIndex != 0 && comb_tjs.SelectedIndex != 0 && comb_zbs.SelectedIndex != 0)
+            {
+                String sql = String.Format("update t_rule_djfhbj set gzfz = '{0}' where djfhbjbh = '{1}' and ff = '{2}' and blgz = '{3}'"
+                    , comb_tjfz.Text, m_djfhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                int count = comm.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+
+        /// <summary>
+        /// 功能：组内阀值下拉框关闭触发事件
+        /// </summary>
+        private void comb_zlfz_DropDownClosed(object sender, EventArgs e)
+        {
+            if (comb_ffs.SelectedIndex != 0 && comb_tjs.SelectedIndex != 0 && comb_zbs.SelectedIndex != 0)
+            {
+                String sql = String.Format("update t_rule_djfhbj set znfz = '{0}' where djfhbjbh = '{1}' and ff = '{2}' and tjzb = '{3}'"
+                                    , comb_zlfz.Text, m_djfhbjbh, comb_ffs.SelectedIndex, comb_zbs.SelectedIndex);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                int count = comm.ExecuteNonQuery();
+                conn.Close();
             }
         }
     }

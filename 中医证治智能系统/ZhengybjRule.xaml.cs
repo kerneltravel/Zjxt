@@ -902,6 +902,9 @@ namespace 中医证治智能系统
                 }
                 dr.Close();
                 conn.Close();
+                // 清空条件类型和条件名称
+                comb_tjlx.SelectedIndex = 0;
+                tjmc.Text = "";
                 // 刷新子树
                 RefreshTree1();
             }
@@ -1313,6 +1316,10 @@ namespace 中医证治智能系统
             comb_zbs.Items.Clear();
             comb_zbs.Items.Add("--请选择组别数--");
             comb_zbs.SelectedIndex = 0;
+            // 条件阀值为默认值1
+            comb_tjfz.SelectedIndex = -1;
+            // 组内阀值为默认值1
+            comb_zlfz.SelectedIndex = -1;
             // 清空
             nodes.Clear();
             // 判断是否存在该病名的推理规则
@@ -1639,6 +1646,38 @@ namespace 中医证治智能系统
                         CollapseTreeviewItems(((TreeViewItem)dObject));
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// 功能：条件阀值下拉框关闭触发事件
+        /// </summary>
+        private void comb_tjfz_DropDownClosed(object sender, EventArgs e)
+        {
+            if (comb_ffs.SelectedIndex != 0 && comb_tjs.SelectedIndex != 0 && comb_zbs.SelectedIndex != 0)
+            {
+                String sql = String.Format("update t_rule_zybj set gzfz = '{0}' where zybjbh = '{1}' and ff = '{2}' and blgz = '{3}'"
+                    , comb_tjfz.Text, m_jbzmbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                int count = comm.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+
+        /// <summary>
+        /// 功能：组内阀值下拉框关闭触发事件
+        /// </summary>
+        private void comb_zlfz_DropDownClosed(object sender, EventArgs e)
+        {
+            if (comb_ffs.SelectedIndex != 0 && comb_tjs.SelectedIndex != 0 && comb_zbs.SelectedIndex != 0)
+            {
+                String sql = String.Format("update t_rule_zybj set znfz = '{0}' where zybjbh = '{1}' and ff = '{2}' and tjzb = '{3}'"
+                                    , comb_zlfz.Text, m_jbzmbh, comb_ffs.SelectedIndex, comb_zbs.SelectedIndex);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                int count = comm.ExecuteNonQuery();
+                conn.Close();
             }
         }
     }

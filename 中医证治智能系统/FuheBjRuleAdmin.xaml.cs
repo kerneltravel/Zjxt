@@ -1579,5 +1579,37 @@ namespace 中医证治智能系统
             dr.Close();
             conn.Close();
         }
+
+        /// <summary>
+        /// 功能：条件阀值下拉框关闭触发事件
+        /// </summary>
+        private void comb_tjfz_DropDownClosed(object sender, EventArgs e)
+        {
+            if (comb_ffs.SelectedIndex != 0 && comb_tjs.SelectedIndex != 0 && comb_zbs.SelectedIndex != 0)
+            {
+                String sql = String.Format("update t_rule_fhbj set gzfz = '{0}' where fhbjbh = '{1}' and ff = '{2}' and blgz = '{3}'"
+                    , comb_tjfz.Text, m_fhbjbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                int count = comm.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
+
+        /// <summary>
+        /// 功能：组内阀值下拉框关闭触发事件
+        /// </summary>
+        private void comb_zlfz_DropDownClosed(object sender, EventArgs e)
+        {
+            if (comb_ffs.SelectedIndex != 0 && comb_tjs.SelectedIndex != 0 && comb_zbs.SelectedIndex != 0)
+            {
+                String sql = String.Format("update t_rule_fhbj set znfz = '{0}' where fhbjbh = '{1}' and ff = '{2}' and tjzb = '{3}'"
+                                    , comb_zlfz.Text, m_fhbjbh, comb_ffs.SelectedIndex, comb_zbs.SelectedIndex);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                int count = comm.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
     }
 }

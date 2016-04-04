@@ -808,6 +808,8 @@ namespace 中医证治智能系统
                                 finally
                                 {
                                     conn.Close();
+                                    // 刷新目录
+                                    refresh();   
                                     input_save.IsEnabled = false;
                                     input_cancel.IsEnabled = false;
                                     IsAdd = false;
@@ -882,6 +884,8 @@ namespace 中医证治智能系统
                                         finally
                                         {
                                             conn.Close();
+                                            // 刷新目录
+                                            refresh();   
                                             input_save.IsEnabled = false;
                                             input_cancel.IsEnabled = false;
                                             IsAdd = false;
@@ -930,6 +934,8 @@ namespace 中医证治智能系统
                             finally
                             {
                                 conn.Close();
+                                // 刷新目录
+                                refresh();   
                                 input_save.IsEnabled = false;
                                 input_cancel.IsEnabled = false;
                                 IsAdd = false;
@@ -1003,6 +1009,8 @@ namespace 中医证治智能系统
                                     finally
                                     {
                                         conn.Close();
+                                        // 刷新目录
+                                        refresh();   
                                         input_save.IsEnabled = false;
                                         input_cancel.IsEnabled = false;
                                         IsAdd = false;
@@ -1147,6 +1155,325 @@ namespace 中医证治智能系统
            
         }
 
-                  
+        /// <summary>
+        /// 功能：刷新目录
+        /// </summary>
+        private void refresh() 
+        {
+            listDisease.Clear(); // 先清空集合
+            string sql = "";
+            string sql_count = "";
+            if (search_bmlx.Text.Trim() == "外感")
+            {
+                if (search_bmjb.SelectedIndex == 0)
+                {
+                    sql = String.Format("select * from t_info_bm where bmlx = '{0}' and bmmc like '%{1}%'", 0, search_bmmc.Text.Trim());
+                    sql_count = String.Format("select count(*) from t_info_bm where bmlx = '{0}' and bmmc like '%{1}%' ", 0, search_bmmc.Text.Trim());
+                    conn.Open();
+                    SqlCommand comm = new SqlCommand(sql, conn);
+                    SqlDataReader dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        string bmjb = "";
+                        switch (dr["bmjb"].ToString())
+                        {
+                            case "1":
+                                bmjb = "危";
+                                break;
+                            case "2":
+                                bmjb = "急";
+                                break;
+                            case "3":
+                                bmjb = "重";
+                                break;
+                            case "4":
+                                bmjb = "轻";
+                                break;
+                        }
+                        listDisease.Add(new DiseaseInfo(dr["bmbh"].ToString(), bmjb, "", "", dr["bmmc"].ToString()));
+                    }
+                    dr.Close();
+                    conn.Close();
+                    // 显示记录数
+                    conn.Open();
+                    comm = new SqlCommand(sql_count, conn);
+                    int count = (int)comm.ExecuteScalar();
+                    conn.Close();
+                    Record_Name.Text = Convert.ToString(count) + "条";
+                }
+                else
+                {
+                    sql = String.Format("select * from t_info_bm where bmlx = '{0}' and bmjb = '{1}' and bmmc like '%{2}%'", 0, (search_bmjb.SelectedIndex).ToString(), search_bmmc.Text.Trim());
+                    sql_count = String.Format("select count(*) from t_info_bm where bmlx = '{0}' and bmjb = '{1}' and bmmc like '%{2}%' ", 0, (search_bmjb.SelectedIndex).ToString(), search_bmmc.Text.Trim());
+                    conn.Open();
+                    SqlCommand comm = new SqlCommand(sql, conn);
+                    SqlDataReader dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        string bmjb = "";
+                        switch (dr["bmjb"].ToString())
+                        {
+                            case "1":
+                                bmjb = "危";
+                                break;
+                            case "2":
+                                bmjb = "急";
+                                break;
+                            case "3":
+                                bmjb = "重";
+                                break;
+                            case "4":
+                                bmjb = "轻";
+                                break;
+                        }
+                        listDisease.Add(new DiseaseInfo(dr["bmbh"].ToString(), bmjb, "", "", dr["bmmc"].ToString()));
+                    }
+                    dr.Close();
+                    conn.Close();
+                    // 显示记录数
+                    conn.Open();
+                    comm = new SqlCommand(sql_count, conn);
+                    int count = (int)comm.ExecuteScalar();
+                    conn.Close();
+                    Record_Name.Text = Convert.ToString(count) + "条";
+                }
+
+            }
+            if (search_bmlx.Text.Trim() == "内伤")
+            {
+                // 病名级别、内伤病名类型、系都为空
+                if (search_bmjb.SelectedIndex == 0 && search_nsbmlx.SelectedIndex == 0 && search_xi.SelectedIndex == 0)
+                {
+                    sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%'"
+                                           , search_bmmc.Text.Trim());
+                    sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%'"
+                                        , search_bmmc.Text.Trim());
+                }
+                // 病名级别不为空，内伤病名类型、系都为空
+                else if (search_bmjb.SelectedIndex != 0 && search_nsbmlx.SelectedIndex == 0 && search_xi.SelectedIndex == 0)
+                {
+                    sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and bmjb = '{1}'"
+                       , search_bmmc.Text.Trim(), (search_bmjb.SelectedIndex).ToString());
+                    sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and bmjb = '{1}'"
+                                        , search_bmmc.Text.Trim(), (search_bmjb.SelectedIndex).ToString());
+                }
+                // 内伤病名类型不为空，病名级别、系都为空
+                else if (search_bmjb.SelectedIndex == 0 && search_nsbmlx.SelectedIndex != 0 && search_xi.SelectedIndex == 0)
+                {
+                    sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}'"
+                       , search_bmmc.Text.Trim(), (search_nsbmlx.SelectedIndex - 1).ToString());
+                    sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}'"
+                                        , search_bmmc.Text.Trim(), (search_nsbmlx.SelectedIndex - 1).ToString());
+                }
+                // 系不为空，病名级别、内伤病名类型都为空
+                else if (search_bmjb.SelectedIndex == 0 && search_nsbmlx.SelectedIndex == 0 && search_xi.SelectedIndex != 0)
+                {
+                    sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and xmc = '{1}'"
+                       , search_bmmc.Text.Trim(), search_xi.Text);
+                    sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and xmc = '{1}'"
+                                        , search_bmmc.Text.Trim(), search_xi.Text);
+                }
+                // 病名级别、内伤病名类型不为空，系为空
+                else if (search_bmjb.SelectedIndex != 0 && search_nsbmlx.SelectedIndex != 0 && search_xi.SelectedIndex == 0)
+                {
+                    sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and bmjb = '{1}' and nsbmlx = '{2}'"
+                       , search_bmmc.Text.Trim(), (search_bmjb.SelectedIndex).ToString(), (search_nsbmlx.SelectedIndex - 1).ToString());
+                    sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and bmjb = '{1}' and nsbmlx = '{2}'"
+                                        , search_bmmc.Text.Trim(), (search_bmjb.SelectedIndex).ToString(), (search_nsbmlx.SelectedIndex - 1).ToString());
+                }
+                // 病名级别、系不为空，内伤病名类型为空
+                else if (search_bmjb.SelectedIndex != 0 && search_nsbmlx.SelectedIndex == 0 && search_xi.SelectedIndex != 0)
+                {
+                    sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and bmjb = '{1}' and xmc = '{2}'"
+                       , search_bmmc.Text.Trim(), (search_bmjb.SelectedIndex).ToString(), search_xi.Text);
+                    sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and bmjb = '{1}' and xmc = '{2}'"
+                                        , search_bmmc.Text.Trim(), (search_bmjb.SelectedIndex).ToString(), search_xi.Text);
+                }
+                // 内伤病名类型、系不为空，病名级别为空
+                else if (search_bmjb.SelectedIndex == 0 && search_nsbmlx.SelectedIndex != 0 && search_xi.SelectedIndex != 0)
+                {
+                    sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}' and xmc = '{2}'"
+                       , search_bmmc.Text.Trim(), (search_nsbmlx.SelectedIndex - 1).ToString(), search_xi.Text);
+                    sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}' and xmc = '{2}'"
+                                        , search_bmmc.Text.Trim(), (search_nsbmlx.SelectedIndex - 1).ToString(), search_xi.Text);
+                }
+                else
+                {
+                    sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and bmjb = '{1}' and nsbmlx = '{2}' and xmc = '{3}'"
+                           , search_bmmc.Text.Trim(), (search_bmjb.SelectedIndex).ToString(), (search_nsbmlx.SelectedIndex - 1).ToString(), search_xi.Text);
+                    sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and bmjb = '{1}' and nsbmlx = '{2}' and xmc = '{3}'"
+                                        , search_bmmc.Text.Trim(), (search_bmjb.SelectedIndex).ToString(), (search_nsbmlx.SelectedIndex - 1).ToString(), search_xi.Text);
+                }
+                //// 病名级别、内伤病名类型、系都不为空
+                //else if (search_bmjb.SelectedIndex != 0 && search_nsbmlx.SelectedIndex != 0 && search_xi.SelectedIndex != 0)
+                //{
+                //    if (search_bmjb.Text.Trim() == "全部" && search_nsbmlx.Text.Trim() == "全部" && search_xi.Text.Trim() == "全部")
+                //    {
+                //        sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%'"
+                //       , search_bmmc.Text.Trim());
+                //        sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%'"
+                //                            , search_bmmc.Text.Trim());
+                //    }
+                //    else 
+                //    {
+                //        sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and bmjb = '{1}' and nsbmlx = '{2}' and xmc = '{3}'"
+                //       , search_bmmc.Text.Trim(), (search_bmjb.SelectedIndex + 1).ToString(), (search_nsbmlx.SelectedIndex).ToString(), search_xi.Text);
+                //        sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and bmjb = '{1}' and nsbmlx = '{2}' and xmc = '{3}'"
+                //                            , search_bmmc.Text.Trim(), (search_bmjb.SelectedIndex + 1).ToString(), (search_nsbmlx.SelectedIndex).ToString(), search_xi.Text);
+                //    }
+
+                //}
+                //// 内伤病名类型为空时
+                //if (search_nsbmlx.Text.Trim() == "")
+                //{
+                //    if (search_xi.Text.Trim() == "")
+                //    {
+                //        sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%'"
+                //                               , search_bmmc.Text.Trim());
+                //        sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%'"
+                //                            , search_bmmc.Text.Trim());
+                //    }
+                //    else
+                //    {
+                //        sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and xmc = '{1}'and bmjb = '{2}'"
+                //                           , search_bmmc.Text.Trim(), search_xi.Text.Trim(), (search_bmjb.SelectedIndex + 1).ToString());
+                //        sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and xmc = '{1}'and bmjb = '{2}'"
+                //                        , search_bmmc.Text.Trim(), search_xi.Text.Trim(), (search_bmjb.SelectedIndex + 1).ToString());
+                //    }
+                //}
+                //// 内伤病名类型为"甲类病名"时
+                //if(search_nsbmlx.Text.Trim() == "甲类病名")
+                //{
+                //    if (search_xi.Text.Trim() == "")
+                //    {
+                //        sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}'"
+                //                          , search_bmmc.Text.Trim(), 0);
+                //        sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}'"
+                //                        , search_bmmc.Text.Trim(), 0);
+                //    }
+                //    else
+                //    {
+                //        sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}' and xmc = '{2}'"
+                //                           , search_bmmc.Text.Trim(), 0, search_xi.Text.Trim());
+                //        sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}' and xmc = '{2}'"
+                //                        , search_bmmc.Text.Trim(), 0, search_xi.Text.Trim());
+                //    }
+                //}
+                //// 内伤病名类型为"乙1类病名"时
+                //if(search_nsbmlx.Text.Trim() == "乙1类病名")
+                //{
+                //    if (search_xi.Text.Trim() == "")
+                //    {
+                //        sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}'"
+                //                           , search_bmmc.Text.Trim(), 1);
+                //        sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}'"
+                //                        , search_bmmc.Text.Trim(), 1);
+                //    }
+                //    else
+                //    {
+                //        sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}' and xmc = '{2}'"
+                //                           , search_bmmc.Text.Trim(), 1, search_xi.Text.Trim());
+                //        sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}' and xmc = '{2}'"
+                //                        , search_bmmc.Text.Trim(), 1, search_xi.Text.Trim());
+                //    }
+                //}
+                //// 内伤病名类型为"乙2类病名"时
+                //if (search_nsbmlx.Text.Trim() == "乙1类病名")
+                //{
+                //    if (search_xi.Text.Trim() == "")
+                //    {
+                //        sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}'"
+                //                           , search_bmmc.Text.Trim(), 1);
+                //        sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}'"
+                //                        , search_bmmc.Text.Trim(), 1);
+                //    }
+                //    else
+                //    {
+                //        sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}' and xmc = '{2}'"
+                //                           , search_bmmc.Text.Trim(), 1, search_xi.Text.Trim());
+                //        sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}' and xmc = '{2}'"
+                //                        , search_bmmc.Text.Trim(), 1, search_xi.Text.Trim());
+                //    }
+                //}
+                //// 内伤病名类型为"乙3类病名"时
+                //if (search_nsbmlx.Text.Trim() == "乙1类病名")
+                //{
+                //    if (search_xi.Text.Trim() == "")
+                //    {
+                //        sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}'"
+                //                           , search_bmmc.Text.Trim(), 1);
+                //        sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}'"
+                //                        , search_bmmc.Text.Trim(), 1);
+                //    }
+                //    else
+                //    {
+                //        sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}' and xmc = '{2}'"
+                //                           , search_bmmc.Text.Trim(), 1, search_xi.Text.Trim());
+                //        sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}' and xmc = '{2}'"
+                //                        , search_bmmc.Text.Trim(), 1, search_xi.Text.Trim());
+                //    }
+                //}
+                //// 内伤病名类型为"乙4类病名"时
+                //if (search_nsbmlx.Text.Trim() == "乙1类病名")
+                //{
+                //    if (search_xi.Text.Trim() == "")
+                //    {
+                //        sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}'"
+                //                           , search_bmmc.Text.Trim(), 1);
+                //        sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}'"
+                //                        , search_bmmc.Text.Trim(), 1);
+                //    }
+                //    else
+                //    {
+                //        sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}' and xmc = '{2}'"
+                //                           , search_bmmc.Text.Trim(), 1, search_xi.Text.Trim());
+                //        sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' and nsbmlx = '{1}' and xmc = '{2}'"
+                //                        , search_bmmc.Text.Trim(), 1, search_xi.Text.Trim());
+                //    }
+                //}
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                SqlDataReader dr = comm.ExecuteReader();
+                while (dr.Read())
+                {
+                    string bmjb = "";
+                    string nsbmlx = "";
+                    switch (dr["bmjb"].ToString())
+                    {
+                        case "1":
+                            bmjb = "危";
+                            break;
+                        case "2":
+                            bmjb = "急";
+                            break;
+                        case "3":
+                            bmjb = "重";
+                            break;
+                        case "4":
+                            bmjb = "轻";
+                            break;
+                    }
+                    switch (dr["nsbmlx"].ToString())
+                    {
+                        case "0":
+                            nsbmlx = "甲类";
+                            break;
+                        case "1":
+                            nsbmlx = "乙类";
+                            break;
+                    }
+                    listDisease.Add(new DiseaseInfo(dr["bmbh"].ToString(), bmjb, nsbmlx, dr["xmc"].ToString(), dr["bmmc"].ToString()));
+                }
+                dr.Close();
+                conn.Close();
+
+                // 显示记录数               
+                conn.Open();
+                comm = new SqlCommand(sql_count, conn);
+                int count = (int)comm.ExecuteScalar();
+                conn.Close();
+                Record_Name.Text = Convert.ToString(count) + "条";
+            }  
+        }          
     }
 }

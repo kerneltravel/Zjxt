@@ -367,6 +367,9 @@ namespace 中医证治智能系统
             BasicZhengmInfo basiczhengminfo = search_lv.SelectedItem as BasicZhengmInfo;
             if (basiczhengminfo != null && basiczhengminfo is BasicZhengmInfo)
             {
+                string zmjb_number = ""; // 证名级别
+                string xsjb_number = ""; // 证名分类
+                string bjys_number = ""; // 病机因素
                 string sql = String.Format("select * from t_info_jbzm where jbzmbh = '{0}'", basiczhengminfo.BasicZhengmNumber);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
@@ -381,9 +384,72 @@ namespace 中医证治智能系统
                     input_jbzmmc.Text = dr["jbzmmc"].ToString();
                     input_zf.Text = dr["zf"].ToString();
                     input_bz.Text = dr["bz"].ToString();
+                    zmjb_number = dr["zmjb"].ToString();
+                    xsjb_number = dr["xsjb"].ToString();
+                    bjys_number = dr["bjys"].ToString();
                 }
                 dr.Close();
                 conn.Close();
+                // 通过证名级别编号获取证名级别名称
+                switch (zmjb_number)
+                {
+                    case "1":
+                        input_zmjb.SelectedIndex = 0;
+                        break;
+                    case "2":
+                        input_zmjb.SelectedIndex = 1;
+                        break;
+                    case "3":
+                        input_zmjb.SelectedIndex = 2;
+                        break;
+                    case "4":
+                        input_zmjb.SelectedIndex = 3;
+                        break;
+                    case "5":
+                        input_zmjb.SelectedIndex = 4;
+                        break;
+                }
+                // 通过证名分类编号获取证名分类名称
+                switch (xsjb_number)
+                {
+                    case "1":
+                        input_xsjb.SelectedIndex = 0;
+                        break;
+                    case "2":
+                        input_xsjb.SelectedIndex = 1;
+                        break;
+                    case "3":
+                        input_xsjb.SelectedIndex = 2;
+                        break;
+                    case "4":
+                        input_xsjb.SelectedIndex = 3;
+                        break;
+                    case "5":
+                        input_xsjb.SelectedIndex = 4;
+                        break;
+                }
+                // 通过病机因素编号获取病机因素名称
+                switch (bjys_number)
+                {
+                    case "1":
+                        input_bjys.SelectedIndex = 0;
+                        break;
+                    case "2":
+                        input_bjys.SelectedIndex = 1;
+                        break;
+                    case "3":
+                        input_bjys.SelectedIndex = 2;
+                        break;
+                    case "4":
+                        input_bjys.SelectedIndex = 3;
+                        break;
+                    case "5":
+                        input_bjys.SelectedIndex = 4;
+                        break;
+                    case "6":
+                        input_bjys.SelectedIndex = 5;
+                        break;
+                }
             }
         }
 
@@ -572,6 +638,8 @@ namespace 中医证治智能系统
                                 finally
                                 {
                                     conn.Close();
+                                    // 刷新目录
+                                    refresh();
                                     input_save.IsEnabled = false;
                                     input_cancel.IsEnabled = false;
                                     IsAdd = false;
@@ -596,13 +664,13 @@ namespace 中医证治智能系统
                                 try
                                 {
                                     string sql = String.Format("INSERT INTO t_info_jbzm ( jbzmbh, jbzmmc, jbzmlx, zf, bz, xsjb, bjys, zmjb) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
-                                                                , BasicZhengm_Edit.BasicZhengmNumber, input_jbzmmc.Text, 1, input_zf.Text, input_bz.Text, input_xsjb.SelectedIndex, input_bjys.SelectedIndex + 1, input_zmjb.SelectedIndex + 1);
+                                                                , BasicZhengm_Edit.BasicZhengmNumber, input_jbzmmc.Text, 1, input_zf.Text, input_bz.Text, input_xsjb.SelectedIndex + 1, input_bjys.SelectedIndex + 1, input_zmjb.SelectedIndex + 1);
                                     conn.Open();
                                     SqlCommand comm = new SqlCommand(sql, conn);
                                     int count = comm.ExecuteNonQuery();
                                     if (count > 0)
-                                    {
-                                        MessageBox.Show("保存成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    {                                      
+                                        MessageBox.Show("保存成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);                                       
                                     }
                                 }
                                 catch (Exception)
@@ -612,6 +680,8 @@ namespace 中医证治智能系统
                                 finally
                                 {
                                     conn.Close();
+                                    // 刷新目录
+                                    refresh();
                                     input_save.IsEnabled = false;
                                     input_cancel.IsEnabled = false;
                                     IsAdd = false;
@@ -663,6 +733,8 @@ namespace 中医证治智能系统
                                 finally
                                 {
                                     conn.Close();
+                                    // 刷新目录
+                                    refresh();                    
                                     input_save.IsEnabled = false;
                                     input_cancel.IsEnabled = false;
                                     IsModify = false;
@@ -687,7 +759,7 @@ namespace 中医证治智能系统
                                 try
                                 {
                                     string sql = String.Format("update t_info_jbzm set jbzmmc = '{0}', jbzmlx = '{1}', zf = '{2}', bz = '{3}', zmjb = '{4}' ,xsjb = '{5}', bjys = '{6}'  where jbzmbh = '{7}'"
-                                                                 , input_jbzmmc.Text, 1, input_zf.Text, input_bz.Text, input_zmjb.SelectedIndex + 1, input_xsjb.SelectedIndex, input_bjys.SelectedIndex + 1, BasicZhengm_Edit.BasicZhengmNumber);
+                                                                 , input_jbzmmc.Text, 1, input_zf.Text, input_bz.Text, input_zmjb.SelectedIndex + 1, input_xsjb.SelectedIndex + 1, input_bjys.SelectedIndex + 1, BasicZhengm_Edit.BasicZhengmNumber);
                                     conn.Open();
                                     SqlCommand comm = new SqlCommand(sql, conn);
                                     int count = comm.ExecuteNonQuery();
@@ -703,6 +775,8 @@ namespace 中医证治智能系统
                                 finally
                                 {
                                     conn.Close();
+                                    // 刷新目录
+                                    refresh();                          
                                     input_save.IsEnabled = false;
                                     input_cancel.IsEnabled = false;
                                     IsModify = false;
@@ -840,6 +914,103 @@ namespace 中医证治智能系统
                 input_zmjb.IsEnabled = true;
                 input_xsjb.IsEnabled = true;
                 input_bjys.IsEnabled = true;
+            }
+        }
+
+        /// <summary>
+        /// 功能：刷新目录
+        /// </summary>
+        private void refresh() {
+            listBasicZhengm.Clear(); // 先清空集合
+            string sql = "";
+            string sql_count = "";
+            if (search_jbzmlx.Text.Trim() == "外感")
+            {
+                sql = String.Format("select * from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%'", 0, search_jbzmmc.Text.Trim());
+                sql_count = String.Format("select count(*) from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' ", 0, search_jbzmmc.Text.Trim());
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                SqlDataReader dr = comm.ExecuteReader();
+                while (dr.Read())
+                {
+                    listBasicZhengm.Add(new BasicZhengmInfo(dr["jbzmbh"].ToString(), dr["jbzmmc"].ToString(), "0", "", "", "", dr["zf"].ToString(), dr["bz"].ToString()));
+                }
+                dr.Close();
+                conn.Close();
+
+                // 显示记录数
+                conn.Open();
+                comm = new SqlCommand(sql_count, conn);
+                int count = (int)comm.ExecuteScalar();
+                conn.Close();
+                Record_Name.Text = Convert.ToString(count) + "条";
+            }
+            if (search_jbzmlx.Text.Trim() == "内伤")
+            {
+                // 证名分级、证名分类、病机因素都为全部
+                if (search_zmjb.SelectedIndex == 0 && search_xsjb.SelectedIndex == 0 && search_bjys.SelectedIndex == 0)
+                {
+                    sql = String.Format("select * from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%'", 1, search_jbzmmc.Text.Trim());
+                    sql_count = String.Format("select count(*) from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' ", 1, search_jbzmmc.Text.Trim());
+                }
+                // 证名分级不为全部，证名分类、病机因素为全部
+                if (search_zmjb.SelectedIndex != 0 && search_xsjb.SelectedIndex == 0 && search_bjys.SelectedIndex == 0)
+                {
+                    sql = String.Format("select * from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' and zmjb = '{2}'", 1, search_jbzmmc.Text.Trim(), search_zmjb.SelectedIndex.ToString());
+                    sql_count = String.Format("select count(*) from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' and zmjb = '{2}' ", 1, search_jbzmmc.Text.Trim(), search_zmjb.SelectedIndex.ToString());
+                }
+                // 证名分类不为全部，证名分级、病机因素都为全部
+                if (search_zmjb.SelectedIndex == 0 && search_xsjb.SelectedIndex != 0 && search_bjys.SelectedIndex == 0)
+                {
+                    sql = String.Format("select * from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' and xsjb = '{2}'", 1, search_jbzmmc.Text.Trim(), search_xsjb.SelectedIndex.ToString());
+                    sql_count = String.Format("select count(*) from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' and xsjb = '{2}' ", 1, search_jbzmmc.Text.Trim(), search_xsjb.SelectedIndex.ToString());
+                }
+                // 证名分级、证名分类为全部，病机因素不为全部
+                if (search_zmjb.SelectedIndex == 0 && search_xsjb.SelectedIndex == 0 && search_bjys.SelectedIndex != 0)
+                {
+                    sql = String.Format("select * from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' and bjys = '{2}'", 1, search_jbzmmc.Text.Trim(), search_bjys.SelectedIndex.ToString());
+                    sql_count = String.Format("select count(*) from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' and bjys = '{2}' ", 1, search_jbzmmc.Text.Trim(), search_bjys.SelectedIndex.ToString());
+                }
+                // 证名分级、证名分类不为全部，病机因素为全部
+                if (search_zmjb.SelectedIndex != 0 && search_xsjb.SelectedIndex != 0 && search_bjys.SelectedIndex == 0)
+                {
+                    sql = String.Format("select * from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' and zmjb = '{2}' and xsjb = '{3}'", 1, search_jbzmmc.Text.Trim(), search_zmjb.SelectedIndex.ToString(), search_xsjb.SelectedIndex.ToString());
+                    sql_count = String.Format("select count(*) from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' and zmjb = '{2}' and xsjb = '{3}' ", 1, search_jbzmmc.Text.Trim(), search_zmjb.SelectedIndex.ToString(), search_xsjb.SelectedIndex.ToString());
+                }
+                // 证名分级、病机因素不为全部，证名分类为全部
+                if (search_zmjb.SelectedIndex != 0 && search_xsjb.SelectedIndex == 0 && search_bjys.SelectedIndex != 0)
+                {
+                    sql = String.Format("select * from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' and zmjb = '{2}' and bjys = '{3}'", 1, search_jbzmmc.Text.Trim(), search_zmjb.SelectedIndex.ToString(), search_bjys.SelectedIndex.ToString());
+                    sql_count = String.Format("select count(*) from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' and zmjb = '{2}' and bjys = '{3}' ", 1, search_jbzmmc.Text.Trim(), search_zmjb.SelectedIndex.ToString(), search_bjys.SelectedIndex.ToString());
+                }
+                // 证名分级为全部，证名分类、病机因素不为全部
+                if (search_zmjb.SelectedIndex == 0 && search_xsjb.SelectedIndex != 0 && search_bjys.SelectedIndex != 0)
+                {
+                    sql = String.Format("select * from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' and xsjb = '{2}' and bjys = '{3}'", 1, search_jbzmmc.Text.Trim(), search_xsjb.SelectedIndex.ToString(), search_bjys.SelectedIndex.ToString());
+                    sql_count = String.Format("select count(*) from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' and xsjb = '{2}' and bjys = '{3}' ", 1, search_jbzmmc.Text.Trim(), search_xsjb.SelectedIndex.ToString(), search_bjys.SelectedIndex.ToString());
+                }
+                // 证名分级、证名分类、病机因素都不为全部
+                if (search_zmjb.SelectedIndex != 0 && search_xsjb.SelectedIndex != 0 && search_bjys.SelectedIndex != 0)
+                {
+                    sql = String.Format("select * from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' and zmjb = '{2}' and xsjb = '{3}' and bjys = '{4}'", 1, search_jbzmmc.Text.Trim(), search_zmjb.SelectedIndex.ToString(), search_xsjb.SelectedIndex.ToString(), search_bjys.SelectedIndex.ToString());
+                    sql_count = String.Format("select count(*) from t_info_jbzm where jbzmlx = '{0}' and jbzmmc like '%{1}%' and zmjb = '{2}' and xsjb = '{3}' and bjys = '{4}'", 1, search_jbzmmc.Text.Trim(), search_zmjb.SelectedIndex.ToString(), search_xsjb.SelectedIndex.ToString(), search_bjys.SelectedIndex.ToString());
+                }
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                SqlDataReader dr = comm.ExecuteReader();
+                while (dr.Read())
+                {
+                    listBasicZhengm.Add(new BasicZhengmInfo(dr["jbzmbh"].ToString(), dr["jbzmmc"].ToString(), "1", Get_Zmjb(dr["zmjb"].ToString()), Get_Xsjb(dr["xsjb"].ToString()), dr["bjys"].ToString(), dr["zf"].ToString(), dr["bz"].ToString()));
+                }
+                dr.Close();
+                conn.Close();
+
+                // 显示记录数               
+                conn.Open();
+                comm = new SqlCommand(sql_count, conn);
+                int count = (int)comm.ExecuteScalar();
+                conn.Close();
+                Record_Name.Text = Convert.ToString(count) + "条";
             }
         }
     }
