@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,12 +15,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Data;
-using System.Data.SqlClient;
-using System.Configuration;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-
 
 namespace 中医证治智能系统
 {
@@ -24,27 +22,56 @@ namespace 中医证治智能系统
     /// Interaction logic for XiInfoAdmin.xaml
     /// </summary>
     public partial class XiInfoAdmin : Window
-    {// 定义连接字符串
+    {
+        // 定义连接字符串
         static public string connString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
         // 创建 Connection 对象
         static public SqlConnection conn = new SqlConnection(connString);
-        int i = -1;
-        static string j;
+        XiInfo Xi_Edit = new XiInfo("", "", "");
+        ObservableCollection<XiInfo> listXi = new ObservableCollection<XiInfo>();
         bool IsAdd = false;
-
-        bool IsEdit = false;
-
-        bool valid = true;
-
+        bool IsModify = false;
+        bool IsValid = true;
         bool IsRepeat = false;
-        UserInfo user_add = new UserInfo("", "", "");
+        bool Modify = false;
+        // 创建对 PassValuesHandler 方法的引用的类
+        public delegate void PassValuesHandler(object sender, PassValuesEventArgs e);
+        // 声明事件
+        public event PassValuesHandler PassValuesEvent;
+        // 创建事件数据类
+        public class PassValuesEventArgs : EventArgs
+        {
+            private string _name;
+            private string _number;
+            public string Name
+            {
+                get { return _name; }
+                set { _name = value; }
+            }
+            public string Number
+            {
+                get { return _number; }
+                set { _number = value; }
+            }
+            public PassValuesEventArgs(string name, string number)
+            {
+                this.Name = name;
+                this.Number = number;
+            }
+        }
 
-        UserInfo useredit = new UserInfo("", "", "");
+        public XiInfoAdmin()
+        {
+            InitializeComponent();
+            save_input.IsEnabled = false;
+        }
 
-        public class UserInfo : INotifyPropertyChanged
+        /// <summary>
+        /// 功能：创建系信息类
+        /// </summary>
+        public class XiInfo : INotifyPropertyChanged
         {
             #region INotifyPropertyChanged 成员
-
             public event PropertyChangedEventHandler PropertyChanged;
             public void OnPropertyChanged(PropertyChangedEventArgs e)
             {
@@ -56,309 +83,113 @@ namespace 中医证治智能系统
             #endregion
             private string _xiNumber;
             private string _xiName;
-            private string _beiZu;
+            private string _Beizu;
 
             public string XiNumber
             {
                 get { return _xiNumber; }
                 set { _xiNumber = value; OnPropertyChanged(new PropertyChangedEventArgs("XiNumber")); }
             }
+
             public string XiName
             {
                 get { return _xiName; }
                 set { _xiName = value; OnPropertyChanged(new PropertyChangedEventArgs("XiName")); }
             }
 
-            public string BeiZu
+            public string Beizu
             {
-                get { return _beiZu; }
-                set { _beiZu = value; OnPropertyChanged(new PropertyChangedEventArgs("BeiZu")); }
+                get { return _Beizu; }
+                set { _Beizu = value; OnPropertyChanged(new PropertyChangedEventArgs("Beizu")); }
             }
 
-            public UserInfo(string xinumber, string xiname, string beizu)
+            public XiInfo(string xinumber, string xiname, string Beizu)
             {
                 _xiNumber = xinumber;
                 _xiName = xiname;
-                _beiZu = beizu;
+                _Beizu = Beizu;
             }
         }
 
-        ObservableCollection<UserInfo> listCustomer1 = new ObservableCollection<UserInfo>();
-        public void Text_Readonly()
-        {
-            text_box_xmc.IsReadOnly = true;
-            text_box_bz.IsReadOnly = true;
-
-        }
-        public void Text_Editable()
-        {
-            text_box_xmc.IsReadOnly = false;
-            text_box_bz.IsReadOnly = false;
-        }
-        public void Text_Clear()
-        {
-            text_box_bz.Text = "";
-            text_box_xmc.Text = "";
-            text_block_xbh.Text = j;
-
-        }
-        private void text_box_xmc_LostFocus(object sender, RoutedEventArgs e)
-        {
-            //if(  )
-            user_add.XiName = text_box_xmc.Text;
-            useredit.XiName = text_box_xmc.Text;
-        }
-        private void text_box_bz_LostFocus(object sender, RoutedEventArgs e)
-        {
-            user_add.BeiZu = text_box_bz.Text;
-            useredit.BeiZu = text_box_bz.Text;
-        }
-
-        public XiInfoAdmin()
-        {
-            InitializeComponent();
-            button_save.IsEnabled = false;
-
-            string sql = String.Format("select * from t_info_x");
-            conn.Open();
-            SqlCommand comm = new SqlCommand(sql, conn);
-            SqlDataReader dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                listCustomer1.Add(new UserInfo(dr["xbh"].ToString(), dr["xmc"].ToString(), dr["bz"].ToString()));
-
-            }
-            lv1.ItemsSource = listCustomer1;
-            dr.Close();
-            conn.Close();
-            // 设置默认选中第一项
-            lv1.SelectedIndex = 0;
-        }
-
-        private void button_add_Click(object sender, RoutedEventArgs e)
-        {
-
-
-            string sql = String.Format("select max(xbh) from t_info_x");
-            conn.Open();
-            SqlCommand comm = new SqlCommand(sql, conn);
-            SqlDataReader dr = comm.ExecuteReader();
-            while (dr.Read() && button_add.IsEnabled)
-            {
-                user_add = new UserInfo(String.Format("{0:000}", Convert.ToInt64(dr[0]) + 1), "", "");
-                j = String.Format("{0:000}", Convert.ToInt64(dr[0]) + 1);
-                Text_Clear();
-                Text_Editable();
-                listCustomer1.Add(user_add);
-            }
-            dr.Close();
-            conn.Close();
-            Keyboard.Focus(text_box_xmc); // 设置焦点
-            lv1.SelectedIndex = lv1.Items.Count - 1; // 设置增加项被选中
-            IsAdd = true;
-            button_save.IsEnabled = true;
-            button_add.IsEnabled = false;
-        }
-        //public void Text_Clear()
-        //{
-        //    text_box_bz.Text = "";
-        //    text_box_xmc.Text = "";
-        //    text_block_xbh.Text = j;
-
-        //}
-
-        private void lv1_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (lv1.SelectedIndex != lv1.Items.Count - 1 && IsAdd)
-            {
-                if (text_box_xmc.Text == "")
-                {
-                    MessageBox.Show("系名不能为空！");
-                    lv1.SelectedIndex = lv1.Items.Count - 1;
-                    Keyboard.Focus(text_box_xmc);
-                }
-                else
-                {
-                    MessageBox.Show("请先保存！");
-                    lv1.SelectedIndex = i;
-                }
-            }
-            else if (lv1.SelectedIndex != i && IsEdit)
-            {
-                if (text_box_xmc.Text == "")
-                {
-                    MessageBox.Show("系名不能为空！");
-                    lv1.SelectedIndex = i;
-                    Keyboard.Focus(text_box_xmc);
-                }
-                else
-                {
-                    MessageBox.Show("请先保存！");
-                    lv1.SelectedIndex = i;
-                }
-            }
-            else
-            {
-                useredit = lv1.SelectedItem as UserInfo;
-                i = lv1.SelectedIndex;
-                if (useredit != null && useredit is UserInfo)
-                {
-                    string sql = String.Format("select * from t_info_x where xbh = '{0}'", useredit.XiNumber);
-                    conn.Open();
-                    SqlCommand comm = new SqlCommand(sql, conn);
-                    SqlDataReader dr = comm.ExecuteReader();
-                    while (dr.Read())
-                    {
-                        if (IsEdit != true) Text_Readonly();
-                        text_box_xmc.Text = dr["xmc"].ToString();
-                        text_box_bz.Text = dr["bz"].ToString();
-                        text_block_xbh.Text = dr["xbh"].ToString();
-                    }
-                    dr.Close();
-                    conn.Close();
-                }
-            }
-        }
-
-        private void button_back_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void button_modify_Click(object sender, RoutedEventArgs e)
-        {
-            if (lv1.SelectedIndex == -1)
-            {
-                MessageBox.Show("请预先选择需要修改的行！");
-            }
-            else
-            {
-                IsEdit = true;
-                Text_Editable();
-                button_save.IsEnabled = true;
-            }
-        }
-
-        private void button_save_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// 功能：查找
+        /// </summary>
+        private void search_Click(object sender, RoutedEventArgs e)
         {
             if (text_box_xmc.Text == "")
             {
-                MessageBox.Show("系名不能为空！");
-                valid = false;
-                Keyboard.Focus(text_box_xmc);
+                // 先清空目录
+                listXi.Clear();
+                string sql = String.Format("select * from x_t_info_x");
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                SqlDataReader dr = comm.ExecuteReader();
+                while (dr.Read())
+                {
+                    listXi.Add(new XiInfo(dr["xbh"].ToString(), dr["xmc"].ToString(), dr["bz"].ToString()));
+                }
+                //lv.Items.Clear(); //关键点，指定 ItemsSource 时，该项必须得清空?
+                lv.ItemsSource = listXi;
+                dr.Close();
+                conn.Close();
             }
             else
             {
-                valid = true;
-                Is_Repeat();
-            }
-            if (IsAdd == true && valid == true && IsRepeat == false)
-            {
-                // 前面三项满足后才能保存至数据库
-                button_add.IsEnabled = true;
-                button_save.IsEnabled = false;
-                lv1.SelectedIndex = lv1.Items.Count - 1;
-                IsAdd = false;
-                try
-                {
-                    string sql = String.Format("INSERT INTO t_info_x (xbh,xmc,bz) VALUES ('{0}', '{1}', '{2}')",
-                                   user_add.XiNumber, text_box_xmc.Text, text_box_bz.Text);
-                    conn.Open();
-                    SqlCommand comm = new SqlCommand(sql, conn);
-                    int count = comm.ExecuteNonQuery();
-                    if (count > 0)
-                    {
-                        MessageBox.Show("保存成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("保存失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    listCustomer1.Remove(user_add);
-                    Text_Clear();
-                    lv1.SelectedIndex = lv1.Items.Count - 1;
-
-                }
-                finally
-                {
-                    conn.Close();
-                    Text_Readonly();
-                }
-            }
-            else if (IsEdit == true && valid == true && IsRepeat == false)
-            {
-
-                IsEdit = false;
-                button_save.IsEnabled = false;
-                try
-                {
-                    string sql_update = String.Format("UPDATE t_info_x SET xmc='{0}', bz ='{1}' WHERE xbh='{2}'", text_box_xmc.Text, text_box_bz.Text, useredit.XiNumber);
-
-                    conn.Open();
-                    // 创建 Command 对象
-                    SqlCommand comm = new SqlCommand(sql_update, conn);
-                    int count = comm.ExecuteNonQuery();
-                    if (count > 0)
-                    {
-                        MessageBox.Show("操作成功！", "操作", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                }
-                catch (Exception)
+                // 先清空目录
+                listXi.Clear();
+                string sql = String.Format("select * from x_t_info_x where xmc like'%{0}%'", text_box_xmc.Text);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                SqlDataReader dr = comm.ExecuteReader();
+                listXi.Clear();
+                while (dr.Read())
                 {
 
-                    MessageBox.Show("操作失败！");
-
+                    listXi.Add(new XiInfo(dr["xbh"].ToString(), dr["xmc"].ToString(), dr["bz"].ToString()));
                 }
-                finally
-                {
-                    conn.Close();
-                    Text_Readonly();
-                }
-            }
-            if (IsRepeat == true)
-            {
-                Keyboard.Focus(text_box_xmc);
-
+                lv.ItemsSource = listXi;
+                dr.Close();
+                conn.Close();
             }
         }
 
-        public void Is_Repeat()
+        /// <summary>
+        /// 功能：【系信息管理】中的【选定】按钮功能
+        /// </summary>
+        private void select_search_Click(object sender, RoutedEventArgs e)
         {
-
-            string username = text_box_xmc.Text.Trim();
-            string sql = String.Format("select count(*) from t_info_x where xmc = '{0}' and xbh!='{1}' ", username, useredit.XiNumber);
-            conn.Open();
-            SqlCommand comm = new SqlCommand(sql, conn);
-            int count = (int)comm.ExecuteScalar();
-            if (count == 1)
+            this.Close();
+            XiInfo xi = lv.SelectedItem as XiInfo;
+            if (xi != null && xi is XiInfo)
             {
-                MessageBox.Show("姓名不能重复！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                IsRepeat = true;
-
-            }
-            else
-                IsRepeat = false;
-            conn.Close();
-
-        }
-        private void button_delete_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (MessageBox.Show("执行删除操作将对数据库造成很大影响，强烈建议不要执行此操作，您确定要删除该病名吗？", "confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-            {
-                if (MessageBox.Show("再次警告，您确定要删除该病名吗？", "confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                PassValuesEventArgs args = new PassValuesEventArgs(xi.XiName.ToString(), xi.XiNumber.ToString());
+                // 要判断 PassValuesEvent 是否为空，即判断该窗口是否被调用
+                if (PassValuesEvent != null)
                 {
-                    if (MessageBox.Show("第三次警告，您确定要删除该病名吗？", "confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    PassValuesEvent(this, args);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 功能：删除
+        /// </summary>
+        private void delete_search_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("执行删除操作将对数据库造成很大影响，强烈建议不要执行此操作，您确定要删除该系吗？", "confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                if (MessageBox.Show("再次警告，您确定要删除该系吗？", "confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    if (MessageBox.Show("第三次警告，您确定要删除该系吗？", "confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
-                        UserInfo userinfo = lv1.SelectedItem as UserInfo;
-                        if (userinfo != null && userinfo is UserInfo)
+                        XiInfo xi = lv.SelectedItem as XiInfo;
+                        if (xi != null && xi is XiInfo)
                         {
-                            listCustomer1.Remove(userinfo);
+                            listXi.Remove(xi);
                         }
-                        Text_Clear();
                         try
                         {
-                            string sql = String.Format("delete from t_info_x where xbh = '{0}'", userinfo.XiNumber);
+                            string sql = String.Format("delete from x_t_info_x where xbh = '{0}'", xi.XiNumber);
                             conn.Open();
                             SqlCommand comm = new SqlCommand(sql, conn);
                             int count = comm.ExecuteNonQuery();
@@ -375,37 +206,318 @@ namespace 中医证治智能系统
                         {
                             conn.Close();
                         }
-
                     }
                 }
             }
         }
 
-        private void button_cancel_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// 功能：修改
+        /// </summary>
+        private void modify_search_Click(object sender, RoutedEventArgs e)
         {
-            button_save.IsEnabled = false;
-            Text_Readonly();
-            if (IsEdit == true)
+            Text_Editable();
+            Modify = true;
+            save_input.IsEnabled = true;
+            tabControl1.SelectedIndex = 1;
+            if (lv.SelectedItem != null)
             {
-                //string number = text_block_xbh.Text;
-                string sql = String.Format("select * from t_info_x where xbh = '{0}'", useredit.XiNumber);
+                Xi_Edit = lv.SelectedItem as XiInfo;
+            }
+            text_xmc.Text = Xi_Edit.XiName;
+            text_xbh.Text = Xi_Edit.XiNumber;
+            text_bz.Text = Xi_Edit.Beizu;
+        }
+
+        /// <summary>
+        /// 功能：设置文本编辑权限
+        /// </summary>
+        public void Text_Editable()
+        {
+
+            text_xmc.IsReadOnly = false;
+            text_bz.IsReadOnly = false;
+
+        }
+
+        /// <summary>
+        /// 功能：返回
+        /// </summary>
+        private void back_search_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        /// <summary>
+        /// 功能：【系信息录入】中的增加
+        /// </summary>
+        private void add_input_Click(object sender, RoutedEventArgs e)
+        {
+            Text_Editable();
+            if (IsAdd == false && IsModify == false)
+            {
+                text_xmc.Text = "";
+                text_bz.Text = "";
+                save_input.IsEnabled = true;
+                string sql = String.Format("select max(xbh) from x_t_info_x");
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
                 while (dr.Read())
                 {
-                    text_box_xmc.Text = dr["xmc"].ToString();
-                    text_box_bz.Text = dr["bz"].ToString();
-                    useredit.XiName = text_box_xmc.Text;
-
+                    text_xbh.Text = String.Format("{0:000}", Convert.ToInt64(dr[0]) + 1);
+                    Xi_Edit = new XiInfo(String.Format("{0:000}", Convert.ToInt64(dr[0]) + 1), "", "");
+                    listXi.Add(Xi_Edit);
                 }
                 dr.Close();
                 conn.Close();
-
+                Keyboard.Focus(text_xmc); // 设置焦点
+                lv.SelectedIndex = lv.Items.Count - 1; // 设置增加项被选中
+                IsAdd = true;
             }
-            IsEdit = false;
+        }
 
+        /// <summary>
+        /// 功能：【系信息录入】中的修改
+        /// </summary>
+        private void modify_input_Click(object sender, RoutedEventArgs e)
+        {
+            if (text_xbh.Text != "")
+            {
+                save_input.IsEnabled = true;
+                IsModify = true;
+                Text_Editable();
+            }
+        }
 
+        /// <summary>
+        /// 功能：【系信息录入】中的保存
+        /// </summary>
+        private void save_input_Click(object sender, RoutedEventArgs e)
+        {
+            if (text_xmc.Text == "")
+            {
+                MessageBox.Show("系名称不能为空！");
+                IsValid = false;
+                Keyboard.Focus(text_xmc);
+            }
+            else
+            {
+                IsValid = true;
+                Is_Repeat();
+            }
+            if (IsAdd == true && IsValid == true && IsRepeat == false)
+            {
+                save_input.IsEnabled = false;
+                IsAdd = false;
+                try
+                {
+                    string sql = String.Format("INSERT INTO x_t_info_x (xmc,bz,xbh) VALUES ('{0}', '{1}', '{2}')", text_xmc.Text, text_bz.Text, Xi_Edit.XiNumber);
+
+                    conn.Open();
+                    SqlCommand comm = new SqlCommand(sql, conn);
+                    int count = comm.ExecuteNonQuery();
+                    if (count > 0)
+                    {
+                        MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("添加失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    listXi.Remove(Xi_Edit);
+                    text_bz.Text = "";
+                    text_xmc.Text = "";
+                    text_xbh.Text = "";
+                    lv.SelectedIndex = lv.Items.Count - 1;
+                }
+                finally
+                {
+                    conn.Close();
+                    // 刷新目录
+                    refresh();
+                }
+            }
+            else if (IsModify == true && IsValid == true && IsRepeat == false && text_xbh.Text != "")
+            {
+                save_input.IsEnabled = false;
+                IsModify = false;
+                try
+                {
+                    string sql_update = String.Format("UPDATE x_t_info_x SET xmc = '{0}', bz = '{1}' WHERE xbh='{2}' ", text_xmc.Text, text_bz.Text, Xi_Edit.XiNumber);
+                    conn.Open();
+                    SqlCommand comm = new SqlCommand(sql_update, conn);
+                    int count = comm.ExecuteNonQuery();
+                    if (count > 0)
+                    {
+                        MessageBox.Show("修改成功！", "操作", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("修改失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                finally
+                {
+                    conn.Close();
+                    Text_Readonly();
+                }
+            }
+            else if (Modify == true && IsValid == true && IsRepeat == false && text_xbh.Text != "")
+            {
+                save_input.IsEnabled = false;
+                Modify = false;
+                try
+                {
+                    string sql_update = String.Format("UPDATE x_t_info_x SET xmc = '{0}', bz = '{1}' WHERE xbh='{2}' ", text_xmc.Text, text_bz.Text, Xi_Edit.XiNumber);
+                    conn.Open();
+                    SqlCommand comm = new SqlCommand(sql_update, conn);
+                    int count = comm.ExecuteNonQuery();
+                    if (count > 0)
+                    {
+                        MessageBox.Show("修改成功！", "操作", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("修改失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                finally
+                {
+                    conn.Close();
+                    Text_Readonly();
+                }
+            }
+            if (IsRepeat == true)
+            {
+                text_xmc.Text = "";
+                Keyboard.Focus(text_xmc);
+            }
+        }
+
+        /// <summary>
+        /// 功能：【系信息录入】中的取消
+        /// </summary>
+        private void cancel_input_Click(object sender, RoutedEventArgs e)
+        {
+            save_input.IsEnabled = false;
+            IsAdd = false;
+            text_xmc.Text = "";
+            text_xbh.Text = "";
+            text_bz.Text = "";
+            // 刷新目录
+            refresh();
+        }
+
+        /// <summary>
+        /// 功能：【系信息录入】中的返回
+        /// </summary>
+        private void back_input_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        /// <summary>
+        /// 功能：判断是否重复
+        /// </summary>
+        public void Is_Repeat()
+        {
+            string username = text_xmc.Text.Trim();
+            string sql = String.Format("select count(*) from x_t_info_x where xmc = '{0}'and xbh!='{1}'", username, Xi_Edit.XiNumber);
+            conn.Open();
+            SqlCommand comm = new SqlCommand(sql, conn);
+            int count = (int)comm.ExecuteScalar();
+            if (count == 1)
+            {
+                MessageBox.Show("病机名称不能重复！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                IsRepeat = true;
+            }
+            else
+                IsRepeat = false;
+            conn.Close();
+        }
+
+        /// <summary>
+        /// 功能：刷新目录
+        /// </summary>
+        private void refresh()
+        {
+            if (text_box_xmc.Text == "")
+            {
+                // 先清空目录
+                listXi.Clear();
+                string sql = String.Format("select * from x_t_info_x");
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                SqlDataReader dr = comm.ExecuteReader();
+                while (dr.Read())
+                {
+                    listXi.Add(new XiInfo(dr["xbh"].ToString(), dr["xmc"].ToString(), dr["bz"].ToString()));
+                }
+                //lv.Items.Clear(); //关键点，指定 ItemsSource 时，该项必须得清空?
+                lv.ItemsSource = listXi;
+                dr.Close();
+                conn.Close();
+            }
+            else
+            {
+                // 先清空目录
+                listXi.Clear();
+                string sql = String.Format("select * from x_t_info_x where xmc like'%{0}%'", text_box_xmc.Text);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                SqlDataReader dr = comm.ExecuteReader();
+                listXi.Clear();
+                while (dr.Read())
+                {
+                    listXi.Add(new XiInfo(dr["xbh"].ToString(), dr["xmc"].ToString(), dr["bz"].ToString()));
+                }
+                lv.ItemsSource = listXi;
+                dr.Close();
+                conn.Close();
+            }
+        }
+
+        /// <summary>
+        /// 功能：设置文本读写权限
+        /// </summary>
+        public void Text_Readonly()
+        {
+            text_xmc.IsReadOnly = true;
+            text_bz.IsReadOnly = true;
+        }
+
+        /// <summary>
+        /// 功能：listview选择某项时对应的信息显示
+        /// </summary>
+        private void lv_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            XiInfo xi = lv.SelectedItem as XiInfo;
+            if (xi != null && xi is XiInfo)
+            {
+                text_xmc.Text = xi.XiName;
+                text_xbh.Text = xi.XiNumber;
+                text_bz.Text = xi.Beizu;
+            }
+            Xi_Edit = xi;
+        }
+
+        /// <summary>
+        /// 功能：系名称编辑框失去焦点时对应的listview显示
+        /// </summary>
+        private void text_xmc_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if(text_xbh.Text != "")
+                Xi_Edit.XiName = text_xmc.Text;
+        }
+
+        /// <summary>
+        /// 功能：备注编辑框失去焦点时对应的listview显示
+        /// </summary>
+        private void text_bz_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (text_xbh.Text != "")
+                Xi_Edit.Beizu = text_bz.Text;
         }
     }
 }

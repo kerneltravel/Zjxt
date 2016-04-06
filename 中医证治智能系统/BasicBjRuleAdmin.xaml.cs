@@ -27,7 +27,8 @@ namespace 中医证治智能系统
     /// Interaction logic for BasicBjRuleAdmin.xaml
     /// </summary>
     public partial class BasicBjRuleAdmin : Window
-    { // 定义连接字符串
+    {   
+        // 定义连接字符串
         static public string connString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
         // 创建 Connection 对象
         static public SqlConnection conn = new SqlConnection(connString);
@@ -335,7 +336,7 @@ namespace 中医证治智能系统
                 conn.Close();
 
                 // 四级树写入
-                // 写入病机信息
+                // 写入症象信息
                 sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_jbbj as t2 on t2.zxbh = t1.zxbh where jbbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh", bjNumber);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
@@ -352,7 +353,7 @@ namespace 中医证治智能系统
                 dr.Close();
                 conn.Close();
 
-                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, t1.zxmc, t1.id from t_info_zxmx as t1 inner join t_rule_jbbj as t2 on t2.zxbh = t1.zxbh  group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh, t1.zxmc, t1.id");
+                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, t1.zxmc, t1.id from t_info_zxmx as t1 inner join t_rule_jbbj as t2 on t2.zxbh = t1.zxbh where jbbjbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh, t1.zxmc, t1.id", bjNumber);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();

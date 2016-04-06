@@ -27,12 +27,6 @@ namespace 中医证治智能系统
     /// <summary>
     /// Interaction logic for Info_Symptom.xaml
     /// </summary>
-//    public class shuzi
-//{
-//public void func()
-//        { }
-
-//}
     public partial class Info_Symptom : Window
     {
         // 定义连接字符串
@@ -623,6 +617,7 @@ namespace 中医证治智能系统
         /// </summary>
         private void select_Click(object sender, RoutedEventArgs e)
         {
+            this.Close();
             SymptomInfo symptominfo = lv.SelectedItem as SymptomInfo;
             if (symptominfo != null && symptominfo is SymptomInfo)
             {
@@ -633,7 +628,6 @@ namespace 中医证治智能系统
                     PassValuesEvent(this, args);
                 }     
             }
-            this.Close();
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)

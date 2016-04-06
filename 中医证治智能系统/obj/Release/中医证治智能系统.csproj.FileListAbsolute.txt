@@ -241,13 +241,10 @@ C:\Users\Administrator\Desktop\中医证治智能系统\中医证治智能系统
 C:\Users\Administrator\Desktop\中医证治智能系统\中医证治智能系统(0323)\中医证治智能系统\obj\Release\中医证治智能系统.exe.manifest
 C:\Users\Administrator\Desktop\中医证治智能系统\中医证治智能系统(0323)\中医证治智能系统\obj\Release\中医证治智能系统.application
 D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\bin\Release\中医证治智能系统.exe.config
-D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\obj\Release\中医证治智能系统.exe
-D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\obj\Release\中医证治智能系统.pdb
 D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\bin\Release\中医证治智能系统.exe.manifest
 D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\bin\Release\中医证治智能系统.application
 D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\bin\Release\中医证治智能系统.exe
 D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\bin\Release\中医证治智能系统.pdb
-D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\obj\Release\中医证治智能系统.csprojResolveAssemblyReference.cache
 D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\obj\Release\BasicBingji.baml
 D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\obj\Release\BasicBjRuleAdmin.baml
 D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\obj\Release\BasicZhengm.baml
@@ -360,3 +357,6 @@ D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智�
 D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\obj\Release\中医证治智能系统.csproj.GenerateResource.Cache
 D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\obj\Release\中医证治智能系统.exe.manifest
 D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\obj\Release\中医证治智能系统.application
+D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\obj\Release\中医证治智能系统.exe
+D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\obj\Release\中医证治智能系统.pdb
+D:\苏功闯\我的文档\GitHub\Repos\中医证治智能系统\中医证治智能系统\obj\Release\中医证治智能系统.csprojResolveAssemblyReference.cache

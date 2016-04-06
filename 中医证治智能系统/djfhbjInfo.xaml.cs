@@ -132,8 +132,8 @@ namespace 中医证治智能系统
         }
         private void search_Click(object sender, RoutedEventArgs e)
         {
-
-
+            // 先清空目录
+            listCustomer.Clear();
             if (text_box_bjmc.Text == "")
             {
                 string sql = String.Format("select * from t_info_djfhbj");
@@ -442,6 +442,8 @@ namespace 中医证治智能系统
         /// </summary>
         private void refresh()
         {
+            // 先清空目录
+            listCustomer.Clear();
             if (text_box_bjmc.Text == "")
             {
                 string sql = String.Format("select * from t_info_djfhbj");

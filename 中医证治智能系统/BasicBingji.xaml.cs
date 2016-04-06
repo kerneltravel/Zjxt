@@ -23,7 +23,8 @@ namespace 中医证治智能系统
     /// Interaction logic for BasicBingji.xaml
     /// </summary>
     public partial class BasicBingji : Window
-    {// 定义连接字符串
+    {
+        // 定义连接字符串
         static public string connString = ConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
         // 创建 Connection 对象
         static public SqlConnection conn = new SqlConnection(connString);
@@ -123,14 +124,18 @@ namespace 中医证治智能系统
         }
         private void text_bjmc_LostFocus(object sender, RoutedEventArgs e)
         {
-            User_Edit.BingjiName = text_bjmc.Text;
+            if (text_bjbh.Text != "")
+                User_Edit.BingjiName = text_bjmc.Text;
         }
         private void text_bz_LostFocus(object sender, RoutedEventArgs e)
         {
-            User_Edit.Beizu = text_bz.Text;
+            if (text_bjbh.Text != "")
+                User_Edit.Beizu = text_bz.Text;
         }
         private void search_Click(object sender, RoutedEventArgs e)
         {
+            // 先清空目录
+            listCustomer.Clear();
             if (text_box_bjmc.Text == "")
             {
                 string sql = String.Format("select * from t_info_jbbj");
@@ -145,8 +150,6 @@ namespace 中医证治智能系统
                 lv.ItemsSource = listCustomer;
                 dr.Close();
                 conn.Close();
-
-
             }
             else
             {
@@ -218,6 +221,7 @@ namespace 中医证治智能系统
         /// </summary>
         private void select_search_Click(object sender, RoutedEventArgs e)
         {
+            this.Close();
             UserInfo basicbingji = lv.SelectedItem as UserInfo;
             if (basicbingji != null && basicbingji is UserInfo)
             {
@@ -228,7 +232,6 @@ namespace 中医证治智能系统
                     PassValuesEvent(this, args);
                 }
             }
-            this.Close();
         }
 
         private void lv_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -273,7 +276,8 @@ namespace 中医证治智能系统
             text_bjmc.Text = "";
             text_bjbh.Text = "";
             text_bz.Text = "";
-
+            // 刷新目录
+            refresh();
         }
 
         private void add_input_Click(object sender, RoutedEventArgs e)
@@ -434,6 +438,8 @@ namespace 中医证治智能系统
         /// </summary>
         private void refresh()
         {
+            // 先清空目录
+            listCustomer.Clear();
             if (text_box_bjmc.Text == "")
             {
                 string sql = String.Format("select * from t_info_jbbj");
