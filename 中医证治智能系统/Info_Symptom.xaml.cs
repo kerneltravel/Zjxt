@@ -113,7 +113,12 @@ namespace 中医证治智能系统
             while (dr.Read())
             {
                 //？？？ 有问题，数据库中的 zxlxbh = 30 对应的 zxbh 为空会出现问题，赋值为0问题解决
-                nodes.Add(new Node { ID = Convert.ToInt32(dr["zxbh"]), Name = dr["zxbh"].ToString() + "  " + dr[2].ToString(), ParentID = Convert.ToInt32(dr["zxlxbh"])});
+                nodes.Add(
+                    new Node { 
+                        ID = Convert.ToInt32(dr["zxbh"]), 
+                        Name = dr["zxbh"].ToString() + "  " + dr[2].ToString(), 
+                        ParentID = Convert.ToInt32(dr["zxlxbh"])
+                    });
                 //nodes.Add(new Node { ID = Convert.ToInt32(dr["zxbh"]), Name = dr["zxbh"].ToString() + "  " + "默认名称", ParentID = Convert.ToInt32(dr["zxlxbh"]) });
             }
             dr.Close();
@@ -126,7 +131,12 @@ namespace 中医证治智能系统
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                nodes.Add(new Node { ID = Convert.ToInt32(dr["id"]), Name = dr["zxmc"].ToString().Trim(), ParentID = Convert.ToInt32(dr["zxbh"]) });
+                nodes.Add(
+                    new Node {
+                        ID = Convert.ToInt32(dr["zxbh"].ToString() + dr["id"].ToString()), 
+                        Name = dr["zxmc"].ToString().Trim(), 
+                        ParentID = Convert.ToInt32(dr["zxbh"]) 
+                    });
             }
             dr.Close();
             conn.Close();

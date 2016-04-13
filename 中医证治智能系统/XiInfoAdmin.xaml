@@ -64,7 +64,7 @@
 
                 </Grid>
             </TabItem>
-            <TabItem Name="tabItem1" Header="系信息录入" Margin="5,0,-5,-3" HorizontalAlignment="Left" Width="110" >
+            <TabItem Name="tabItem1" Header="系信息录入" Margin="5,0,-9,-3" HorizontalAlignment="Left" Width="80" >
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="320"/>
