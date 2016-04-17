@@ -494,6 +494,11 @@ namespace 中医证治智能系统
             comb_zbs.Items.Clear();
             comb_zbs.Items.Add("--请选择组别数--");
             comb_zbs.SelectedIndex = 0;
+            comb_tjfz.SelectedIndex = -1;
+            comb_zlfz.SelectedIndex = -1;
+            tjmc.Clear();
+            // 刷新子树
+            RefreshTree1();
             // 清空
             nodes.Clear();
             // 判断是否存在该病名的推理规则
@@ -743,10 +748,6 @@ namespace 中医证治智能系统
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
                     int count = comm.ExecuteNonQuery();
-                    if (count > 0)
-                    {
-                        MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
                 }
 
                 catch (Exception)
@@ -766,23 +767,25 @@ namespace 中医证治智能系统
 
         private void btn_add_Click(object sender, RoutedEventArgs e)
         {
-            Is_Repeat();
-            if (IsRepeat)
-            {
-                MessageBox.Show("该条件已添加！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else
-            {
-                string sql = String.Format("insert into t_rule_jbbj ( ff, blgz, zxbh, tjzb, znfz, gzfz, jbbjbh) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, bjNumber);
-                conn.Open();
-                SqlCommand comm = new SqlCommand(sql, conn);
-                int count = comm.ExecuteNonQuery();
-                conn.Close();
-                IsAdd = false;
-                // 刷新子树
-                RefreshTree1();
+            if (IsAdd) {
+                Is_Repeat();
+                if (IsRepeat)
+                {
+                    MessageBox.Show("该条件已添加！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    string sql = String.Format("insert into t_rule_jbbj ( ff, blgz, zxbh, tjzb, znfz, gzfz, jbbjbh) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, bjNumber);
+                    conn.Open();
+                    SqlCommand comm = new SqlCommand(sql, conn);
+                    int count = comm.ExecuteNonQuery();
+                    conn.Close();
+                    IsAdd = false;
+                    // 刷新子树
+                    RefreshTree1();
 
-            }
+                }
+            }   
         }
 
         public void Is_Repeat()

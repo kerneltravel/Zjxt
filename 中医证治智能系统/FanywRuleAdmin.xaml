@@ -1,7 +1,7 @@
 ﻿<Window x:Class="中医证治智能系统.FanywRuleAdmin"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="中医证治智能系统【反药物规则管理】" Height="650" Width="860" WindowStartupLocation="CenterScreen">
+        Title="中医证治智能系统【药物取舍规则管理】" Height="650" Width="860" WindowStartupLocation="CenterScreen">
     <Grid Background="#FFE5E5E5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="800"/>
@@ -60,7 +60,7 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-            <Label Content="反药物规则录入" HorizontalAlignment="Left" Margin="380,32,0,0" VerticalAlignment="Top" FontSize="20"/>
+            <Label Content="药物取舍规则录入" HorizontalAlignment="Left" Margin="380,32,0,0" VerticalAlignment="Top" FontSize="20"/>
             <TextBlock HorizontalAlignment="Left" Margin="688,10,0,0" TextWrapping="Wrap" Text="规则说明：中医用药时，某些药不能同时存在于同一处方之中；如果出现，药物只能取其中一种！具体用药请遵医嘱！" VerticalAlignment="Top" Height="91" Width="135" Foreground="Red" FontWeight="Bold"/>
         </Grid>
         <Button x:Name="save" Margin="128,0,613,0" HorizontalAlignment="Center" Width="59" Click="save_Click">

@@ -216,6 +216,9 @@ namespace 中医证治智能系统
             comb_zbs.Items.Clear();
             comb_zbs.Items.Add("--请选择组别数--");
             comb_zbs.SelectedIndex = 0;
+            comb_tjfz.SelectedIndex = -1;
+            comb_zlfz.SelectedIndex = -1;
+            tjmc.Clear();
             // 清空
             nodes.Clear();
             // 将数据库数据写入 List 集合
@@ -271,9 +274,9 @@ namespace 中医证治智能系统
             {
                 nodes.Add(new Node
                 {
-                    ID = Convert.ToInt32(dr["ff"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString()),
+                    ID = Convert.ToInt64(dr["ff"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString()),
                     Name = dr["zxbh"].ToString() + "  " + dr[4].ToString() + "【症象】",
-                    ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
+                    ParentID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
                 });
             }
             dr.Close();
@@ -290,7 +293,7 @@ namespace 中医证治智能系统
                 {
                     ID = Convert.ToInt64(dr["ff"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
                     Name = dr["zxmc"].ToString(),
-                    ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString())
+                    ParentID = Convert.ToInt64(dr["ff"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString())
                 });
             }
             dr.Close();
@@ -390,7 +393,7 @@ namespace 中医证治智能系统
                 {
                     nodes.Add(new Node
                     {
-                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString()),
+                        ID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString()),
                         Name = dr["zxbh"].ToString() + "  " + dr[4].ToString()
                     });
                 }
@@ -409,7 +412,7 @@ namespace 中医证治智能系统
                     {
                         ID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
                         Name = dr["zxmc"].ToString(),
-                        ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString())
+                        ParentID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString())
                     });
                 }
                 dr.Close();
@@ -627,7 +630,7 @@ namespace 中医证治智能系统
                     {
                         nodes.Add(new Node
                         {
-                            ID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString()),
+                            ID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString()),
                             Name = dr["zxbh"].ToString() + "  " + dr[4].ToString()
                         });
                     }
@@ -646,14 +649,13 @@ namespace 中医证治智能系统
                         {
                             ID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
                             Name = dr["zxmc"].ToString(),
-                            ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString())
+                            ParentID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString())
                         });
                     }
                     dr.Close();
                     conn.Close();
                     // 调用创建树函数
                     BuildENTree1();
-                    tjmc.Text = "";
                 }              
             }
         }
@@ -694,7 +696,7 @@ namespace 中医证治智能系统
                 {
                     nodes.Add(new Node
                     {
-                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString()),
+                        ID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString()),
                         Name = dr["zxbh"].ToString() + "  " + dr[4].ToString()
                     });
                 }
@@ -710,9 +712,9 @@ namespace 中医证治智能系统
                 {
                     nodes.Add(new Node
                     {
-                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
+                        ID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
                         Name = dr["zxmc"].ToString(),
-                        ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString())
+                        ParentID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString())
                     });
                 }
                 dr.Close();
@@ -738,7 +740,7 @@ namespace 中医证治智能系统
             {
                 nodes.Add(new Node
                 {
-                    ID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString()),
+                    ID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString()),
                     Name = dr["zxbh"].ToString() + "  " + dr[4].ToString()
                 });
             }
@@ -756,9 +758,9 @@ namespace 中医证治智能系统
             {
                 nodes.Add(new Node
                 {
-                    ID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
+                    ID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
                     Name = dr["zxmc"].ToString(),
-                    ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString())
+                    ParentID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString())
                 });
             }
             dr.Close();

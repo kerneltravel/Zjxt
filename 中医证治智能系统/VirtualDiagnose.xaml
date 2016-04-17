@@ -6,8 +6,8 @@
     <Grid>
         <StackPanel HorizontalAlignment="Left" Height="37" VerticalAlignment="Top" Orientation="Horizontal" Width="852" Background="{DynamicResource ButtonNormalBackground}"/>
         <Button Content="退出" HorizontalAlignment="Left" Margin="362,0,0,0" VerticalAlignment="Top" Width="40" Height="37" Click="Button_Click"/>
-        <Button Content="新建拷贝诊断" HorizontalAlignment="Left" Margin="266,0,0,0" VerticalAlignment="Top" Width="84" Height="37" Click="Button_Click_copyzd"/>
-        <Button Content="病历提取" HorizontalAlignment="Left" Margin="189,0,0,0" VerticalAlignment="Top" Width="63" Height="37" Click="Button_Click_bltq"/>
+        <Button Name="copyzd" Content="新建拷贝诊断" HorizontalAlignment="Left" Margin="266,0,0,0" VerticalAlignment="Top" Width="84" Height="37" Click="Button_Click_copyzd"/>
+        <Button Name="bltq" Content="病历提取" HorizontalAlignment="Left" Margin="189,0,0,0" VerticalAlignment="Top" Width="63" Height="37" Click="Button_Click_bltq"/>
         <Button Content="清除" HorizontalAlignment="Left" Margin="133,0,0,0" VerticalAlignment="Top" Width="41" Height="37" Click="Button_Click_clear"/>
         <Button Content="诊断" HorizontalAlignment="Left" Margin="77,0,0,0" VerticalAlignment="Top" Width="43" Height="37" Click="Button_Click_zd" RenderTransformOrigin="0.256,0.486"/>
         <Button  Name="zd" Content="新建诊断" HorizontalAlignment="Left" VerticalAlignment="Top" Width="62" Height="37" Click="Button_Click_new"/>

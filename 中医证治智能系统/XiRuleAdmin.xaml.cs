@@ -183,7 +183,7 @@ namespace 中医证治智能系统
             {
                 nodes.Add(new Node
                 {
-                    ID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString()),
+                    ID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString()),
                     Name = dr["zxbh"].ToString() + "  " + dr[4].ToString()
                 });
             }
@@ -198,7 +198,7 @@ namespace 中医证治智能系统
             {
                 nodes.Add(new Node
                 {
-                    ID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
+                    ID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
                     Name = dr["zxbh"].ToString() + "  " + dr[5].ToString(),
                     ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString())
                 });
@@ -373,6 +373,11 @@ namespace 中医证治智能系统
             comb_zbs.Items.Clear();
             comb_zbs.Items.Add("--请选择组别数--");
             comb_zbs.SelectedIndex = 0;
+            comb_tjfz.SelectedIndex = -1;
+            comb_zlfz.SelectedIndex = -1;
+            tjmc.Clear();
+            // 刷新子树
+            RefreshTree1();
             // 清空
             nodes.Clear();
             // 判断是否存在该病名的推理规则
@@ -762,22 +767,24 @@ namespace 中医证治智能系统
         /// </summary>
         private void btn_add_Click(object sender, RoutedEventArgs e)
         {
-            Is_Repeat();
-            if (IsRepeat)
-            {
-                MessageBox.Show("该条件已添加！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else
-            {
-                string sql = String.Format("insert into x_t_rule_x ( ff, blgz, zxbh, tjzb, znfz, gzfz, xbh) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_xbh);
-                conn.Open();
-                SqlCommand comm = new SqlCommand(sql, conn);
-                int count = comm.ExecuteNonQuery();
-                conn.Close();
-                IsAdd = false;
-                // 刷新子树
-                RefreshTree1();
-            }
+            if (IsAdd) {
+                Is_Repeat();
+                if (IsRepeat)
+                {
+                    MessageBox.Show("该条件已添加！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    string sql = String.Format("insert into x_t_rule_x ( ff, blgz, zxbh, tjzb, znfz, gzfz, xbh) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_xbh);
+                    conn.Open();
+                    SqlCommand comm = new SqlCommand(sql, conn);
+                    int count = comm.ExecuteNonQuery();
+                    conn.Close();
+                    IsAdd = false;
+                    // 刷新子树
+                    RefreshTree1();
+                }
+            }   
         }
 
         /// <summary>
@@ -816,10 +823,6 @@ namespace 中医证治智能系统
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
                     int count = comm.ExecuteNonQuery();
-                    if (count > 0)
-                    {
-                        MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
                 }
                 catch (Exception)
                 {

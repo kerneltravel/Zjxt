@@ -39,6 +39,7 @@ namespace 中医证治智能系统
         // 用于判断是否进行了 Add 操作
         bool IsAdd = false;
         bool iscopy = false;
+        bool isbltq = false;
         bool isnowzz = false;
         bool isfirstzz = false;
         bool iszstime = false;
@@ -60,14 +61,13 @@ namespace 中医证治智能系统
         
         string selectIndex = "0";
 
-
-
         public VirtualDiagnose()
         {
             InitializeComponent();
             lb.ItemsSource = listZz;
             lv.ItemsSource = listZd;
         }
+
         public class ZdInfo : INotifyPropertyChanged
         {
             #region INotifyPropertyChanged 成员
@@ -82,7 +82,6 @@ namespace 中医证治智能系统
             #endregion
             private string _xxLx;
             private string _xxName;
-
 
             public string XxLx
             {
@@ -99,9 +98,9 @@ namespace 中医证治智能系统
             {
                 _xxLx = xxlx;
                 _xxName = xxname;
-
             }
         }
+
         public class ZzInfo : INotifyPropertyChanged
         {
             #region INotifyPropertyChanged 成员
@@ -121,47 +120,61 @@ namespace 中医证治智能系统
                 set { _zzname = value; OnPropertyChanged(new PropertyChangedEventArgs("ZzName")); }
             }
 
-
             public ZzInfo(string zzname)
             {
                 _zzname = zzname;
-
-
             }
         }
+
+        /// <summary>
+        /// 功能：退出
+        /// </summary>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
+        /// <summary>
+        /// 功能：新建诊断
+        /// </summary>
         private void Button_Click_new(object sender, RoutedEventArgs e)
         {
             if (IsAdd == false)
             {
                 IsAdd = true;
+
+                // 查找出最大id号，并将其加1赋值给number
                 string sql = String.Format("select max(id) from t_bl where ysbh='00000028'");
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
                 while (dr.Read())
                 {
-                    number = (Convert.ToInt64(dr[0])).ToString();
+                    number = (Convert.ToInt64(dr[0]) + 1).ToString();
                 }
                 dr.Close();
                 conn.Close();
 
+                // 插入新的病例
                 sql = String.Format("Insert into t_bl (blbh,bllx,jsxx,jzsj,ysbh,zt) values ('{0}','3','', GetDate(),'00000028','0')", number);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 int count = comm.ExecuteNonQuery();
-                if (count > 0)
-                {
-                    MessageBox.Show("插入成功");
-                }
+                //if (count > 0)
+                //{
+                //    MessageBox.Show("插入成功");
+                //}
                 conn.Close();
+
+                // 新建诊断后，病例提取及新建拷贝诊断将不可用
+                bltq.IsEnabled = false;
+                copyzd.IsEnabled = false;
             }
         }
 
+        /// <summary>
+        /// 功能：清除
+        /// </summary>
         private void Button_Click_clear(object sender, RoutedEventArgs e)
         {
             listZz.Clear();
@@ -170,6 +183,11 @@ namespace 中医证治智能系统
             bljs.Text = "";
         }
 
+        /// <summary>
+        /// 功能：添加现症象
+        /// 说明：xxdllx = 0 xxxllx = 2 xxbh --> 现症象编号
+        ///       xxdllx = 0 xxxllx = 8 xxbh --> 现症象名称
+        /// </summary>
         private void Button_Click_xzz(object sender, RoutedEventArgs e)
         {
             if (IsAdd == false)
@@ -180,12 +198,12 @@ namespace 中医证治智能系统
             {
                 MessageBox.Show("没有选中任何信息，请先在症状列表选择框中选择您需要的症状！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-
             else
             {
-
                 ZzInfo Sel_Info = new ZzInfo("");
                 Sel_Info = lb.SelectedItem as ZzInfo;
+
+                // 先判断现症状是否重复添加
                 string sql = String.Format("select count(*) from t_bl_mx where id = '{0}'and xxdllx = '0' and xxxllx = '8'and xxbh ='{1}' ", number, Sel_Info.ZzName);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
@@ -193,20 +211,19 @@ namespace 中医证治智能系统
                 while (dr.Read())
                 {
                     count = Convert.ToInt16(dr[0].ToString());
-
                 }
                 dr.Close();
                 conn.Close();
                 if (count > 0)
                 {
                     MessageBox.Show("已添加！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-
-
                 }
                 else
                 {
-
+                    // 显示现症象名称
                     listZd.Add(new ZdInfo("现症象名称", Sel_Info.ZzName));
+                    
+                    // 根据现症象名称查找现症象编号
                     sql = String.Format("select zxbh from t_info_zxmx where zxmc ='{0}'", Sel_Info.ZzName);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
@@ -214,39 +231,45 @@ namespace 中医证治智能系统
                     while (dr.Read())
                     {
                         zxnumber = dr[0].ToString();
-
-
                     }
                     dr.Close();
                     conn.Close();
+
+                    // 添加现症象编号
                     sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh)VALUES ('{0}', '{1}', '{2}', '{3}')", number, '0', '2', zxnumber);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     int count1 = comm.ExecuteNonQuery();
-                    if (count1 > 0)
-                    {
-                        MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
+                    //if (count1 > 0)
+                    //{
+                    //    MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //}
                     conn.Close();
+
+                    // 添加现症象名称
                     sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh)VALUES ('{0}', '{1}', '{2}', '{3}')", number, '0', '8', Sel_Info.ZzName);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     int count2 = comm.ExecuteNonQuery();
-                    if (count2 > 0)
-                    {
-                        MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
+                    //if (count2 > 0)
+                    //{
+                    //    MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //}
                     conn.Close();
                 }
-
             }
             listZz.Clear();
-            zz.Text = "";
+            zz.Text = ""; 
         }
 
+        /// <summary>
+        /// 功能：添加初期症象
+        /// 说明：xxdllx = 0 xxxllx = 1 xxbh --> 初期症象编号
+        ///       xxdllx = 0 xxxllx = 7 xxbh --> 初期症象名称
+        /// </summary>
         private void Button_Click_cqzz(object sender, RoutedEventArgs e)
         {
-            if (IsAdd == false)
+            if (IsAdd == false) 
             {
                 MessageBox.Show("表未处于打开状态，请先新建诊断！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -254,12 +277,12 @@ namespace 中医证治智能系统
             {
                 MessageBox.Show("没有选中任何信息，请先在症状列表选择框中选择您需要的症状！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-
             else
             {
-
                 ZzInfo Sel_Info = new ZzInfo("");
                 Sel_Info = lb.SelectedItem as ZzInfo;
+
+                // 先判断初期症象名称是否重复添加
                 string sql = String.Format("select count(*) from t_bl_mx where id = '{0}'and xxdllx = '0' and xxxllx = '7'and xxbh ='{1}' ", number, Sel_Info.ZzName);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
@@ -268,12 +291,13 @@ namespace 中医证治智能系统
                 if (count > 0)
                 {
                     MessageBox.Show("已添加！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-
                 }
-
                 else
                 {
+                    // 显示初期症象名称
                     listZd.Add(new ZdInfo("初期症象名称", Sel_Info.ZzName));
+
+                    // 根据初期症象名称查找初期症象编号
                     sql = String.Format("select zxbh from t_info_zxmx where zxmc ='{0}'", Sel_Info.ZzName);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
@@ -281,39 +305,44 @@ namespace 中医证治智能系统
                     while (dr.Read())
                     {
                         zxnumber = dr[0].ToString();
-
                     }
                     dr.Close();
                     conn.Close();
 
+                    // 添加初期症象编号
                     sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh)VALUES ('{0}', '{1}', '{2}', '{3}')", number, '0', '1', zxnumber);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     int count1 = comm.ExecuteNonQuery();
-                    if (count1 > 0)
-                    {
-                        MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
+                    //if (count1 > 0)
+                    //{
+                    //    MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //}
                     conn.Close();
+
+                    // 添加初期症象名称
                     sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh)VALUES ('{0}', '{1}', '{2}', '{3}')", number, '0', '7', Sel_Info.ZzName);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     int count2 = comm.ExecuteNonQuery();
-                    if (count2 > 0)
-                    {
-                        MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
+                    //if (count2 > 0)
+                    //{
+                    //    MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //}
                     conn.Close();
                 }
-
             }
             zz.Text = "";
             listZz.Clear();
         }
 
+        /// <summary>
+        /// 功能：添加主诉时间
+        /// 说明：xxdllx = 0 xxxllx = 3 xxbh --> 主诉时间编号
+        ///       xxdllx = 0 xxxllx = 9 xxbh --> 主诉时间名称
+        /// </summary>
         private void Button_Click_zssj(object sender, RoutedEventArgs e)
         {
-
             if (IsAdd == false)
             {
                 MessageBox.Show("表未处于打开状态，请先新建诊断！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -322,12 +351,12 @@ namespace 中医证治智能系统
             {
                 MessageBox.Show("没有选中任何信息，请先在症状列表选择框中选择您需要的症状！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-
             else
             {
-
                 ZzInfo Sel_Info = new ZzInfo("");
                 Sel_Info = lb.SelectedItem as ZzInfo;
+
+                // 先判断主诉时间名称是否重复添加
                 string sql = String.Format("select count(*) from t_bl_mx where id = '{0}'and xxdllx = '0' and xxxllx = '9'and xxbh ='{1}' ", number, Sel_Info.ZzName);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
@@ -336,11 +365,13 @@ namespace 中医证治智能系统
                 if (count > 0)
                 {
                     MessageBox.Show("已添加！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-
                 }
                 else
                 {
+                    // 显示主诉时间名称
                     listZd.Add(new ZdInfo("主诉时间名称", Sel_Info.ZzName));
+
+                    // 根据主诉时间名称查找主诉时间编号
                     sql = String.Format("select zxbh from t_info_zxmx where zxmc ='{0}'", Sel_Info.ZzName);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
@@ -348,28 +379,30 @@ namespace 中医证治智能系统
                     while (dr.Read())
                     {
                         zxnumber = dr[0].ToString();
-
                     }
                     dr.Close();
                     conn.Close();
 
+                    // 添加主诉时间编号
                     sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh)VALUES ('{0}', '{1}', '{2}', '{3}')", number, '0', '3', zxnumber);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     int count1 = comm.ExecuteNonQuery();
-                    if (count1 > 0)
-                    {
-                        MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
+                    //if (count1 > 0)
+                    //{
+                    //    MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //}
                     conn.Close();
+
+                    // 添加主诉时间名称
                     sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh)VALUES ('{0}', '{1}', '{2}', '{3}')", number, '0', '9', Sel_Info.ZzName);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     int count2 = comm.ExecuteNonQuery();
-                    if (count2 > 0)
-                    {
-                        MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
+                    //if (count2 > 0)
+                    //{
+                    //    MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //}
                     conn.Close();
                 }
             }
@@ -377,9 +410,13 @@ namespace 中医证治智能系统
             listZz.Clear();
         }
 
+        /// <summary>
+        /// 功能：添加主诉
+        /// 说明：xxdllx = 0 xxxllx = 0 xxbh --> 主诉编号
+        ///       xxdllx = 0 xxxllx = 6 xxbh --> 主诉名称
+        /// </summary>
         private void Button_Click_zs(object sender, RoutedEventArgs e)
         {
-
             if (IsAdd == false)
             {
                 MessageBox.Show("表未处于打开状态，请先新建诊断！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -388,23 +425,22 @@ namespace 中医证治智能系统
             {
                 MessageBox.Show("没有选中任何信息，请先在症状列表选择框中选择您需要的症状！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-
             else
             {
-
                 ZzInfo Sel_Info = new ZzInfo("");
                 Sel_Info = lb.SelectedItem as ZzInfo;
-                string sql = String.Format("select count(*) from t_bl_mx where id = '{0}'and xxdllx = '0' and xxxllx = '0'and xxbh ='{1}' ", number, Sel_Info.ZzName);
+                // 先检查该主诉名称有没有重复添加，若没有，则进行下一步
+                string sql = String.Format("select count(*) from t_bl_mx where id = '{0}'and xxdllx = '0' and xxxllx = '6' and xxbh ='{1}' ", number, Sel_Info.ZzName);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
-
                 int count = (int)comm.ExecuteScalar();
-
                 conn.Close();
                 if (count == 0)
                 {
-
+                    // 将主诉名称显示至列表
                     listZd.Add(new ZdInfo("主诉名称", Sel_Info.ZzName));
+
+                    // 根据主诉名称查找主诉编号
                     sql = String.Format("select zxbh from t_info_zxmx where zxmc ='{0}'", Sel_Info.ZzName);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
@@ -412,54 +448,62 @@ namespace 中医证治智能系统
                     while (dr.Read())
                     {
                         zxnumber = dr[0].ToString();
-
                     }
                     dr.Close();
                     conn.Close();
 
+                    // 添加主诉编号
                     sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh)VALUES ('{0}', '{1}', '{2}', '{3}')", number, '0', '0', zxnumber);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     int count1 = comm.ExecuteNonQuery();
-                    if (count1 > 0)
-                    {
-                        MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
+                    //if (count1 > 0)
+                    //{
+                    //    MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //}
                     conn.Close();
-                    sql = String.Format("delete from t_bl_mx  where id = '{0}'and xxdllx = '0' and xxxllx = '2'and xxbh ='{1}'", number, Sel_Info.ZzName);
+
+                    // 根据主诉编号删除所对应的现症象编号（两者不能同时存在同一编号，主诉编号为主）
+                    sql = String.Format("delete from t_bl_mx  where id = '{0}'and xxdllx = '0' and xxxllx = '2'and xxbh ='{1}'", number, zxnumber);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     int count2 = comm.ExecuteNonQuery();
-                    if (count2 > 0)
-                    {
-                        MessageBox.Show("成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
+                    //if (count2 > 0)
+                    //{
+                    //    MessageBox.Show("成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //}
                     conn.Close();
-                    sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh)VALUES ('{0}', '{1}', '{2}', '{3}')", number, '0', '6', zxnumber);
+
+                    // 添加主诉名称
+                    sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh)VALUES ('{0}', '{1}', '{2}', '{3}')", number, '0', '6', Sel_Info.ZzName);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     int count3 = comm.ExecuteNonQuery();
-                    if (count3 > 0)
-                    {
-                        MessageBox.Show("成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
+                    //if (count3 > 0)
+                    //{
+                    //    MessageBox.Show("成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //}
                     conn.Close();
+
+                    // 根据主诉名称删除所对应的现症象名称（两者不能同时存在同一名称，主诉名称为主）
                     sql = String.Format("delete from t_bl_mx  where id = '{0}'and xxdllx = '0' and xxxllx = '8'and xxbh ='{1}'", number, Sel_Info.ZzName);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     int count4 = comm.ExecuteNonQuery();
-                    if (count4 > 0)
-                    {
-                        MessageBox.Show("成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
+                    //if (count4 > 0)
+                    //{
+                    //    MessageBox.Show("成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //}
                     conn.Close();
-
                 }
             }
             zz.Text = "";
             listZz.Clear();
         }
 
+        /// <summary>
+        /// 功能：病例提取
+        /// </summary>
         private void Button_Click_bltq(object sender, RoutedEventArgs e)
         {
             listZd.Clear();
@@ -469,15 +513,24 @@ namespace 中医证治智能系统
             ClassiccaseSearch classicalcase = new ClassiccaseSearch();
             classicalcase.Show();
             classicalcase.PassValuesEvent += new ClassiccaseSearch.PassValuesHandler(ReceiveValues);
-
-
-
         }
+
+        /// <summary>
+        /// 功能：显示病例信息
+        /// 说明：e.Name --> 病例名称
+        ///       e.Number --> 病例编号
+        /// </summary>
         private void ReceiveValues(object sender, ClassiccaseSearch.PassValuesEventArgs e)
         {
-            bljs.Text = e.Name;
-            title = e.Name;
+            bljs.Text = e.Name; 
+            title = e.Name;     
             number = e.Number;
+
+            // 病例提取有效
+            if (e.Name != "")
+                isbltq = true;
+
+            // 显示现症象名称 
             string sql = String.Format("select xxbh from t_bl_mx where id = '{0}'and xxdllx = '0' and xxxllx = '8'", number);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
@@ -485,10 +538,11 @@ namespace 中医证治智能系统
             while (dr.Read())
             {
                 listZd.Add(new ZdInfo("现症象名称", dr[0].ToString()));
-
             }
             dr.Close();
             conn.Close();
+
+            // 初期症象名称
             sql = String.Format("select xxbh from t_bl_mx where id = '{0}'and xxdllx = '0' and xxxllx = '7'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
@@ -496,10 +550,11 @@ namespace 中医证治智能系统
             while (dr.Read())
             {
                 listZd.Add(new ZdInfo("初期症象名称", dr[0].ToString()));
-
             }
             dr.Close();
             conn.Close();
+
+            // 主诉时间名称
             sql = String.Format("select xxbh from t_bl_mx where id = '{0}'and xxdllx = '0' and xxxllx = '9'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
@@ -507,10 +562,11 @@ namespace 中医证治智能系统
             while (dr.Read())
             {
                 listZd.Add(new ZdInfo("主诉时间名称", dr[0].ToString()));
-
             }
             dr.Close();
             conn.Close();
+
+            // 主诉名称
             sql = String.Format("select xxbh from t_bl_mx where id = '{0}'and xxdllx = '0' and xxxllx = '6'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
@@ -518,35 +574,37 @@ namespace 中医证治智能系统
             while (dr.Read())
             {
                 listZd.Add(new ZdInfo("主诉名称", dr[0].ToString()));
-
             }
             dr.Close();
             conn.Close();
-            sql = String.Format("select xxbh from t_bl_mx where id = '{0}'and xxdllx = '0' and xxxllx = '4'", number);
+
+            // 既往史名称
+            sql = String.Format("select xxbh from t_bl_mx where id = '{0}'and xxdllx = '0' and xxxllx = 'a'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
                 listZd.Add(new ZdInfo("既往史名称", dr[0].ToString()));
-
             }
             dr.Close();
-            conn.Close(); sql = String.Format("select xxbh from t_bl_mx where id = '{0}'and xxdllx = '0' and xxxllx = '5'", number);
+            conn.Close();
+
+            // 西医病名名称
+            sql = String.Format("select xxbh from t_bl_mx where id = '{0}'and xxdllx = '0' and xxxllx = 'b'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
                 listZd.Add(new ZdInfo("西医病名名称", dr[0].ToString()));
-
             }
             dr.Close();
             conn.Close();
         }
 
         private void zz_TextChanged(object sender, TextChangedEventArgs e)
-        {
+        {    
             if (zz.Text != "")
             {
                 listZz.Clear();
@@ -564,9 +622,11 @@ namespace 中医证治智能系统
             }
         }
 
+        /// <summary>
+        /// 功能：选择病史
+        /// </summary>
         private void Button_Click_selectbs(object sender, RoutedEventArgs e)
         {
-
             if (IsAdd == false)
             {
                 MessageBox.Show("表未处于打开状态，请先新建诊断！");
@@ -578,17 +638,15 @@ namespace 中医证治智能系统
                 diseaseinfoadmin.Show();
             }
         }
+
+        /// <summary>
+        /// 功能：添加既往史
+        /// </summary>
         private void ReceiveValues1(object sender, selectbs.PassValuesEventArgs e)
         {
             if (IsAdd == true)
             {
-
-                listZd.Add(new ZdInfo("既往病史名称", e.Name));
-
-            }
-            else
-            {
-
+                // 先查重
                 string sql = String.Format("select count(*) from t_bl_mx where id = '{0}' and xxdllx = '0' and xxxllx = '4' and xxbh = '{1}'", number, e.Number);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
@@ -596,7 +654,6 @@ namespace 中医证治智能系统
                 while (dr.Read())
                 {
                     count = Convert.ToInt16(dr[0].ToString());
-
                 }
                 dr.Close();
                 conn.Close();
@@ -604,37 +661,40 @@ namespace 中医证治智能系统
                 {
                     MessageBox.Show("已添加");
                 }
-
                 else
                 {
                     lv.ItemsSource = listZd;
+                    // 显示既往病史名称
                     listZd.Add(new ZdInfo("既往病史名称", e.Name));
-                    sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh) values ('{1}','0', '4', '{0}')", number, e.Number);
+                    // 添加既往病史编号
+                    sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh) values ('{0}','0', '4', '{1}')", number, e.Number);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     int count1 = comm.ExecuteNonQuery();
-                    if (count1 > 0)
-                    {
-
-                        MessageBox.Show("插入病史编号成功");
-                    }
+                    //if (count1 > 0)
+                    //{
+                    //    MessageBox.Show("插入病史编号成功");
+                    //}
                     dr.Close();
                     conn.Close();
-                    sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh) values ('{1}','0', 'a','{0}')", e.Name, number);
+                    // 添加既往病史名称
+                    sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh) values ('{0}','0', 'a','{1}')", number, e.Name);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     count1 = comm.ExecuteNonQuery();
-                    if (count1 > 0)
-                    {
-
-                        MessageBox.Show("插入病史成功");
-                    }
+                    //if (count1 > 0)
+                    //{
+                    //    MessageBox.Show("插入病史成功");
+                    //}
                     dr.Close();
                     conn.Close();
                 }
             }
         }
-
+        
+        /// <summary>
+        /// 功能：添加西医病名
+        /// </summary>
         private void Button_Click_xybm(object sender, RoutedEventArgs e)
         {
             if (IsAdd == false)
@@ -643,26 +703,24 @@ namespace 中医证治智能系统
             }
             else
             {
-
                 XYBMsel diseaseinfoadmin = new XYBMsel();
                 diseaseinfoadmin.PassValuesEvent += new XYBMsel.PassValuesHandler(ReceiveValues);
                 diseaseinfoadmin.Show();
             }
         }
+
         /// <summary>
-        /// 功能：实现病名名称的读取和显示
+        /// 功能：实现西医病名名称的读取和显示
         /// </summary>
         private void ReceiveValues(object sender, XYBMsel.PassValuesEventArgs e)
         {
             if (IsAdd == true)
             {
-
-                listZd.Add(new ZdInfo("既往病史名称", e.Name));
-
+                listZd.Add(new ZdInfo("西医病名名称", e.Name));
             }
             else
             {
-
+                // 检查是否重复添加
                 string sql = String.Format("select count(*) from t_bl_mx where id = '{0}' and xxdllx = '0' and xxxllx = '5' and xxbh = '{1}'", number, e.Number);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
@@ -670,7 +728,6 @@ namespace 中医证治智能系统
                 while (dr.Read())
                 {
                     count = Convert.ToInt16(dr[0].ToString());
-
                 }
                 dr.Close();
                 conn.Close();
@@ -682,66 +739,76 @@ namespace 中医证治智能系统
                 {
                     lv.ItemsSource = listZd;
                     listZd.Add(new ZdInfo("西医病名名称", e.Name));
+
+                    // 添加西医病名编号
                     sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh) values ('{1}','0', '5', '{0}')", e.Number, number);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     int count1 = comm.ExecuteNonQuery();
-                    if (count1 > 0)
-                    {
-
-                        MessageBox.Show("插入西医病名编号成功");
-                    }
+                    //if (count1 > 0)
+                    //{
+                    //    MessageBox.Show("插入西医病名编号成功");
+                    //}
                     dr.Close();
                     conn.Close();
+
+                    // 添加西医病名名称
                     sql = String.Format("Insert into t_bl_mx (id,xxdllx,xxxllx,xxbh) values ('{1}','0', 'b','{0}')", e.Name, number);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     count1 = comm.ExecuteNonQuery();
-                    if (count1 > 0)
-                    {
-
-                        MessageBox.Show("插入西医病名成功");
-                    }
+                    //if (count1 > 0)
+                    //{
+                    //    MessageBox.Show("插入西医病名成功");
+                    //}
                     dr.Close();
                     conn.Close();
                 }
-
             }
         }
 
+        /// <summary>
+        /// 功能：诊断
+        /// </summary>
         private void Button_Click_zd(object sender, RoutedEventArgs e)
         {
-            String sql = String.Format("delete from	temp_bl_mx");
-            conn.Open();
-            SqlCommand comm = new SqlCommand(sql, conn);
-            int count = comm.ExecuteNonQuery();
-            if (count > 0)
-            conn.Close();
-            //拷贝原有诊断输入
-            sql = String.Format("insert	into temp_bl_mx(id,xxdllx,xxxllx,xxbh) (select id=a.id,xxdllx=a.xxdllx, xxxllx=a.xxxllx, xxbh=a.xxbh from t_bl_mx a where 	a.id ='{0}' and a.xxdllx = '0')", number);
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            SqlDataReader dr = comm.ExecuteReader();
-            while (dr.Read())
+            // 在直接病例提取并诊断的情况下需要利用以下四步将原有诊断结果清空并保留原有诊断输入
+            if (isbltq && !iscopy) 
             {
-                MessageBox.Show("清除基本证名临时表");
-            }
-            dr.Close();
-            conn.Close();
-            sql = String.Format("delete from t_bl_mx where id ='{0}'", number);
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            dr = comm.ExecuteReader();
-            dr.Close();
-            conn.Close();
+                /// 1.清空病例明细临时表
+                String sql = String.Format("delete from	temp_bl_mx");
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                int count = comm.ExecuteNonQuery();
+                conn.Close();
 
-            sql = String.Format("insert	into t_bl_mx(id,xxdllx,xxxllx,xxbh) (select id=a.id, xxdllx=a.xxdllx, xxxllx=a.xxxllx, xxbh=a.xxbh from temp_bl_mx a where 	a.id ='{0}')", number);
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            dr = comm.ExecuteReader();
-            dr.Close();
-            conn.Close();
-            /*********************************************************************/
+                /// 2.拷贝原有诊断输入
+                sql = String.Format("insert	into temp_bl_mx(id,xxdllx,xxxllx,xxbh) (select id=a.id, xxdllx=a.xxdllx, xxxllx=a.xxxllx, xxbh=a.xxbh from t_bl_mx a where a.id ='{0}' and a.xxdllx = '0')", number);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                count = comm.ExecuteNonQuery();
+                conn.Close();
+
+                /// 3.清空原有诊断输入及结果
+                sql = String.Format("delete from t_bl_mx where id ='{0}'", number);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                count = comm.ExecuteNonQuery();
+                conn.Close();
+
+                /// 4.拷贝原有诊断输入
+                sql = String.Format("insert	into t_bl_mx(id,xxdllx,xxxllx,xxbh) (select id=a.id, xxdllx=a.xxdllx, xxxllx=a.xxxllx, xxbh=a.xxbh from temp_bl_mx a where 	a.id ='{0}')", number);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                count = comm.ExecuteNonQuery();
+                conn.Close();
+
+                isbltq = false;
+            }           
+
+            /// 诊断前必须要输入以下四个信息：
+            /// 1.主诉名称 2.主诉时间名称 3.现症象名称
+            /// 4.病例检索信息
             for (int i = 0; i < listZd.Count; i++)
             {
                 ZdInfo item = listZd.ElementAt(i);
@@ -780,22 +847,23 @@ namespace 中医证治智能系统
                 MessageBox.Show("请输入病人现症状信息！");
             }
             else
-            {//诊断推理过程
+            {
+                // 诊断推理过程
                 IsAdd = false;
-
                 isnowzz = false;
                 isfirstzz = false;
                 iszstime = false;
                 iszs = false;
-                sql = String.Format("update t_bl set jsxx ='{0}' where id='{1}'", bljs.Text, number);
-                conn.Open();
-                comm = new SqlCommand(sql, conn);
-                count = comm.ExecuteNonQuery();
-                if (count > 0)
-                {
-                    MessageBox.Show("修改成功！", "操作", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                }
+                // 更新检索信息和当前时间
+                String sql = String.Format("update t_bl set jsxx ='{0}', jzsj = '{1}' where id='{2}'", bljs.Text, DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"), number);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                count = comm.ExecuteNonQuery();
+                //if (count > 0)
+                //{
+                //    MessageBox.Show("修改成功！", "操作", MessageBoxButton.OK, MessageBoxImage.Information);
+                //}
                 conn.Close();
                 listZz.Clear();
                 zz.Text = "";
@@ -804,10 +872,9 @@ namespace 中医证治智能系统
                 sql = String.Format("exec p_zd_judgewg @id ='{0}' ", number);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
-                dr = comm.ExecuteReader();
+                SqlDataReader dr = comm.ExecuteReader();
                 while (dr.Read())
                 {
-
                     MessageBox.Show("调用判断外感/内伤存储过程p_zd_judgewg");
                 }
                 dr.Close();
@@ -818,7 +885,6 @@ namespace 中医证治智能系统
                 dr = comm.ExecuteReader();
                 while (dr.Read())
                 {
-
                     MessageBox.Show("调用基本病机推理存储过程p_zd_jbbj");
                 }
                 dr.Close();
@@ -829,7 +895,6 @@ namespace 中医证治智能系统
                 dr = comm.ExecuteReader();
                 while (dr.Read())
                 {
-
                     temp = dr[0].ToString();
                 }
                 dr.Close();
@@ -842,7 +907,6 @@ namespace 中医证治智能系统
                     dr = comm.ExecuteReader();
                     while (dr.Read())
                     {
-
                         temp = dr[0].ToString();
                     }
                     dr.Close();
@@ -858,7 +922,6 @@ namespace 中医证治智能系统
                             dr = comm.ExecuteReader();
                             while (dr.Read())
                             {
-
                                 MessageBox.Show("调用外感病名推理存储过程p_wg_bmtl");
                             }
                             dr.Close();
@@ -871,7 +934,6 @@ namespace 中医证治智能系统
                             dr = comm.ExecuteReader();
                             while (dr.Read())
                             {
-
                                 MessageBox.Show("调用外感病名推理存储过程p_wg_bmtl");
                             }
                             dr.Close();
@@ -884,7 +946,6 @@ namespace 中医证治智能系统
                             dr = comm.ExecuteReader();
                             while (dr.Read())
                             {
-
                                 MessageBox.Show("调用外感病名推理存储过程p_wg_bmtl");
                             }
                             dr.Close();
@@ -897,7 +958,6 @@ namespace 中医证治智能系统
                             dr = comm.ExecuteReader();
                             while (dr.Read())
                             {
-
                                 MessageBox.Show("调用外感病名推理存储过程p_wg_bmtl");
                             }
                             dr.Close();
@@ -914,7 +974,6 @@ namespace 中医证治智能系统
                 dr = comm.ExecuteReader();
                 while (dr.Read())
                 {
-
                     MessageBox.Show("病史推理外感病名");
                 }
                 dr.Close();
@@ -925,7 +984,6 @@ namespace 中医证治智能系统
                 dr = comm.ExecuteReader();
                 while (dr.Read())
                 {
-
                     temp = dr[0].ToString();
                 }
                 dr.Close();
@@ -943,7 +1001,6 @@ namespace 中医证治智能系统
                         dr = comm.ExecuteReader();
                         while (dr.Read())
                         {
-
                             count = Convert.ToInt16(dr[0].ToString());
                         }
                         dr.Close();
@@ -955,7 +1012,6 @@ namespace 中医证治智能系统
                         dr = comm.ExecuteReader();
                         while (dr.Read())
                         {
-
                             wg_ff = Convert.ToInt16(dr[0].ToString());
                         }
                         dr.Close();
@@ -965,7 +1021,6 @@ namespace 中医证治智能系统
                             //如果没有外感证名成立，则近似
                             if (wg_ff == 0)//如果没有复合病机成立，则先近似推理复合病机
                             {
-
                                 //复合病机近似处理
                                 sql = String.Format("exec p_fhbj_jstl @id = '{0}'", number);
                                 conn.Open();
@@ -973,7 +1028,6 @@ namespace 中医证治智能系统
                                 dr = comm.ExecuteReader();
                                 while (dr.Read())
                                 {
-
                                     MessageBox.Show("复合病机近似处理");
                                 }
                                 dr.Close();
@@ -985,7 +1039,6 @@ namespace 中医证治智能系统
                                 dr = comm.ExecuteReader();
                                 while (dr.Read())
                                 {
-
                                     MessageBox.Show("清除基本证名临时表");
                                 }
                                 dr.Close();
@@ -997,7 +1050,6 @@ namespace 中医证治智能系统
                                 dr = comm.ExecuteReader();
                                 while (dr.Read())
                                 {
-
                                     MessageBox.Show("重新调用外感基本证名推理");
                                 }
                                 dr.Close();
@@ -1009,7 +1061,6 @@ namespace 中医证治智能系统
                                 dr = comm.ExecuteReader();
                                 while (dr.Read())
                                 {
-
                                     count = Convert.ToInt16(dr[0].ToString());
                                 }
                                 dr.Close();
@@ -1022,7 +1073,6 @@ namespace 中医证治智能系统
                                     dr = comm.ExecuteReader();
                                     while (dr.Read())
                                     {
-
                                         MessageBox.Show("外感基本证名近似推理");
                                     }
                                     dr.Close();
@@ -1034,8 +1084,7 @@ namespace 中医证治智能系统
                                     int count1 = comm.ExecuteNonQuery();
                                     if (count1 > 0)
                                     {
-
-                                        MessageBox.Show("更新近似度为8");
+                                        //MessageBox.Show("更新近似度为8");
                                     }
                                     dr.Close();
                                     conn.Close();
@@ -1049,7 +1098,6 @@ namespace 中医证治智能系统
                                 dr = comm.ExecuteReader();
                                 while (dr.Read())
                                 {
-
                                     MessageBox.Show("外感基本证名近似推理");
                                 }
                                 dr.Close();
@@ -1096,11 +1144,12 @@ namespace 中医证治智能系统
                 //display_bl result = new display_bl(number, oldnumber);
                 //result.Show();           
             }
-
-
         }
 
-        public void wg_hstl()//外感后续推理过程
+        /// <summary>
+        /// 功能：外感后续推理过程
+        /// </summary>
+        public void wg_hstl()
         {
             //调用证名合并推理子过程
             string sql = String.Format("exec p_zmhb @id = '{0}'", number);
@@ -1142,7 +1191,6 @@ namespace 中医证治智能系统
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-
                 count_hfyw = Convert.ToInt16(dr[0].ToString());
             }
             dr.Close();
@@ -1164,7 +1212,6 @@ namespace 中医证治智能系统
                 int count2 = comm.ExecuteNonQuery();
                 if (count2 > 0)
                 {
-
                     MessageBox.Show("诊断完毕");
                 }
                 dr.Close();
@@ -1241,7 +1288,10 @@ namespace 中医证治智能系统
             result1.Show();
         }
 
-        public bool wg_tl()//外感推理子过程wg_tl
+        /// <summary>
+        /// 功能：外感推理子过程wg_tl
+        /// </summary>
+        public bool wg_tl()
         {
             //调用系推理存储过程（根据症象推理）p_x_zx
             string sql = String.Format("exec p_x_zx @id = '{0}'", number);
@@ -1302,7 +1352,11 @@ namespace 中医证治智能系统
             else
                 return true;
         }
-        public void program_ns() //内伤推理总程序，包含ns_tl和ns_hstl的处理
+
+        /// <summary>
+        /// 功能：内伤推理总程序，包含ns_tl和ns_hstl的处理
+        /// </summary>
+        public void program_ns() 
         {
             if (ns_tl())//内伤推理有结果时，进内伤后续处理
             {
@@ -1427,7 +1481,11 @@ namespace 中医证治智能系统
                 ns_hstl();
             }
         }
-        public bool ns_tl()//内伤推理子过程，如果有结果推出，返回true，否则返回false
+
+        /// <summary>
+        /// 功能：内伤推理子过程，如果有结果推出，返回true，否则返回false
+        /// </summary>
+        public bool ns_tl()
         {//调用内伤系推理存储过程（根据主诉推理）
             String sql = String.Format("exec p_x_zs @id =  '{0}'", number);
             conn.Open();
@@ -1516,7 +1574,11 @@ namespace 中医证治智能系统
             else
                 return false;
         }
-        public void ns_hstl()//内伤后续推理
+
+        /// <summary>
+        /// 功能：内伤后续推理
+        /// </summary>
+        public void ns_hstl()
         {
             //调用证名合并推理子过程
             String sql = String.Format("exec p_zmhb @id =  '{0}'", number);
@@ -1612,11 +1674,11 @@ namespace 中医证治智能系统
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 int count2 = comm.ExecuteNonQuery();
-                if (count2 > 0)
-                {
+                //if (count2 > 0)
+                //{
 
-                    MessageBox.Show("诊断完毕");
-                }
+                //    MessageBox.Show("诊断完毕");
+                //}
                 dr.Close();
                 conn.Close();
 
@@ -1637,6 +1699,9 @@ namespace 中医证治智能系统
             }
         }
 
+        /// <summary>
+        /// 功能：新建拷贝诊断
+        /// </summary>
         private void Button_Click_copyzd(object sender, RoutedEventArgs e)
         {
             if (bljs.Text == "")
@@ -1648,15 +1713,19 @@ namespace 中医证治智能系统
                 iscopy = true;
                 oldnumber = number;
                 bljs.Text = "西医诊断—" + bljs.Text;
+
+                // 插入新病例
                 string sql = String.Format("Insert into t_bl (bllx,jsxx,jzsj,ysbh,zt) values ('3','{0}', GetDate(),'00000028','0')", bljs.Text);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 int count = comm.ExecuteNonQuery();
-                if (count > 0)
-                {
-                    MessageBox.Show("插入成功");
-                }
+                //if (count > 0)
+                //{
+                //    MessageBox.Show("插入成功");
+                //}
                 conn.Close();
+
+                // 查找当前最大id号并赋值给新的病例编号
                 sql = String.Format("select max(id) from t_bl where ysbh='00000028'");
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
@@ -1667,23 +1736,26 @@ namespace 中医证治智能系统
                 }
                 dr.Close();
                 conn.Close();
+
+                // 更新病例表中的病例编号
                 sql = String.Format("update t_bl set blbh ='{0}' where id ='{1}'", number, number);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
-                dr = comm.ExecuteReader();
-                dr.Close();
+                count = comm.ExecuteNonQuery();
                 conn.Close();
+
+                // 将旧的病历表中的输入信息复制给新的病例表（只复制诊断输入不复制诊断结果）
                 sql = String.Format("exec p_copybl @source_id ='{0}',@object_id ='{1}'", oldnumber, number);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
-                dr = comm.ExecuteReader();
-                dr.Close();
+                count = comm.ExecuteNonQuery();
                 conn.Close();
-
-
             }
         }
 
+        /// <summary>
+        /// 功能：删除
+        /// </summary>
         private void Button_Click_delete(object sender, RoutedEventArgs e)
         {
             if (IsAdd == false)
@@ -1717,7 +1789,6 @@ namespace 中医证治智能系统
                 while (dr.Read())
                 {
                     subid = dr["subid"].ToString();
-
                 }
                 dr.Close();
                 conn.Close();
@@ -1784,8 +1855,6 @@ namespace 中医证治智能系统
                 listZd.RemoveAt(lv.SelectedIndex);
             }
         }
-
-
     }
 }
 

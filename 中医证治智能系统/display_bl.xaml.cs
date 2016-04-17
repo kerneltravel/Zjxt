@@ -33,6 +33,7 @@ namespace 中医证治智能系统
 
         string chuqizhengxiang1 = "";
         string bingming1 = "";
+        string bingming2 = "";
         string jsd1 = "";
         string ID1 = "";
         string ID2 = "";
@@ -41,6 +42,8 @@ namespace 中医证治智能系统
             InitializeComponent();
             ID1 = id;
             ID2 = old;
+
+            // 病例编号
             string sql = String.Format("select blbh from t_bl where id ='{0}' ", ID1);
             conn1.Open();
             SqlCommand comm = new SqlCommand(sql, conn1);
@@ -52,6 +55,8 @@ namespace 中医证治智能系统
             dr.Close();
             conn1.Close();
             diagnosisresult1 += "----------------------------------------------------------------------------------" + "\n";
+            
+            // 检索信息
             sql = String.Format("select jsxx from t_bl where id ='{0}' ", ID1);
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
@@ -60,192 +65,231 @@ namespace 中医证治智能系统
             {
                 diagnosisresult1 = diagnosisresult1 + "检索信息:" + dr[0].ToString() + "\n";
                 title.Text = dr[0].ToString();
-
-
             }
             dr.Close();
             conn1.Close();
             diagnosisresult1 += "----------------------------------------------------------------------------------" + "\n";
-            sql = String.Format("select * from t_bl_mx where id = '{0}' and xxdllx = '0' and xxxllx = '6'", ID1);  //主诉
+            
+            // 主诉
+            sql = String.Format("select * from t_bl_mx where id = '{0}' and xxdllx = '0' and xxxllx = '6'", ID1);  
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
                 diagnosisresult1 = diagnosisresult1 + "主诉：" + dr["xxbh"].ToString().Trim();
-
             }
             dr.Close();
             conn1.Close();
-            sql = String.Format("select * from t_bl_mx where id = '{0}' and xxdllx = '0' and xxxllx = '9'", ID1);  //主诉时间
+            
+            // 主诉时间
+            sql = String.Format("select * from t_bl_mx where id = '{0}' and xxdllx = '0' and xxxllx = '9'", ID1);  
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
                 diagnosisresult1 = diagnosisresult1 + "(" + dr["xxbh"].ToString() + ")";
-
             }
             dr.Close();
             conn1.Close();
+            
+            // 现病史：
+            // 初起症 + 现症
             diagnosisresult1 += "\n" + "现病史：";
-            sql = String.Format("select * from t_bl_mx where id = '{0}' and xxdllx = '0' and xxxllx = '7'", ID1);  //初起症象
+            sql = String.Format("select * from t_bl_mx where id = '{0}' and xxdllx = '0' and xxxllx = '7'", ID1);  // 初起症象
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                chuqizhengxiang1 = dr["xxbh"].ToString();
+                chuqizhengxiang1 = dr["xxbh"].ToString() + "  ";
             }
             dr.Close();
             conn1.Close();
             if (chuqizhengxiang1 == "")
             {
-                sql = String.Format("select * from t_bl_mx where id = '{0}' and xxdllx = '0' and xxxllx = '8'", ID1);  //现症象
+                sql = String.Format("select * from t_bl_mx where id = '{0}' and xxdllx = '0' and xxxllx = '8'", ID1);  // 现症象
                 conn1.Open();
                 comm = new SqlCommand(sql, conn1);
                 dr = comm.ExecuteReader();
                 while (dr.Read())
                 {
-                    diagnosisresult1 = diagnosisresult1 +"  "+ dr["xxbh"].ToString();
+                    diagnosisresult1 = diagnosisresult1 + dr["xxbh"].ToString() + "  ";
                 }
                 dr.Close();
                 conn1.Close();
             }
             else
             {
-
-                diagnosisresult1 = diagnosisresult1 + "    " + "\n" + "初起症：" + chuqizhengxiang1 + "    " + "现症：";
+                diagnosisresult1 = diagnosisresult1 + "    " + "\n" + "  " + "初起症：" + chuqizhengxiang1 + "    " + "\n" + "  "  + "现症：";
                 sql = String.Format("select * from t_bl_mx where id = '{0}' and xxdllx = '0' and xxxllx = '8'", ID1);  //现症象
                 conn1.Open();
                 comm = new SqlCommand(sql, conn1);
                 dr = comm.ExecuteReader();
                 while (dr.Read())
                 {
-                    diagnosisresult1 = diagnosisresult1 + dr["xxbh"].ToString();
+                    diagnosisresult1 = diagnosisresult1 + dr["xxbh"].ToString() + "  ";
                 }
                 dr.Close();
                 conn1.Close();
             }
-            sql = String.Format("select * from t_bl_mx  where id = '{0}' and xxdllx = '0' and xxxllx = 'b'", ID1);  //西医病名名称
+
+            // 西医诊断：西医病名名称（若无，则默认不显示）
+            String xyzd = "";
+            Boolean is_xyzd = false;
+            sql = String.Format("select * from t_bl_mx where id = '{0}' and xxdllx = '0' and xxxllx = 'b'", ID1); 
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                diagnosisresult1 = diagnosisresult1 + "\n" + "西医诊断：" + dr["xxbh"].ToString();
+                xyzd = xyzd + dr["xxbh"].ToString() + "  ";
+                is_xyzd = true;
             }
+            if (is_xyzd) // 存在西医诊断
+            {
+                diagnosisresult1 = diagnosisresult1 + "\n" + "西医诊断：" + xyzd;
+                is_xyzd = false;
+            } 
             dr.Close();
             conn1.Close();
-            sql = String.Format("select * from t_bl_mx  where id = '{0}' and xxdllx = '0' and xxxllx = 'a'", ID1);  //既往史
+
+            // 既往史：既往史名称
+            diagnosisresult1 = diagnosisresult1 + "\n" + "既往史：";
+            sql = String.Format("select * from t_bl_mx  where id = '{0}' and xxdllx = '0' and xxxllx = 'a'", ID1);  
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                diagnosisresult1 = diagnosisresult1 + "\n" + "既往史：" + dr["xxbh"].ToString() + "\n";
+                diagnosisresult1 = diagnosisresult1 + dr["xxbh"].ToString() + "  ";
             }
             dr.Close();
             conn1.Close();
+
+            // 诊断结论:
+            //    1、病名：中医病名名称+西医病名名称
+            //    2、证名：
+            //    3、治法：
+            //    4、主方名：
+            //    5、处方：
+            //    6、服法：
+            //    7、处方二：
+            //    8、服法：
             diagnosisresult1 += "\n" +"诊断结论：                                                              ";
-            sql = String.Format("select b.bmmc from t_bl_mx a, t_info_bm b where id = '{0}' and a.xxbh = b.bmbh and xxdllx = '2' and xxxllx = '0'", ID1);  //病名编号
+            /// 1.病名：
+            /// 1.1中医病名名称
+            sql = String.Format("select b.bmmc from t_bl_mx a, t_info_bm b where id = '{0}' and a.xxbh = b.bmbh and xxdllx = '2' and xxxllx = '0'", ID1);  
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                bingming1 = dr["bmmc"].ToString();
+                bingming1 = dr["bmmc"].ToString()+ "（中医）" + "  ";
             }
             dr.Close();
             conn1.Close();
-            diagnosisresult1 += "\n" + "病名：" + bingming1 + "（中医）";
-            sql = String.Format("select * from t_bl_mx  where id = '{0}' and xxdllx = '0' and xxxllx = 'b'", ID1);  //西医病名名称
+            diagnosisresult1 += "\n" + "  " + "病名：" + bingming1;
+            /// 1.2西医病名名称
+            sql = String.Format("select * from t_bl_mx  where id = '{0}' and xxdllx = '0' and xxxllx = 'b'", ID1);  
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                bingming1 = dr["xxbh"].ToString();
+                bingming2 = dr["xxbh"].ToString() + "（西医）" + "  ";
             }
             dr.Close();
             conn1.Close();
-            diagnosisresult1 += bingming1 + "（西医）";
-            diagnosisresult1 += "\n" + "证名：";
-            sql = String.Format("select b.jbzmmc from t_bl_mx a, t_info_jbzm b where id = '{0} ' and a.xxbh = b.jbzmbh and xxdllx = '2' and xxxllx = '2'", ID1);  //证名编号
+            diagnosisresult1 += bingming2;
+            /// 2.证名名称：
+            /// 2.1基本证名名称
+            diagnosisresult1 += "\n" + "  " + "证名：";
+            sql = String.Format("select distinct(b.jbzmmc) from t_bl_mx a, t_info_jbzm b where id = '{0} ' and a.xxbh = b.jbzmbh and xxdllx = '2' and xxxllx = '2'", ID1);  
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                diagnosisresult1 += dr["jbzmmc"].ToString();
+                diagnosisresult1 += dr["jbzmmc"].ToString() + "  ";
             }
             dr.Close();
             conn1.Close();
-            sql = String.Format("select b.xyzmmc from t_bl_mx a, t_rule_xyzz b where id = ' {0}' and a.xxbh = b.xybmbh and xxdllx = '0' and xxxllx = '5'", ID1);  //西医证名编号
+            /// 2.2西医证名名称（根据西医病名编号可得）
+            sql = String.Format("select b.xyzmmc from t_bl_mx a, t_rule_xyzz b where id = ' {0}' and a.xxbh = b.xybmbh and xxdllx = '0' and xxxllx = '5'", ID1);  
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                diagnosisresult1 += dr["xyzmmc"].ToString();
+                diagnosisresult1 += dr["xyzmmc"].ToString() + "  ";
             }
             dr.Close();
             conn1.Close();
-            diagnosisresult1 += "\n" + "治法：";
-            sql = String.Format("select b.zf from t_bl_mx a, t_info_jbzm b where id = '{0}' and a.xxbh = b.jbzmbh and xxdllx = '2' and xxxllx = '2'", ID1);  //中医治法
+            /// 3.治法：
+            /// 3.1中医治法（根据中医基本证名得出对应的治法）
+            diagnosisresult1 += "\n" + "  " + "治法：";
+            sql = String.Format("select distinct(b.zf) from t_bl_mx a, t_info_jbzm b where id = '{0}' and a.xxbh = b.jbzmbh and xxdllx = '2' and xxxllx = '2'", ID1);  
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                diagnosisresult1 += dr["zf"].ToString();
+                diagnosisresult1 += dr["zf"].ToString() + "  ";
             }
             dr.Close();
             conn1.Close();
-            sql = String.Format("select c.xyzf from t_bl_mx a, t_rule_xyzz b ,t_rule_xycf c where id = '{0}' and a.xxbh = b.xybmbh  and b.xyzmbh = c.xyzmbh and xxdllx = '0' and xxxllx = '5'", ID1);  //西医治法
+            /// 3.2西医治法（根据西医病名编号得出西医证名编号，再得出西医治法）
+            sql = String.Format("select c.xyzf from t_bl_mx a, t_rule_xyzz b ,t_rule_xycf c where id = '{0}' and a.xxbh = b.xybmbh  and b.xyzmbh = c.xyzmbh and xxdllx = '0' and xxxllx = '5'", ID1); 
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                diagnosisresult1 += dr["xyzf"].ToString();
+                diagnosisresult1 += dr["xyzf"].ToString() + "  ";
             }
             dr.Close();
             conn1.Close();
-            diagnosisresult1 += "\n" + "主方名：";
-            sql = String.Format("select b.jbcfmc from t_bl_mx a, t_info_jbcfxx b where id = '{0}' and a.xxbh = b.jbcfbh and xxdllx ='2' and xxxllx = '4'", ID1);  //处方编号
+            /// 4.主方名：
+            /// 4.1基本处方名称（根据基本处方编号得出基本处方名称）
+            diagnosisresult1 += "\n" + "  " + "主方名：";
+            sql = String.Format("select b.jbcfmc from t_bl_mx a, t_info_jbcfxx b where id = '{0}' and a.xxbh = b.jbcfbh and xxdllx ='2' and xxxllx = '4'", ID1);
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                diagnosisresult1 += dr["jbcfmc"].ToString();
+                diagnosisresult1 += dr["jbcfmc"].ToString() + "  ";
             }
             dr.Close();
             conn1.Close();
-            sql = String.Format("select c.xycfmc from t_bl_mx a, t_rule_xyzz b ,t_rule_xycf c where id = '{0}' and a.xxbh = b.xybmbh  and b.xyzmbh = c.xyzmbh and xxdllx = '0' and xxxllx = '5'", ID1);  //西医处方编号("select b.jbcfmc from t_bl_mx a, t_info_jbcfxx b where id = '{0}' and a.xxbh = b.jbcfbh and xxdllx ='2' and xxxllx = '4'", id);  //处方编号
+            /// 4.2西医处方名称（根据西医病名编号得出西医证名编号，再得出西医处方名称）
+            sql = String.Format("select c.xycfmc from t_bl_mx a, t_rule_xyzz b ,t_rule_xycf c where id = '{0}' and a.xxbh = b.xybmbh  and b.xyzmbh = c.xyzmbh and xxdllx = '0' and xxxllx = '5'", ID1);  
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                diagnosisresult1 += dr["xycfmc"].ToString();
+                diagnosisresult1 += dr["xycfmc"].ToString() + "  ";
             }
             dr.Close();
             conn1.Close();
-            diagnosisresult1 += "\n" + "处方：";
+            /// 5.处方：（根据病例编号在药物组成表查找）
+            diagnosisresult1 += "\n" + "  " + "处方：";
             sql = String.Format("select b.ywmc,a.ywjl,a.dw from t_zd_ywzc a, t_info_yw b where id = '{0}' and a.ywbh = b.ywbh", ID1);
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                diagnosisresult1 += dr["ywmc"].ToString() + " " + Convert.ToInt64(dr["ywjl"]).ToString() + dr["dw"].ToString()+"  ";
+                diagnosisresult1 += dr["ywmc"].ToString() + " " + Convert.ToInt64(dr["ywjl"]).ToString() + dr["dw"].ToString() + "  ";
             }
             dr.Close();
             conn1.Close();
-            diagnosisresult1 += "\n" + "服法：";
-            sql = String.Format("select xxbh from  t_bl_mx a where a.id = '{0}' and a.xxdllx = '2' and a.xxxllx = '5'", ID1);
+            /// 6.服法：（根据病例编号直接在病例明细表中查找服法，重复的服法只需写一次）
+            diagnosisresult1 += "\n" + "  " + "服法：";
+            sql = String.Format("select distinct(xxbh) from t_bl_mx a where a.id = '{0}' and a.xxdllx = '2' and a.xxxllx = '5'", ID1);
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
@@ -255,41 +299,64 @@ namespace 中医证治智能系统
             }
             dr.Close();
             conn1.Close();
-            sql = String.Format("select c.xycfmc,c.xyff from t_bl_mx a, t_rule_xyzz b ,t_rule_xycf c where id = '{0}' and a.xxbh = b.xybmbh  and b.xyzmbh = c.xyzmbh and xxdllx = '0' and xxxllx = '5'", ID1);  //西医治法
+            /// 7.处方二：（根据西医病名编号查找西医证名编号，然后根据西医证名编号查找西医处方组成以及西医服法）
+            /// （默认不显示，若存在则显示）
+            String cf2 = "";
+            Boolean is_cf2 = false;
+            sql = String.Format("select c.xycfmc from t_bl_mx a, t_rule_xyzz b ,t_rule_xycf c where id = '{0}' and a.xxbh = b.xybmbh  and b.xyzmbh = c.xyzmbh and xxdllx = '0' and xxxllx = '5'", ID1); 
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
             dr = comm.ExecuteReader();
-            if (dr.Read())
-            {
-                diagnosisresult1 += " 处方二：";
-            }
             while (dr.Read())
             {
-                diagnosisresult1 += dr["xycfmc"].ToString();
+                is_cf2 = true;
+                cf2 += dr["xycfmc"].ToString() + "  ";
             }
-            if (dr.Read())
+            if (is_cf2) // 存在处方二
             {
-                diagnosisresult1 += "\n" + "服法：";
-            }
-            while (dr.Read())
-            {
-                diagnosisresult1 += dr["xyff"].ToString();
+                diagnosisresult1 += "\n" + "  " + "处方二：" + cf2;
+                is_cf2 = false;
             }
             dr.Close();
             conn1.Close();
-            diagnosisresult1 += "\n" + "                                                                   医师：__________";
 
-            jieguo.Text = diagnosisresult1;
-            sql = String.Format("update t_bl set bz = ' {0} ' where id = '{1}'", jieguo.Text.ToString(), ID1);
+            /// 8.服法：
+            /// （默认不显示，若存在则显示）
+            String ff = "";
+            Boolean is_ff = false;
+            sql = String.Format("select c.xyff from t_bl_mx a, t_rule_xyzz b ,t_rule_xycf c where id = '{0}' and a.xxbh = b.xybmbh  and b.xyzmbh = c.xyzmbh and xxdllx = '0' and xxxllx = '5'", ID1);
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
-            int count1 = comm.ExecuteNonQuery();
-            if (count1 > 0)
+            dr = comm.ExecuteReader();
+            while (dr.Read())
             {
-
-                MessageBox.Show("更新备注成功");
+                is_ff = true;
+                ff += dr["xyff"].ToString() + "  ";
             }
+            if (is_ff)
+            {
+                diagnosisresult1 += "\n" + "  " + "服法：" + ff;
+                is_ff = false;
+            }
+            dr.Close();
             conn1.Close();
+            
+            // 结尾处
+            diagnosisresult1 += "\n" + "                                                                   医师：__________";
+            // 显示结果
+            jieguo.Text = diagnosisresult1;
+            
+            //// 更新备注
+            //sql = String.Format("update t_bl set bz = ' {0} ' where id = '{1}'", jieguo.Text.ToString(), ID1);
+            //conn1.Open();
+            //comm = new SqlCommand(sql, conn1);
+            //int count1 = comm.ExecuteNonQuery();
+            //if (count1 > 0)
+            //{
+            //    MessageBox.Show("更新备注成功");
+            //}
+            //conn1.Close();
+
             sql = String.Format("select zt from t_bl where id = '{0}'", ID1);
             conn1.Open();
             comm = new SqlCommand(sql, conn1);
@@ -312,36 +379,37 @@ namespace 中医证治智能系统
             conn1.Close();
         }
 
-       
-
+        /// <summary>
+        /// 功能：返回
+        /// </summary>
         private void zuofei_Click(object sender, RoutedEventArgs e)
-        {
-            
+        {        
             this.Close();
-
         }
 
+        /// <summary>
+        /// 功能：保存修改
+        /// </summary>
         private void save_Click(object sender, RoutedEventArgs e)
         {
             String sql = String.Format("update t_bl set bz = '{0}', bllx='{1}' where id = '{2}'", jieguo.Text.ToString(),"1", ID1);
             conn1.Open();
             SqlCommand comm = new SqlCommand(sql, conn1);
             int count1 = comm.ExecuteNonQuery();
-            if (count1 > 0)
-            {
-
-                MessageBox.Show("更新备注成功");
-            }
+            //if (count1 > 0)
+            //{
+            //    MessageBox.Show("更新备注成功");
+            //}
             conn1.Close();
             this.Close();
         }
 
+        /// <summary>
+        /// 功能：参考病例
+        /// </summary>
         private void cankao_Click(object sender, RoutedEventArgs e)
         {
-            if (ID2 == "")
-            {
-
-            }
+            if (ID2 == ""){}
             else
             {
                 display_bl1 result = new display_bl1(ID2);

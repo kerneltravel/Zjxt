@@ -224,6 +224,7 @@ namespace 中医证治智能系统
                 SqlCommand comm = new SqlCommand(sql, conn);
                 int count = comm.ExecuteNonQuery();
                 conn.Close();
+                refresh(); // 刷新
             }
         }
 
@@ -242,6 +243,8 @@ namespace 中医证治智能系统
                     SqlCommand comm = new SqlCommand(sql, conn);
                     int count = comm.ExecuteNonQuery();
                     conn.Close();
+                    refresh();
+                    bz.Text = "";
                 }
             }
         }
@@ -261,6 +264,24 @@ namespace 中医证治智能系统
                     PassValuesEvent(this, args);
                 }
             }
+        }
+
+        /// <summary>
+        /// 功能：刷新
+        /// </summary>
+        private void refresh()
+        {
+            listInfo.Clear();
+            string sql = String.Format("select * from t_bl where bllx = '1' order by jsxx");
+            conn.Open();
+            SqlCommand comm = new SqlCommand(sql, conn);
+            SqlDataReader dr = comm.ExecuteReader();
+            while (dr.Read())
+            {
+                listInfo.Add(new ClassiccaseInfo(dr["blbh"].ToString(), dr["jsxx"].ToString(), dr["zt"].ToString()));
+            }
+            dr.Close();
+            conn.Close();
         }
     }
 }

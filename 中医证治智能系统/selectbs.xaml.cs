@@ -67,7 +67,7 @@ namespace 中医证治智能系统
         {
             InitializeComponent();
             lv.ItemsSource = listSymptom;
-            string sql = String.Format("select * from t_info_zxmx as t1 inner join t_info_zxxx as t2 on t1.zxbh=t2.zxbh where t2.zxlxbh='29'");
+            string sql = String.Format("select * from t_info_zxmx as t1 inner join t_info_zxxx as t2 on t1.zxbh=t2.zxbh where t2.zxlxbh='56'");  // 新的症象分类，病史为56号
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             SqlDataReader dr = comm.ExecuteReader();

@@ -20,23 +20,23 @@
         <Label Content="西医病名名称：" HorizontalAlignment="Left" Margin="447,0,0,0" Grid.Row="1" VerticalAlignment="Top" Height="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Width="90" Grid.Column="1"/>
         <Label Content="西医病名类型：" HorizontalAlignment="Left" Margin="91,0,0,0" Grid.Row="1" VerticalAlignment="Top" Height="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Width="88" Grid.Column="1"/>
         <TextBox  Name="text_box_bjmc"  HorizontalAlignment="Left" Height="24" Margin="542,10,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="231" Grid.Column="1"/>
-        <Button x:Name="search" Grid.Row="3" Grid.Column="1" Margin="213,5,570,5" HorizontalAlignment="Center" Width="60" Click="search_Click">
-            <Grid Height="36" Width="55" >
-                <Image HorizontalAlignment="Left" Margin="0,0,0,16" Width="21" Source="Resources/search.ico" VerticalAlignment="Center" Height="18"/>
-                <Label Content="查找" Margin="0,-3,0,15" HorizontalAlignment="Right" VerticalAlignment="Center" Width="38" Height="24" />
+        <Button x:Name="search" Grid.Row="3" Grid.Column="1" Margin="213,5,560,5" HorizontalAlignment="Center" Width="70" Click="search_Click">
+            <Grid Height="23" Width="50" >
+                <Image HorizontalAlignment="Left" Margin="-6,5,0,0" Width="21" Source="Resources/search.ico" VerticalAlignment="Center" Height="18"/>
+                <Label Content="查找" Margin="10,0,-1,-1" VerticalAlignment="Center" Height="24" />
             </Grid>
         </Button>
         <Label Content="查询结果" Background="{DynamicResource TabItemHotBackground}" Grid.ColumnSpan="2" Grid.Row="2"/>
-        <Button x:Name="select_search" Grid.Row="3" Grid.Column="1" Margin="388,5,393,5" HorizontalAlignment="Center" Width="62" Click="select_search_Click">
-            <Grid Height="34" Width="55" >
-                <Image HorizontalAlignment="Left" Margin="0,3,0,10" Width="21" Source="Resources/check.ico" VerticalAlignment="Center"/>
-                <Label Content="选定" Margin="0,0,0,10" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
+        <Button x:Name="select_search" Grid.Row="3" Grid.Column="1" Margin="388,5,385,5" HorizontalAlignment="Center" Width="70" Click="select_search_Click">
+            <Grid Height="24" Width="56" >
+                <Image HorizontalAlignment="Left" Margin="5,6,0,4" Width="17" Source="Resources/check.ico" VerticalAlignment="Center" RenderTransformOrigin="0.651,1.015" Height="14"/>
+                <Label Content="选定" HorizontalAlignment="Right" VerticalAlignment="Center" Width="34" Height="24" />
             </Grid>
         </Button>
-        <Button x:Name="back_search" Grid.Row="3" Grid.Column="1" Margin="563,5,220,5" HorizontalAlignment="Center" Width="60" Click="back_search_Click">
-            <Grid Height="34" Width="55" >
-                <Image HorizontalAlignment="Left" Margin="0,3,0,10" Width="21" Source="Resources/home.ico" VerticalAlignment="Center"/>
-                <Label Content="返回" Margin="0,0,0,10" HorizontalAlignment="Right" VerticalAlignment="Center" Width="37" Height="24" />
+        <Button x:Name="back_search" Grid.Row="3" Grid.Column="1" Margin="563,5,210,5" HorizontalAlignment="Center" Width="70" Click="back_search_Click">
+            <Grid Height="24" Width="54" >
+                <Image HorizontalAlignment="Left" Margin="0,5,0,3" Width="17" Source="Resources/home.ico" VerticalAlignment="Center" Height="16"/>
+                <Label Content="返回" HorizontalAlignment="Right" VerticalAlignment="Center" Width="37" Height="24" />
             </Grid>
         </Button>
         <ListView  Name="lv" Grid.Row="4" Margin="9,0,6,0" SelectionChanged="lv_SelectionChanged" Grid.Column="1">

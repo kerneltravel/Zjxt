@@ -1109,49 +1109,51 @@ namespace 中医证治智能系统
         /// </summary>
         private void btn_add_Click(object sender, RoutedEventArgs e)
         {
-            Is_Repeat();
-            if (IsRepeat)
-            {
-                MessageBox.Show("该条件已添加！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else
-            {
-                string sql = "";
-                switch (comb_tjlx.SelectedIndex.ToString())
+            if (IsAdd) {
+                Is_Repeat();
+                if (IsRepeat)
                 {
-                    case "1": //【症象】
-                        {
-                            sql = String.Format("insert into t_rule_jbzm ( ff, blgz, zxbh, tjzb, znfz, gzfz, jbzmbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_jbzmbh, (comb_tjlx.SelectedIndex - 1).ToString());
-                        }
-                        break;
-                    case "2": //【基本病机】
-                        {
-                            sql = String.Format("insert into t_rule_jbzm ( ff, blgz, jbbjbh, tjzb, znfz, gzfz, jbzmbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_jbzmbh, (comb_tjlx.SelectedIndex - 1).ToString());
-                        }
-                        break;
-                    case "3": //【复合病机】
-                        {
-                            sql = String.Format("insert into t_rule_jbzm ( ff, blgz, fhbjbh, tjzb, znfz, gzfz, jbzmbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_jbzmbh, (comb_tjlx.SelectedIndex - 1).ToString());
-                        }
-                        break;
-                    case "4": //【病名】
-                        {
-                            sql = String.Format("insert into t_rule_jbzm ( ff, blgz, bmbh, tjzb, znfz, gzfz, jbzmbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_jbzmbh, (comb_tjlx.SelectedIndex - 1).ToString());
-                        }
-                        break;
+                    MessageBox.Show("该条件已添加！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                conn.Open();
-                SqlCommand comm = new SqlCommand(sql, conn);
-                int count = comm.ExecuteNonQuery();
-                conn.Close();
-                IsAdd = false;
-                // 刷新子树
-                RefreshTree1();
-            }
+                else
+                {
+                    string sql = "";
+                    switch (comb_tjlx.SelectedIndex.ToString())
+                    {
+                        case "1": //【症象】
+                            {
+                                sql = String.Format("insert into t_rule_jbzm ( ff, blgz, zxbh, tjzb, znfz, gzfz, jbzmbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
+                                    , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_jbzmbh, (comb_tjlx.SelectedIndex - 1).ToString());
+                            }
+                            break;
+                        case "2": //【基本病机】
+                            {
+                                sql = String.Format("insert into t_rule_jbzm ( ff, blgz, jbbjbh, tjzb, znfz, gzfz, jbzmbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
+                                    , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_jbzmbh, (comb_tjlx.SelectedIndex - 1).ToString());
+                            }
+                            break;
+                        case "3": //【复合病机】
+                            {
+                                sql = String.Format("insert into t_rule_jbzm ( ff, blgz, fhbjbh, tjzb, znfz, gzfz, jbzmbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
+                                    , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_jbzmbh, (comb_tjlx.SelectedIndex - 1).ToString());
+                            }
+                            break;
+                        case "4": //【病名】
+                            {
+                                sql = String.Format("insert into t_rule_jbzm ( ff, blgz, bmbh, tjzb, znfz, gzfz, jbzmbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
+                                    , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_jbzmbh, (comb_tjlx.SelectedIndex - 1).ToString());
+                            }
+                            break;
+                    }
+                    conn.Open();
+                    SqlCommand comm = new SqlCommand(sql, conn);
+                    int count = comm.ExecuteNonQuery();
+                    conn.Close();
+                    IsAdd = false;
+                    // 刷新子树
+                    RefreshTree1();
+                }
+            }           
         }
 
         /// <summary>
@@ -1224,6 +1226,11 @@ namespace 中医证治智能系统
             comb_zbs.Items.Clear();
             comb_zbs.Items.Add("--请选择组别数--");
             comb_zbs.SelectedIndex = 0;
+            comb_tjfz.SelectedIndex = -1;
+            comb_zlfz.SelectedIndex = -1;
+            tjmc.Clear();
+            // 刷新子树
+            RefreshTree1();
             // 清空
             nodes.Clear();
             // 判断是否存在该病名的推理规则
