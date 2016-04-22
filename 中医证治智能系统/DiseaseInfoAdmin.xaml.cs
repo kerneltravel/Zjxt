@@ -287,7 +287,7 @@ namespace 中医证治智能系统
                 // 病名级别、内伤病名类型、系都为空
                 if (search_bmjb.SelectedIndex == 0 && search_nsbmlx.SelectedIndex == 0 && search_xi.SelectedIndex == 0)
                 {
-                    sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%'"
+                    sql = String.Format("select * from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%' order by bmbh"
                                            , search_bmmc.Text.Trim());
                     sql_count = String.Format("select count(*) from t_info_bm inner join t_info_x on t_info_x.xbh = t_info_bm.xbh where bmmc like '%{0}%'"
                                         , search_bmmc.Text.Trim());

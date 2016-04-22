@@ -120,7 +120,7 @@ namespace 中医证治智能系统
             {
                 // 先清空目录
                 listXi.Clear();
-                string sql = String.Format("select * from x_t_info_x");
+                string sql = String.Format("select * from t_info_x");
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -137,7 +137,7 @@ namespace 中医证治智能系统
             {
                 // 先清空目录
                 listXi.Clear();
-                string sql = String.Format("select * from x_t_info_x where xmc like'%{0}%'", text_box_xmc.Text);
+                string sql = String.Format("select * from t_info_x where xmc like'%{0}%'", text_box_xmc.Text);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -189,18 +189,18 @@ namespace 中医证治智能系统
                         }
                         try
                         {
-                            string sql = String.Format("delete from x_t_info_x where xbh = '{0}'", xi.XiNumber);
+                            string sql = String.Format("delete from t_info_x where xbh = '{0}'", xi.XiNumber);
                             conn.Open();
                             SqlCommand comm = new SqlCommand(sql, conn);
                             int count = comm.ExecuteNonQuery();
-                            if (count > 0)
-                            {
-                                MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                            }
+                            //if (count > 0)
+                            //{
+                            //    MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                            //}
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("删除失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                            //MessageBox.Show("删除失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         finally
                         {
@@ -259,7 +259,7 @@ namespace 中医证治智能系统
                 text_xmc.Text = "";
                 text_bz.Text = "";
                 save_input.IsEnabled = true;
-                string sql = String.Format("select max(xbh) from x_t_info_x");
+                string sql = String.Format("select max(xbh) from t_info_x");
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -312,7 +312,7 @@ namespace 中医证治智能系统
                 IsAdd = false;
                 try
                 {
-                    string sql = String.Format("INSERT INTO x_t_info_x (xmc,bz,xbh) VALUES ('{0}', '{1}', '{2}')", text_xmc.Text, text_bz.Text, Xi_Edit.XiNumber);
+                    string sql = String.Format("INSERT INTO t_info_x (xmc,bz,xbh) VALUES ('{0}', '{1}', '{2}')", text_xmc.Text, text_bz.Text, Xi_Edit.XiNumber);
 
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
@@ -344,7 +344,7 @@ namespace 中医证治智能系统
                 IsModify = false;
                 try
                 {
-                    string sql_update = String.Format("UPDATE x_t_info_x SET xmc = '{0}', bz = '{1}' WHERE xbh='{2}' ", text_xmc.Text, text_bz.Text, Xi_Edit.XiNumber);
+                    string sql_update = String.Format("UPDATE t_info_x SET xmc = '{0}', bz = '{1}' WHERE xbh='{2}' ", text_xmc.Text, text_bz.Text, Xi_Edit.XiNumber);
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql_update, conn);
                     int count = comm.ExecuteNonQuery();
@@ -369,7 +369,7 @@ namespace 中医证治智能系统
                 Modify = false;
                 try
                 {
-                    string sql_update = String.Format("UPDATE x_t_info_x SET xmc = '{0}', bz = '{1}' WHERE xbh='{2}' ", text_xmc.Text, text_bz.Text, Xi_Edit.XiNumber);
+                    string sql_update = String.Format("UPDATE t_info_x SET xmc = '{0}', bz = '{1}' WHERE xbh='{2}' ", text_xmc.Text, text_bz.Text, Xi_Edit.XiNumber);
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql_update, conn);
                     int count = comm.ExecuteNonQuery();
@@ -423,7 +423,7 @@ namespace 中医证治智能系统
         public void Is_Repeat()
         {
             string username = text_xmc.Text.Trim();
-            string sql = String.Format("select count(*) from x_t_info_x where xmc = '{0}'and xbh!='{1}'", username, Xi_Edit.XiNumber);
+            string sql = String.Format("select count(*) from t_info_x where xmc = '{0}'and xbh!='{1}'", username, Xi_Edit.XiNumber);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             int count = (int)comm.ExecuteScalar();
@@ -446,7 +446,7 @@ namespace 中医证治智能系统
             {
                 // 先清空目录
                 listXi.Clear();
-                string sql = String.Format("select * from x_t_info_x");
+                string sql = String.Format("select * from t_info_x");
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -463,7 +463,7 @@ namespace 中医证治智能系统
             {
                 // 先清空目录
                 listXi.Clear();
-                string sql = String.Format("select * from x_t_info_x where xmc like'%{0}%'", text_box_xmc.Text);
+                string sql = String.Format("select * from t_info_x where xmc like'%{0}%'", text_box_xmc.Text);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();

@@ -368,21 +368,21 @@ namespace 中医证治智能系统
                 }
                 dr.Close();
                 conn.Close();
-                BuildENTree();
-                comb_ffs.Items.Clear();
-                comb_ffs.Items.Add("--请选择方法数--");
-                comb_ffs.SelectedIndex = 0;
-                sql = String.Format("select distinct ff from t_rule_jbbj where jbbjbh = '{0}' order by ff", bjNumber);
-                conn.Open();
-                comm = new SqlCommand(sql, conn);
-                dr = comm.ExecuteReader();
-                while (dr.Read())
-                {
-                    comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
-                }
-                dr.Close();
-                conn.Close();
+                BuildENTree();             
             }
+            comb_ffs.Items.Clear();
+            comb_ffs.Items.Add("--请选择方法数--");
+            comb_ffs.SelectedIndex = 0;
+            sql = String.Format("select distinct ff from t_rule_jbbj where jbbjbh = '{0}' order by ff", bjNumber);
+            conn.Open();
+            comm = new SqlCommand(sql, conn);
+            dr = comm.ExecuteReader();
+            while (dr.Read())
+            {
+                comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
+            }
+            dr.Close();
+            conn.Close();
         }
 
         private void btn_tjmc_Click(object sender, RoutedEventArgs e)

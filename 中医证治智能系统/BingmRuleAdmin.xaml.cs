@@ -247,6 +247,12 @@ namespace 中医证治智能系统
                 case "10":
                     chinese = "十";
                     break;
+                case "11":
+                    chinese = "十一";
+                    break;
+                case "12":
+                    chinese = "十二";
+                    break;
             }
             return chinese;
         }
@@ -332,7 +338,11 @@ namespace 中医证治智能系统
                     dr = comm.ExecuteReader();
                     while (dr.Read())
                     {
-                        nodes.Add(new Node { ID = Convert.ToInt32(dr["ff"]), Name = bmmc.Text.Trim() + "的推理规则方法" + numbertochinese(dr["ff"].ToString()) + "（规则：所有条件均成立）" });
+                        nodes.Add(new Node 
+                        { 
+                            ID = Convert.ToInt32(dr["ff"]), 
+                            Name = bmmc.Text.Trim() + "的推理规则方法" + numbertochinese(dr["ff"].ToString()) + "（规则：所有条件均成立）" 
+                        });
                     }
                     dr.Close();
                     conn.Close();
@@ -381,7 +391,7 @@ namespace 中医证治智能系统
                     {
                         nodes.Add(new Node
                         {
-                            ID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString()),
+                            ID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString()),
                             Name = dr["zxbh"].ToString() + "  " + dr[4].ToString() + "【症象】",
                             ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
                         });
@@ -397,13 +407,32 @@ namespace 中医证治智能系统
                     {
                         nodes.Add(new Node
                         {
-                            ID = Convert.ToInt32(dr["ff"].ToString() + dr["jbbjbh"].ToString()),
+                            ID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["jbbjbh"].ToString()),
                             Name = dr["jbbjbh"].ToString() + "  " + dr[4].ToString() + "【基本病机】",
                             ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
                         });
                     }
                     dr.Close();
                     conn.Close();
+
+                    // 五级树写入
+                    // 写入症象信息
+                    sql = String.Format("select t2.id, t1.blgz, t1.tjzb, t1.ff, t1.zxbh, t2.zxmc from t_rule_wg_bm as t1 inner join t_info_zxmx as t2 on t1.zxbh = t2.zxbh where bmbh = '{0}' group by t2.id, t1.blgz, t1.tjzb, t1.ff, t1.zxbh, t2.zxmc ", m_bmbh);
+                    conn.Open();
+                    comm = new SqlCommand(sql, conn);
+                    dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        nodes.Add(new Node
+                        {
+                            ID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
+                            Name = dr["zxmc"].ToString(),
+                            ParentID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString())
+                        });
+                    }
+                    dr.Close();
+                    conn.Close();
+
                     // 调用创建树函数
                     BuildENTree();
                     // 在下拉框显示方法数
@@ -499,7 +528,7 @@ namespace 中医证治智能系统
                     {
                         nodes.Add(new Node
                         {
-                            ID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString()),
+                            ID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString()),
                             Name = dr["zxbh"].ToString() + "  " + dr[4].ToString() + "【症象】",
                             ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
                         });
@@ -508,7 +537,7 @@ namespace 中医证治智能系统
                     conn.Close();
 
                     // 五级树写入
-                    sql = String.Format("select t2.id, t1.ff, t1.zxbh, t2.zxmc from t_rule_ns_bm as t1 inner join t_info_zxmx as t2 on t1.zxbh = t2.zxbh where bmbh = '{0}' group by t2.id, t1.ff, t1.zxbh, t2.zxmc ", m_bmbh);
+                    sql = String.Format("select t2.id, t1.blgz, t1.tjzb, t1.ff, t1.zxbh, t2.zxmc from t_rule_ns_bm as t1 inner join t_info_zxmx as t2 on t1.zxbh = t2.zxbh where bmbh = '{0}' group by t2.id, t1.blgz, t1.tjzb, t1.ff, t1.zxbh, t2.zxmc ", m_bmbh);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     dr = comm.ExecuteReader();
@@ -516,9 +545,9 @@ namespace 中医证治智能系统
                     {
                         nodes.Add(new Node
                         {
-                            ID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
+                            ID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
                             Name = dr["zxmc"].ToString(),
-                            ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString())
+                            ParentID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString())
                         });
                     }
                     dr.Close();
@@ -667,7 +696,7 @@ namespace 中医证治智能系统
                     {
                         nodes.Add(new Node
                         {
-                            ID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString()),
+                            ID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString()),
                             Name = dr["zxbh"].ToString() + "  " + dr[4].ToString() + "【症象】",
                             ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
                         });
@@ -683,7 +712,7 @@ namespace 中医证治智能系统
                     {
                         nodes.Add(new Node
                         {
-                            ID = Convert.ToInt32(dr["ff"].ToString() + dr["jbbjbh"].ToString()),
+                            ID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["jbbjbh"].ToString()),
                             Name = dr["jbbjbh"].ToString() + "  " + dr[4].ToString() + "【基本病机】",
                             ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
                         });
@@ -693,7 +722,7 @@ namespace 中医证治智能系统
 
                     // 五级树写入
                     // 写入症象信息
-                    sql = String.Format("select t2.id, t1.ff, t1.zxbh, t2.zxmc from t_rule_wg_bm as t1 inner join t_info_zxmx as t2 on t1.zxbh = t2.zxbh where bmbh = '{0}' group by t2.id, t1.ff, t1.zxbh, t2.zxmc ", m_bmbh);
+                    sql = String.Format("select t2.id, t1.blgz, t1.tjzb, t1.ff, t1.zxbh, t2.zxmc from t_rule_wg_bm as t1 inner join t_info_zxmx as t2 on t1.zxbh = t2.zxbh where bmbh = '{0}' group by t2.id, t1.blgz, t1.tjzb, t1.ff, t1.zxbh, t2.zxmc ", m_bmbh);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     dr = comm.ExecuteReader();
@@ -701,9 +730,9 @@ namespace 中医证治智能系统
                     {
                         nodes.Add(new Node
                         {
-                            ID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
+                            ID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
                             Name = dr["zxmc"].ToString(),
-                            ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString())
+                            ParentID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString())
                         });
                     }
                     dr.Close();
@@ -760,7 +789,11 @@ namespace 中医证治智能系统
                     dr = comm.ExecuteReader();
                     while (dr.Read())
                     {
-                        nodes.Add(new Node { ID = Convert.ToInt32(dr["ff"]), Name = bmmc.Text.Trim() + "的推理规则方法" + numbertochinese(dr["ff"].ToString()) + "（规则：所有条件均成立）" });
+                        nodes.Add(new Node 
+                        { 
+                            ID = Convert.ToInt32(dr["ff"]), 
+                            Name = bmmc.Text.Trim() + "的推理规则方法" + numbertochinese(dr["ff"].ToString()) + "（规则：所有条件均成立）" 
+                        });
                     }
                     dr.Close();
                     conn.Close();
@@ -808,7 +841,7 @@ namespace 中医证治智能系统
                     {
                         nodes.Add(new Node
                         {
-                            ID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString()),
+                            ID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString()),
                             Name = dr["zxbh"].ToString() + "  " + dr[4].ToString() + "【症象】",
                             ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
                         });
@@ -817,7 +850,7 @@ namespace 中医证治智能系统
                     conn.Close();
 
                     // 五级树写入
-                    sql = String.Format("select t2.id, t1.ff, t1.zxbh, t2.zxmc from t_rule_ns_bm as t1 inner join t_info_zxmx as t2 on t1.zxbh = t2.zxbh where bmbh = '{0}' group by t2.id, t1.ff, t1.zxbh, t2.zxmc ", m_bmbh);
+                    sql = String.Format("select t2.id, t1.blgz, t1.tjzb, t1.ff, t1.zxbh, t2.zxmc from t_rule_ns_bm as t1 inner join t_info_zxmx as t2 on t1.zxbh = t2.zxbh where bmbh = '{0}' group by t2.id, t1.blgz, t1.tjzb, t1.ff, t1.zxbh, t2.zxmc ", m_bmbh);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     dr = comm.ExecuteReader();
@@ -825,9 +858,9 @@ namespace 中医证治智能系统
                     {
                         nodes.Add(new Node
                         {
-                            ID = Convert.ToInt64(dr["ff"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
+                            ID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString() + dr["id"].ToString()),
                             Name = dr["zxmc"].ToString(),
-                            ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["zxbh"].ToString())
+                            ParentID = Convert.ToInt64(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString() + dr["zxbh"].ToString())
                         });
                     }
                     dr.Close();
@@ -835,21 +868,21 @@ namespace 中医证治智能系统
 
                     // 调用创建树函数
                     BuildENTree();
-                    // 在下拉框显示方法数
-                    comb_ffs.Items.Clear();
-                    comb_ffs.Items.Add("--请选择方法数--");
-                    comb_ffs.SelectedIndex = 0;
-                    sql = String.Format("select distinct ff from t_rule_ns_bm where bmbh = '{0}' order by ff", m_bmbh);
-                    conn.Open();
-                    comm = new SqlCommand(sql, conn);
-                    dr = comm.ExecuteReader();
-                    while (dr.Read())
-                    {
-                        comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
-                    }
-                    dr.Close();
-                    conn.Close();
                 }
+                // 在下拉框显示方法数
+                comb_ffs.Items.Clear();
+                comb_ffs.Items.Add("--请选择方法数--");
+                comb_ffs.SelectedIndex = 0;
+                sql = String.Format("select distinct ff from t_rule_ns_bm where bmbh = '{0}' order by ff", m_bmbh);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                dr = comm.ExecuteReader();
+                while (dr.Read())
+                {
+                    comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
+                }
+                dr.Close();
+                conn.Close();
             }        
         }
 
@@ -1132,7 +1165,7 @@ namespace 中医证治智能系统
                             {
                                 if (dr[0].ToString() != "1")
                                 {
-                                    comb_ffs.Items.Add("条件" + numbertochinese("1"));
+                                    comb_ffs.Items.Add("方法" + numbertochinese("1"));
                                 }
                             }
                         }
@@ -1165,7 +1198,7 @@ namespace 中医证治智能系统
                             {
                                 if (dr[0].ToString() != "1")
                                 {
-                                    comb_ffs.Items.Add("条件" + numbertochinese("1"));
+                                    comb_ffs.Items.Add("方法" + numbertochinese("1"));
                                 }
                             }
                         }

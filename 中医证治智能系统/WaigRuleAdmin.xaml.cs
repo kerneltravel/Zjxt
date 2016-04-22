@@ -189,6 +189,12 @@ namespace 中医证治智能系统
                 case "10":
                     chinese = "十";
                     break;
+                case "11":
+                    chinese = "十一";
+                    break;
+                case "12":
+                    chinese = "十二";
+                    break;
             }
             return chinese;
         }

@@ -163,6 +163,12 @@ namespace 中医证治智能系统
                 case "10":
                     chinese = "十";
                     break;
+                case "11":
+                    chinese = "十一";
+                    break;
+                case "12":
+                    chinese = "十二";
+                    break;
             }
             return chinese;
         }
@@ -237,6 +243,7 @@ namespace 中医证治智能系统
             string sql = String.Format("select count(*) from x_t_rule_x where xbh = '{0}'", m_xbh);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
+            SqlDataReader dr;
             int count = (int)comm.ExecuteScalar();
             if (count == 0)
             {
@@ -254,7 +261,7 @@ namespace 中医证治智能系统
                 sql = String.Format("select distinct ff from x_t_rule_x where xbh = '{0}'", m_xbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
-                SqlDataReader dr = comm.ExecuteReader();
+                dr = comm.ExecuteReader();
                 while (dr.Read())
                 {
                     nodes.Add(
@@ -333,22 +340,22 @@ namespace 中医证治智能系统
                 dr.Close();
                 conn.Close();
                 // 调用创建树函数
-                BuildENTree();
-                // 在下拉框显示方法数
-                comb_ffs.Items.Clear();
-                comb_ffs.Items.Add("--请选择方法数--");
-                comb_ffs.SelectedIndex = 0;
-                sql = String.Format("select distinct ff from x_t_rule_x where xbh = '{0}' order by ff", m_xbh);
-                conn.Open();
-                comm = new SqlCommand(sql, conn);
-                dr = comm.ExecuteReader();
-                while (dr.Read())
-                {
-                    comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
-                }
-                dr.Close();
-                conn.Close();
+                BuildENTree();                
             }
+            // 在下拉框显示方法数
+            comb_ffs.Items.Clear();
+            comb_ffs.Items.Add("--请选择方法数--");
+            comb_ffs.SelectedIndex = 0;
+            sql = String.Format("select distinct ff from x_t_rule_x where xbh = '{0}' order by ff", m_xbh);
+            conn.Open();
+            comm = new SqlCommand(sql, conn);
+            dr = comm.ExecuteReader();
+            while (dr.Read())
+            {
+                comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
+            }
+            dr.Close();
+            conn.Close();
         }
 
         /// <summary>

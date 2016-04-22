@@ -414,6 +414,12 @@ namespace 中医证治智能系统
                 case "10":
                     chinese = "十";
                     break;
+                case "11":
+                    chinese = "十一";
+                    break;
+                case "12":
+                    chinese = "十二";
+                    break;
             }
             return chinese;
         }
@@ -752,21 +758,21 @@ namespace 中医证治智能系统
 
                 // 调用创建树函数
                 BuildENTree();
-                // 在下拉框显示方法数
-                comb_ffs.Items.Clear();
-                comb_ffs.Items.Add("--请选择方法数--");
-                comb_ffs.SelectedIndex = 0;
-                sql = String.Format("select distinct ff from t_rule_jbzm where jbzmbh = '{0}' order by ff", m_jbzmbh);
-                conn.Open();
-                comm = new SqlCommand(sql, conn);
-                dr = comm.ExecuteReader();
-                while (dr.Read())
-                {
-                    comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
-                }
-                dr.Close();
-                conn.Close();
             }
+            // 在下拉框显示方法数
+            comb_ffs.Items.Clear();
+            comb_ffs.Items.Add("--请选择方法数--");
+            comb_ffs.SelectedIndex = 0;
+            sql = String.Format("select distinct ff from t_rule_jbzm where jbzmbh = '{0}' order by ff", m_jbzmbh);
+            conn.Open();
+            comm = new SqlCommand(sql, conn);
+            dr = comm.ExecuteReader();
+            while (dr.Read())
+            {
+                comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
+            }
+            dr.Close();
+            conn.Close();
         }
 
         /// <summary>
