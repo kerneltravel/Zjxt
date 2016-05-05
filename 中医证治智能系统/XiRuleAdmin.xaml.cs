@@ -82,10 +82,9 @@ namespace 中医证治智能系统
                 if (parentnode != null)
                 {
                     parentnode.Nodes.Add(newnode);
-                    if ((parentnode1.ID != parentnode.ID) && parentnode.ParentID == -1)
+                    if (!outputList.Contains(parentnode) && parentnode.ParentID == -1)
                     {
                         outputList.Add(parentnode);
-                        parentnode1.ID = parentnode.ID;
                     }
                 }
             }
@@ -115,10 +114,9 @@ namespace 中医证治智能系统
                 if (parentnode != null)
                 {
                     parentnode.Nodes.Add(newnode);
-                    if ((parentnode1.ID != parentnode.ID) && parentnode.ParentID == -1)
+                    if (!outputList.Contains(parentnode) && parentnode.ParentID == -1)
                     {
                         outputList.Add(parentnode);
-                        parentnode1.ID = parentnode.ID;
                     }
                 }
             }

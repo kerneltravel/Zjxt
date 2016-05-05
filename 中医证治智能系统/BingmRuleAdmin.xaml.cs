@@ -99,10 +99,9 @@ namespace 中医证治智能系统
                 if (parentnode != null)
                 {
                     parentnode.Nodes.Add(newnode);
-                    if ((parentnode1.ID != parentnode.ID) && parentnode.ParentID == -1)
+                    if (!outputList.Contains(parentnode) && parentnode.ParentID == -1)
                     {
-                        outputList.Add(parentnode);
-                        parentnode1.ID = parentnode.ID;
+                        outputList.Add(parentnode);                       
                     }
                 }
             }
@@ -130,10 +129,9 @@ namespace 中医证治智能系统
                 if (parentnode != null)
                 {
                     parentnode.Nodes.Add(newnode);
-                    if ((parentnode1.ID != parentnode.ID) && parentnode.ParentID == -1)
+                    if (!outputList.Contains(parentnode) && parentnode.ParentID == -1) // 添加一级树（注意重复添加）
                     {
                         outputList.Add(parentnode);
-                        parentnode1.ID = parentnode.ID;
                     }
                 }
             }
@@ -435,21 +433,21 @@ namespace 中医证治智能系统
 
                     // 调用创建树函数
                     BuildENTree();
-                    // 在下拉框显示方法数
-                    comb_ffs.Items.Clear();
-                    comb_ffs.Items.Add("--请选择方法数--");
-                    comb_ffs.SelectedIndex = 0;
-                    sql = String.Format("select distinct ff from t_rule_wg_bm where bmbh = '{0}' order by ff", m_bmbh);
-                    conn.Open();
-                    comm = new SqlCommand(sql, conn);
-                    dr = comm.ExecuteReader();
-                    while (dr.Read())
-                    {
-                        comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
-                    }
-                    dr.Close();
-                    conn.Close();
                 }
+                // 在下拉框显示方法数
+                comb_ffs.Items.Clear();
+                comb_ffs.Items.Add("--请选择方法数--");
+                comb_ffs.SelectedIndex = 0;
+                sql = String.Format("select distinct ff from t_rule_wg_bm where bmbh = '{0}' order by ff", m_bmbh);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                dr = comm.ExecuteReader();
+                while (dr.Read())
+                {
+                    comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
+                }
+                dr.Close();
+                conn.Close();
             }
 
             // 内伤
@@ -555,21 +553,21 @@ namespace 中医证治智能系统
 
                     // 调用创建树函数
                     BuildENTree();
-                    // 在下拉框显示方法数
-                    comb_ffs.Items.Clear();
-                    comb_ffs.Items.Add("--请选择方法数--");
-                    comb_ffs.SelectedIndex = 0;
-                    sql = String.Format("select distinct ff from t_rule_ns_bm where bmbh = '{0}' order by ff", m_bmbh);
-                    conn.Open();
-                    comm = new SqlCommand(sql, conn);
-                    dr = comm.ExecuteReader();
-                    while (dr.Read())
-                    {
-                        comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
-                    }
-                    dr.Close();
-                    conn.Close();
                 }
+                // 在下拉框显示方法数
+                comb_ffs.Items.Clear();
+                comb_ffs.Items.Add("--请选择方法数--");
+                comb_ffs.SelectedIndex = 0;
+                sql = String.Format("select distinct ff from t_rule_ns_bm where bmbh = '{0}' order by ff", m_bmbh);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                dr = comm.ExecuteReader();
+                while (dr.Read())
+                {
+                    comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
+                }
+                dr.Close();
+                conn.Close();
             }
             // 显示【病名规则录入】中的病名名称
             bmmc_1.Text = bmmc.Text;            
@@ -740,21 +738,21 @@ namespace 中医证治智能系统
                     
                     // 调用创建树函数
                     BuildENTree();
-                    // 在下拉框显示方法数
-                    comb_ffs.Items.Clear();
-                    comb_ffs.Items.Add("--请选择方法数--");
-                    comb_ffs.SelectedIndex = 0;
-                    sql = String.Format("select distinct ff from t_rule_wg_bm where bmbh = '{0}' order by ff", m_bmbh);
-                    conn.Open();
-                    comm = new SqlCommand(sql, conn);
-                    dr = comm.ExecuteReader();
-                    while (dr.Read())
-                    {
-                        comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
-                    }
-                    dr.Close();
-                    conn.Close();
-                }                
+                }
+                // 在下拉框显示方法数
+                comb_ffs.Items.Clear();
+                comb_ffs.Items.Add("--请选择方法数--");
+                comb_ffs.SelectedIndex = 0;
+                sql = String.Format("select distinct ff from t_rule_wg_bm where bmbh = '{0}' order by ff", m_bmbh);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                dr = comm.ExecuteReader();
+                while (dr.Read())
+                {
+                    comb_ffs.Items.Add("方法" + numbertochinese(dr["ff"].ToString()));
+                }
+                dr.Close();
+                conn.Close();
             }
 
             // 内伤
@@ -1113,7 +1111,7 @@ namespace 中医证治智能系统
                     dr.Close();
                     conn.Close();                   
                     // 五级树写入
-                    sql = String.Format("select t2.id, t1.ff, t1.zxbh, t2.zxmc from t_rule_ns_bm as t1 inner join t_info_zxmx as t2 on t1.zxbh = t2.zxbh where bmbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}'  group by t2.id, t1.ff, t1.zxbh, t2.zxmc "
+                    sql = String.Format("select t2.id, t1.ff, t1.zxbh, t2.zxmc from t_rule_ns_bm as t1 inner join t_info_zxmx as t2 on t1.zxbh = t2.zxbh where bmbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}'  group by t2.id, t1.ff, t1.zxbh, t2.zxmc"
                         , m_bmbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
@@ -1493,7 +1491,7 @@ namespace 中医证治智能系统
                         if (comb_tjlx.SelectedIndex == 1)
                         {
                             string sql = String.Format("insert into t_rule_wg_bm ( ff, blgz, zxbh, tjzb, znfz, gzfz, bmbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
-                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_bmbh, comb_tjlx.SelectedIndex.ToString());
+                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_bmbh, (comb_tjlx.SelectedIndex - 1).ToString());
                             conn.Open();
                             SqlCommand comm = new SqlCommand(sql, conn);
                             int count = comm.ExecuteNonQuery();
@@ -1575,7 +1573,7 @@ namespace 中医证治智能系统
                         if(comb_tjlx.SelectedIndex == 2)
                         {
                             string sql = String.Format("insert into t_rule_wg_bm ( ff, blgz, jbbjbh, tjzb, znfz, gzfz, bmbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
-                               , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_bmbh, comb_tjlx.SelectedIndex.ToString());
+                               , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_bmbh, (comb_tjlx.SelectedIndex - 1).ToString());
                             conn.Open();
                             SqlCommand comm = new SqlCommand(sql, conn);
                             int count = comm.ExecuteNonQuery();

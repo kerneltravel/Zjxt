@@ -131,7 +131,7 @@ namespace 中医证治智能系统
         private void back_search_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-            MessageBox.Show("没有西医病名被选择！");
+            MessageBox.Show("没有病史被选择！");
         }
 
         private void select_search_Click(object sender, RoutedEventArgs e)
