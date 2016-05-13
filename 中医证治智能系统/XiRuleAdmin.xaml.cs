@@ -178,7 +178,7 @@ namespace 中医证治智能系统
         {
             // 刷新
             nodes.Clear();
-            string sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join x_t_rule_x as t2 on t2.zxbh = t1.zxbh where xbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}'  group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh"
+            string sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_x as t2 on t2.zxbh = t1.zxbh where xbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}'  group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh"
                                , m_xbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
@@ -193,7 +193,7 @@ namespace 中医证治智能系统
             }
             dr.Close();
             conn.Close();
-            sql = String.Format("select t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join x_t_rule_x as t2 on t2.zxbh = t1.zxbh where xbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}' group by t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh"
+            sql = String.Format("select t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_x as t2 on t2.zxbh = t1.zxbh where xbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}' group by t1.id, t2.ff, t2.blgz, t2.tjzb, t2.zxbh"
                                 , m_xbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
             conn.Open();
             comm = new SqlCommand(sql, conn);
@@ -238,7 +238,7 @@ namespace 中医证治智能系统
             comb_zlfz.SelectedIndex = -1;
             // 清空
             nodes.Clear();
-            string sql = String.Format("select count(*) from x_t_rule_x where xbh = '{0}'", m_xbh);
+            string sql = String.Format("select count(*) from t_rule_x where xbh = '{0}'", m_xbh);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             SqlDataReader dr;
@@ -256,7 +256,7 @@ namespace 中医证治智能系统
             {
                 // 将数据库数据写入 List 集合
                 // 一级树写入           
-                sql = String.Format("select distinct ff from x_t_rule_x where xbh = '{0}'", m_xbh);
+                sql = String.Format("select distinct ff from t_rule_x where xbh = '{0}'", m_xbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -272,7 +272,7 @@ namespace 中医证治智能系统
                 dr.Close();
                 conn.Close();
                 // 二级树写入
-                sql = String.Format("select ff, blgz, gzfz from x_t_rule_x where xbh = '{0}' group by ff, blgz, gzfz", m_xbh);
+                sql = String.Format("select ff, blgz, gzfz from t_rule_x where xbh = '{0}' group by ff, blgz, gzfz", m_xbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -288,7 +288,7 @@ namespace 中医证治智能系统
                 dr.Close();
                 conn.Close();
                 // 三级树写入
-                sql = String.Format("select ff, blgz, tjzb, znfz from x_t_rule_x where xbh = '{0}' group by ff, blgz, tjzb, znfz ", m_xbh);
+                sql = String.Format("select ff, blgz, tjzb, znfz from t_rule_x where xbh = '{0}' group by ff, blgz, tjzb, znfz ", m_xbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -305,7 +305,7 @@ namespace 中医证治智能系统
                 conn.Close();
 
                 // 四级树写入
-                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join x_t_rule_x as t2 on t2.zxbh = t1.zxbh where xbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_xbh);
+                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_x as t2 on t2.zxbh = t1.zxbh where xbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_xbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -322,7 +322,7 @@ namespace 中医证治智能系统
                 conn.Close();
 
                 // 五级树写入
-                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, t1.zxmc, t1.id from t_info_zxmx as t1 inner join x_t_rule_x as t2 on t2.zxbh = t1.zxbh where xbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh, t1.zxmc, t1.id", m_xbh);
+                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, t1.zxmc, t1.id from t_info_zxmx as t1 inner join t_rule_x as t2 on t2.zxbh = t1.zxbh where xbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh, t1.zxmc, t1.id", m_xbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -344,7 +344,7 @@ namespace 中医证治智能系统
             comb_ffs.Items.Clear();
             comb_ffs.Items.Add("--请选择方法数--");
             comb_ffs.SelectedIndex = 0;
-            sql = String.Format("select distinct ff from x_t_rule_x where xbh = '{0}' order by ff", m_xbh);
+            sql = String.Format("select distinct ff from t_rule_x where xbh = '{0}' order by ff", m_xbh);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
@@ -386,7 +386,7 @@ namespace 中医证治智能系统
             // 清空
             nodes.Clear();
             // 判断是否存在该病名的推理规则
-            string sql = String.Format("select count(*) from x_t_rule_x where xbh = '{0}'", m_xbh);
+            string sql = String.Format("select count(*) from t_rule_x where xbh = '{0}'", m_xbh);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             int count = (int)comm.ExecuteScalar();
@@ -403,7 +403,7 @@ namespace 中医证治智能系统
             {
                 // 将数据库数据写入 List 集合
                 // 一级树写入           
-                sql = String.Format("select distinct ff from x_t_rule_x where xbh = '{0}'", m_xbh);
+                sql = String.Format("select distinct ff from t_rule_x where xbh = '{0}'", m_xbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -414,7 +414,7 @@ namespace 中医证治智能系统
                 dr.Close();
                 conn.Close();
                 // 二级树写入
-                sql = String.Format("select ff, blgz, gzfz from x_t_rule_x where xbh = '{0}' group by ff, blgz, gzfz", m_xbh);
+                sql = String.Format("select ff, blgz, gzfz from t_rule_x where xbh = '{0}' group by ff, blgz, gzfz", m_xbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -430,7 +430,7 @@ namespace 中医证治智能系统
                 dr.Close();
                 conn.Close();
                 // 三级树写入
-                sql = String.Format("select ff, blgz, tjzb, znfz from x_t_rule_x where xbh = '{0}' group by ff, blgz, tjzb, znfz ", m_xbh);
+                sql = String.Format("select ff, blgz, tjzb, znfz from t_rule_x where xbh = '{0}' group by ff, blgz, tjzb, znfz ", m_xbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -446,7 +446,7 @@ namespace 中医证治智能系统
                 dr.Close();
                 conn.Close();
                 // 四级树写入
-                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join x_t_rule_x as t2 on t2.zxbh = t1.zxbh where xbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_xbh);
+                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, min(t1.zxmc) from t_info_zxmx as t1 inner join t_rule_x as t2 on t2.zxbh = t1.zxbh where xbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh", m_xbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -462,7 +462,7 @@ namespace 中医证治智能系统
                 dr.Close();
                 conn.Close();
                 // 五级树写入
-                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, t1.zxmc, t1.id from t_info_zxmx as t1 inner join x_t_rule_x as t2 on t2.zxbh = t1.zxbh where xbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh, t1.zxmc, t1.id", m_xbh);
+                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zxbh, t1.zxmc, t1.id from t_info_zxmx as t1 inner join t_rule_x as t2 on t2.zxbh = t1.zxbh where xbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zxbh, t1.zxmc, t1.id", m_xbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -483,7 +483,7 @@ namespace 中医证治智能系统
                 comb_ffs.Items.Clear();
                 comb_ffs.Items.Add("--请选择方法数--");
                 comb_ffs.SelectedIndex = 0;
-                sql = String.Format("select distinct ff from x_t_rule_x where xbh = '{0}' order by ff", m_xbh);
+                sql = String.Format("select distinct ff from t_rule_x where xbh = '{0}' order by ff", m_xbh);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -510,7 +510,7 @@ namespace 中医证治智能系统
             // 在方法数选定的前提下
             if (comb_ffs.SelectedIndex > 0)
             {
-                string sql = String.Format("select distinct blgz from x_t_rule_x where ff = '{0}' and xbh = '{1}'", comb_ffs.SelectedIndex, m_xbh);
+                string sql = String.Format("select distinct blgz from t_rule_x where ff = '{0}' and xbh = '{1}'", comb_ffs.SelectedIndex, m_xbh);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -534,7 +534,7 @@ namespace 中医证治智能系统
             comb_zbs.SelectedIndex = 0;
             if (comb_tjs.SelectedIndex > 0)
             {
-                string sql = String.Format("select gzfz, tjzb from x_t_rule_x where ff = '{0}' and blgz = '{1}' and xbh = '{2}' group by gzfz, tjzb", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_xbh);
+                string sql = String.Format("select gzfz, tjzb from t_rule_x where ff = '{0}' and blgz = '{1}' and xbh = '{2}' group by gzfz, tjzb", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_xbh);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -556,7 +556,7 @@ namespace 中医证治智能系统
             comb_zlfz.SelectedIndex = -1;
             if (comb_zbs.SelectedIndex > 0)
             {
-                string sql = String.Format("select znfz from x_t_rule_x where ff = '{0}' and blgz = '{1}' and tjzb = '{2}' and xbh = '{3}' group by znfz", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_xbh);
+                string sql = String.Format("select znfz from t_rule_x where ff = '{0}' and blgz = '{1}' and tjzb = '{2}' and xbh = '{3}' group by znfz", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_xbh);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -584,7 +584,7 @@ namespace 中医证治智能系统
             comb_zbs.SelectedIndex = 0;
             if (xmc.Text != "")
             {
-                string sql = String.Format("select max(ff) from x_t_rule_x where xbh = '{0}'", m_xbh);
+                string sql = String.Format("select max(ff) from t_rule_x where xbh = '{0}'", m_xbh);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -626,7 +626,7 @@ namespace 中医证治智能系统
             comb_zbs.SelectedIndex = 0;
             if (comb_ffs.SelectedIndex > 0)
             {
-                string sql = String.Format("select max(blgz) from x_t_rule_x where xbh = '{0}' and ff = '{1}'", m_xbh, comb_ffs.SelectedIndex);
+                string sql = String.Format("select max(blgz) from t_rule_x where xbh = '{0}' and ff = '{1}'", m_xbh, comb_ffs.SelectedIndex);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -669,7 +669,7 @@ namespace 中医证治智能系统
         {
             if (comb_tjs.SelectedIndex > 0)
             {
-                string sql = String.Format("select max(tjzb) from x_t_rule_x where ff = '{0}' and blgz = '{1}' and xbh = '{2}'", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_xbh);
+                string sql = String.Format("select max(tjzb) from t_rule_x where ff = '{0}' and blgz = '{1}' and xbh = '{2}'", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_xbh);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -780,7 +780,7 @@ namespace 中医证治智能系统
                 }
                 else
                 {
-                    string sql = String.Format("insert into x_t_rule_x ( ff, blgz, zxbh, tjzb, znfz, gzfz, xbh) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_xbh);
+                    string sql = String.Format("insert into t_rule_x ( ff, blgz, zxbh, tjzb, znfz, gzfz, xbh) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')", comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_xbh);
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
                     int count = comm.ExecuteNonQuery();
@@ -797,7 +797,7 @@ namespace 中医证治智能系统
         /// </summary>
         public void Is_Repeat()
         {
-            string sql = String.Format("select count(*) from x_t_rule_x where ff = '{0}' and blgz = '{1}' and tjzb ='{2}'and zxbh ='{3}' and xbh = '{4}'"
+            string sql = String.Format("select count(*) from t_rule_x where ff = '{0}' and blgz = '{1}' and tjzb ='{2}'and zxbh ='{3}' and xbh = '{4}'"
                           , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_tjbh, m_xbh);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
@@ -823,7 +823,7 @@ namespace 中医证治智能系统
             {
                 try
                 {
-                    string sql = String.Format("delete from x_t_rule_x where ff = '{0}' and blgz = '{1}' and zxbh = '{2}' and tjzb = '{3}' and xbh = '{4}'"
+                    string sql = String.Format("delete from t_rule_x where ff = '{0}' and blgz = '{1}' and zxbh = '{2}' and tjzb = '{3}' and xbh = '{4}'"
                                        , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, node.ID.ToString().Substring(1), comb_zbs.SelectedIndex, m_xbh);
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
@@ -894,7 +894,7 @@ namespace 中医证治智能系统
         {
             if (comb_ffs.SelectedIndex != 0 && comb_tjs.SelectedIndex != 0 && comb_zbs.SelectedIndex != 0)
             {
-                String sql = String.Format("update x_t_rule_x set gzfz = '{0}' where xbh = '{1}' and ff = '{2}' and blgz = '{3}'"
+                String sql = String.Format("update t_rule_x set gzfz = '{0}' where xbh = '{1}' and ff = '{2}' and blgz = '{3}'"
                     , comb_tjfz.Text, m_xbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
@@ -910,7 +910,7 @@ namespace 中医证治智能系统
         {
             if (comb_ffs.SelectedIndex != 0 && comb_tjs.SelectedIndex != 0 && comb_zbs.SelectedIndex != 0)
             {
-                String sql = String.Format("update x_t_rule_x set znfz = '{0}' where xbh = '{1}' and ff = '{2}' and tjzb = '{3}'"
+                String sql = String.Format("update t_rule_x set znfz = '{0}' where xbh = '{1}' and ff = '{2}' and tjzb = '{3}'"
                                     , comb_zlfz.Text, m_xbh, comb_ffs.SelectedIndex, comb_zbs.SelectedIndex);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);

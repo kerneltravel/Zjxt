@@ -58,21 +58,21 @@ namespace 中医证治智能系统
                 }
             }
             #endregion
-            private string _xiNumber;
-            private string _xiName;
+            private string _rkNumber;
+            private string _rkName;
             private string _zxNumber;
             private string _zxName;
 
-            public string XiNumber
+            public string RkNumber
             {
-                get { return _xiNumber; }
-                set { _xiNumber = value; OnPropertyChanged(new PropertyChangedEventArgs("XiNumber")); }
+                get { return _rkNumber; }
+                set { _rkNumber = value; OnPropertyChanged(new PropertyChangedEventArgs("RkNumber")); }
             }
 
-            public string XiName
+            public string RkName
             {
-                get { return _xiName; }
-                set { _xiName = value; OnPropertyChanged(new PropertyChangedEventArgs("XiName")); }
+                get { return _rkName; }
+                set { _rkName = value; OnPropertyChanged(new PropertyChangedEventArgs("RkName")); }
             }
 
             public string ZxNumber
@@ -89,10 +89,10 @@ namespace 中医证治智能系统
 
 
 
-            public XiruleInfo(string xinumber, string xiname, string zxnumber, string zxname)
+            public XiruleInfo(string rknumber, string rkname, string zxnumber, string zxname)
             {
-                _xiNumber = xinumber;
-                _xiName = xiname;
+                _rkNumber = rknumber;
+                _rkName = rkname;
                 _zxNumber = zxnumber;
                 _zxName = zxname;
 
@@ -101,14 +101,14 @@ namespace 中医证治智能系统
         private void ComboBox_DropDownOpened(object sender, EventArgs e)
         {
 
-            string sql = String.Format("select xmc from t_info_x");
+            string sql = String.Format("select rkmc from t_info_rk");
             SqlDataAdapter da = new SqlDataAdapter(sql, conn);
             DataSet ds = new DataSet();
             ds.Clear();
             da.Fill(ds);
-            combobox_xi.ItemsSource = ds.Tables[0].DefaultView;
-            combobox_xi.DisplayMemberPath = "xmc";
-            combobox_xi.SelectedValuePath = "xbh";
+            combobox_rk.ItemsSource = ds.Tables[0].DefaultView;
+            combobox_rk.DisplayMemberPath = "rkmc";
+            combobox_rk.SelectedValuePath = "rkbh";
 
         }
 
@@ -122,17 +122,17 @@ namespace 中医证治智能系统
 
         private void ComboBox_DropDownClosed(object sender, EventArgs e)
         {
-            if (combobox_xi.Text != null)
+            if (combobox_rk.Text != null)
             {
                 listXirule.Clear();
-                string sql = String.Format("select t_info_zxmx.zxmc,  t_rule_x.xbh, t_rule_x.zxbh from (t_info_x as t1 inner join t_rule_x on t1.xbh =  t_rule_x.xbh ) inner join t_info_zxmx on t_rule_x.zxbh =  t_info_zxmx.zxbh  where xmc = '{0}'", combobox_xi.Text);
+                string sql = String.Format("select t_info_zxmx.zxmc,  t_rule_rk.rkbh, t_rule_rk.zxbh from (t_info_rk as t1 inner join t_rule_rk on t1.rkbh =  t_rule_rk.rkbh ) inner join t_info_zxmx on t_rule_rk.zxbh =  t_info_zxmx.zxbh  where rkmc = '{0}'", combobox_rk.Text);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
                 while (dr.Read())
                 {
 
-                    xi_Edit = new XiruleInfo(dr["xbh"].ToString(), combobox_xi.Text, dr["zxbh"].ToString(), dr["zxmc"].ToString());
+                    xi_Edit = new XiruleInfo(dr["rkbh"].ToString(), combobox_rk.Text, dr["zxbh"].ToString(), dr["zxmc"].ToString());
                     listXirule.Add(xi_Edit);
                 }
                 dr.Close();
@@ -144,13 +144,13 @@ namespace 中医证治智能系统
         {
             Add = true;
             save.IsEnabled = true;
-            if (combobox_xi.Text == "")
+            if (combobox_rk.Text == "")
             {
                 MessageBox.Show("请输入系！", "comfirm", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
-                ywAdd = new XiruleInfo(xi_Edit.XiNumber, xi_Edit.XiName, "", "");
+                ywAdd = new XiruleInfo(xi_Edit.RkNumber, xi_Edit.RkName, "", "");
                 listXirule.Add(ywAdd);
                 lv.SelectedIndex = lv.Items.Count - 1;
 
@@ -213,7 +213,7 @@ namespace 中医证治智能系统
         {
             listXirule.Clear();
             zxmc.Text = "";
-            combobox_xi.Text = "";
+            combobox_rk.Text = "";
         }
 
         private void delete_Click(object sender, RoutedEventArgs e)
@@ -227,7 +227,7 @@ namespace 中医证治智能系统
                 }
                 try
                 {
-                    string sql = String.Format("delete from t_rule_x where xbh = '{0}'and zxbh='{1}'", userinfo.XiNumber, userinfo.ZxNumber);
+                    string sql = String.Format("delete from t_rule_rk where rkbh = '{0}'and zxbh='{1}'", userinfo.RkNumber, userinfo.ZxNumber);
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
                     int count = comm.ExecuteNonQuery();
@@ -270,7 +270,7 @@ namespace 中医证治智能系统
                 {
                     try
                     {
-                        string sql = String.Format("INSERT INTO t_rule_x (xbh,zxbh,bz) VALUES ('{0}', '{1}', '{2}')", userinfo.XiNumber, userinfo.ZxNumber, "");
+                        string sql = String.Format("INSERT INTO t_rule_rk (rkbh,zxbh,bz) VALUES ('{0}', '{1}', '{2}')", userinfo.RkNumber, userinfo.ZxNumber, "");
 
                         conn.Open();
                         SqlCommand comm = new SqlCommand(sql, conn);
@@ -284,7 +284,7 @@ namespace 中医证治智能系统
                     {
                         MessageBox.Show("添加失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                         listXirule.Remove(userinfo);
-                        combobox_xi.Text = "";
+                        combobox_rk.Text = "";
                         zxmc.Text = "";
                         lv.SelectedIndex = lv.Items.Count - 1;
                     }
@@ -300,7 +300,7 @@ namespace 中医证治智能系统
         public void Is_Repeat()
         {
             string username = zxmc.Text.Trim();
-            string sql = String.Format("select count(*) from t_rule_x where xbh = '{0}'and zxbh='{1}'", xi_Edit.XiNumber, xi_Edit.ZxNumber);
+            string sql = String.Format("select count(*) from t_rule_rk where rkbh = '{0}'and zxbh='{1}'", xi_Edit.RkNumber, xi_Edit.ZxNumber);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             int count = (int)comm.ExecuteScalar();

@@ -353,7 +353,7 @@
                 </TabItem>
             </TabControl>
             <Button Content="x" HorizontalAlignment="Right" Margin="0,0,2.625,8" Style="{DynamicResource SysButtonStyle}" Width="44.315" Name="closeButton" Click="closeButton_Click" />
-            <Label Content="中医证治诊断系统：V1.0.0.0" HorizontalAlignment="Left"  Width="171.79" Foreground="#A794E9FF" FontWeight="Bold"/>
+            <Label Content="中医证治诊断系统：V2.0" HorizontalAlignment="Left"  Width="171.79" Foreground="#A794E9FF" FontWeight="Bold"/>
             <Button Content="max" HorizontalAlignment="Right" Margin="0,0,46.94,8" Style="{DynamicResource MaxButtonStyle}" Width="41.5" Name="maxButton" Click="maxButton_Click">
                 <Button.Background>
                     <ImageBrush ImageSource="Resources/MAX.png" Stretch="Uniform"/>

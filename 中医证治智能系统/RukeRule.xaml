@@ -52,7 +52,7 @@
                 <Grid>
                     <Label Content="入科名称：" HorizontalAlignment="Left" Margin="38,19,0,0" VerticalAlignment="Top" Height="31" Width="79" VerticalContentAlignment="Center"/>
                     <TextBox  Name="zxmc"  LostFocus="zxmc_LostFocus" HorizontalAlignment="Left" Height="24" Margin="410,27,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="180"/>
-                    <ComboBox Name="combobox_xi" DropDownClosed="ComboBox_DropDownClosed" DropDownOpened="ComboBox_DropDownOpened" HorizontalAlignment="Left" Margin="122,26,0,0" VerticalAlignment="Top" Width="180" Height="24" IsEditable="True"/>
+                    <ComboBox Name="combobox_rk" DropDownClosed="ComboBox_DropDownClosed" DropDownOpened="ComboBox_DropDownOpened" HorizontalAlignment="Left" Margin="122,26,0,0" VerticalAlignment="Top" Width="180" Height="24" IsEditable="True"/>
                     <Label Content="症象编号：" HorizontalAlignment="Left" Margin="326,20,0,0" VerticalAlignment="Top" Height="31" Width="79" VerticalContentAlignment="Center"/>
                     <Button Content=". . ." HorizontalAlignment="Left" Margin="604,27,0,0" VerticalAlignment="Top" Width="40" Height="24" Click="Button_Click_1"/>
                 </Grid>
@@ -62,8 +62,8 @@
             <ListView  Name="lv" HorizontalAlignment="Left" Height="338" Margin="90,29,0,0" VerticalAlignment="Top" Width="719" SelectionChanged="lv_SelectionChanged" >
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="入科编号" DisplayMemberBinding="{Binding Path=XiNumber}"  Width="60"/>
-                        <GridViewColumn Header="入科名称"  DisplayMemberBinding="{Binding Path=XiName}" Width="150"/>
+                        <GridViewColumn Header="入科编号" DisplayMemberBinding="{Binding Path=RkNumber}"  Width="60"/>
+                        <GridViewColumn Header="入科名称"  DisplayMemberBinding="{Binding Path=RkName}" Width="150"/>
                         <GridViewColumn Header="症象编号" DisplayMemberBinding="{Binding Path=ZxNumber}" Width="150" />
                         <GridViewColumn Header="症象名称" DisplayMemberBinding="{Binding Path=ZxName}"  Width="300" />
                     </GridView>

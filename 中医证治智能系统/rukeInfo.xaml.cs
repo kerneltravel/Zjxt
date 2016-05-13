@@ -86,27 +86,27 @@ namespace 中医证治智能系统
         ObservableCollection<UserInfo> listCustomer1 = new ObservableCollection<UserInfo>();
         public void Text_Readonly()
         {
-            text_box_xmc.IsReadOnly = true;
+            text_box_rkmc.IsReadOnly = true;
             text_box_bz.IsReadOnly = true;
 
         }
         public void Text_Editable()
         {
-            text_box_xmc.IsReadOnly = false;
+            text_box_rkmc.IsReadOnly = false;
             text_box_bz.IsReadOnly = false;
         }
         public void Text_Clear()
         {
             text_box_bz.Text = "";
-            text_box_xmc.Text = "";
-            text_block_xbh.Text = j;
+            text_box_rkmc.Text = "";
+            text_block_rkbh.Text = j;
 
         }
         private void text_box_xmc_LostFocus(object sender, RoutedEventArgs e)
         {
             //if(  )
-            user_add.XiName = text_box_xmc.Text;
-            useredit.XiName = text_box_xmc.Text;
+            user_add.XiName = text_box_rkmc.Text;
+            useredit.XiName = text_box_rkmc.Text;
         }
         private void text_box_bz_LostFocus(object sender, RoutedEventArgs e)
         {
@@ -119,13 +119,13 @@ namespace 中医证治智能系统
             InitializeComponent();
             button_save.IsEnabled = false;
 
-            string sql = String.Format("select * from t_info_x");
+            string sql = String.Format("select * from t_info_rk");
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             SqlDataReader dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                listCustomer1.Add(new UserInfo(dr["xbh"].ToString(), dr["xmc"].ToString(), dr["bz"].ToString()));
+                listCustomer1.Add(new UserInfo(dr["rkbh"].ToString(), dr["rkmc"].ToString(), dr["bz"].ToString()));
 
             }
             lv1.ItemsSource = listCustomer1;
@@ -139,7 +139,7 @@ namespace 中医证治智能系统
         {
 
 
-            string sql = String.Format("select max(xbh) from t_info_x");
+            string sql = String.Format("select max(rkbh) from t_info_rk");
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             SqlDataReader dr = comm.ExecuteReader();
@@ -153,7 +153,7 @@ namespace 中医证治智能系统
             }
             dr.Close();
             conn.Close();
-            Keyboard.Focus(text_box_xmc); // 设置焦点
+            Keyboard.Focus(text_box_rkmc); // 设置焦点
             lv1.SelectedIndex = lv1.Items.Count - 1; // 设置增加项被选中
             IsAdd = true;
             button_save.IsEnabled = true;
@@ -171,11 +171,11 @@ namespace 中医证治智能系统
         {
             if (lv1.SelectedIndex != lv1.Items.Count - 1 && IsAdd)
             {
-                if (text_box_xmc.Text == "")
+                if (text_box_rkmc.Text == "")
                 {
                     MessageBox.Show("系名不能为空！");
                     lv1.SelectedIndex = lv1.Items.Count - 1;
-                    Keyboard.Focus(text_box_xmc);
+                    Keyboard.Focus(text_box_rkmc);
                 }
                 else
                 {
@@ -185,11 +185,11 @@ namespace 中医证治智能系统
             }
             else if (lv1.SelectedIndex != i && IsEdit)
             {
-                if (text_box_xmc.Text == "")
+                if (text_box_rkmc.Text == "")
                 {
                     MessageBox.Show("系名不能为空！");
                     lv1.SelectedIndex = i;
-                    Keyboard.Focus(text_box_xmc);
+                    Keyboard.Focus(text_box_rkmc);
                 }
                 else
                 {
@@ -203,16 +203,16 @@ namespace 中医证治智能系统
                 i = lv1.SelectedIndex;
                 if (useredit != null && useredit is UserInfo)
                 {
-                    string sql = String.Format("select * from t_info_x where xbh = '{0}'", useredit.XiNumber);
+                    string sql = String.Format("select * from t_info_rk where rkbh = '{0}'", useredit.XiNumber);
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
                     SqlDataReader dr = comm.ExecuteReader();
                     while (dr.Read())
                     {
                         if (IsEdit != true) Text_Readonly();
-                        text_box_xmc.Text = dr["xmc"].ToString();
+                        text_box_rkmc.Text = dr["rkmc"].ToString();
                         text_box_bz.Text = dr["bz"].ToString();
-                        text_block_xbh.Text = dr["xbh"].ToString();
+                        text_block_rkbh.Text = dr["rkbh"].ToString();
                     }
                     dr.Close();
                     conn.Close();
@@ -241,11 +241,11 @@ namespace 中医证治智能系统
 
         private void button_save_Click(object sender, RoutedEventArgs e)
         {
-            if (text_box_xmc.Text == "")
+            if (text_box_rkmc.Text == "")
             {
                 MessageBox.Show("系名不能为空！");
                 valid = false;
-                Keyboard.Focus(text_box_xmc);
+                Keyboard.Focus(text_box_rkmc);
             }
             else
             {
@@ -261,8 +261,8 @@ namespace 中医证治智能系统
                 IsAdd = false;
                 try
                 {
-                    string sql = String.Format("INSERT INTO t_info_x (xbh,xmc,bz) VALUES ('{0}', '{1}', '{2}')",
-                                   user_add.XiNumber, text_box_xmc.Text, text_box_bz.Text);
+                    string sql = String.Format("INSERT INTO t_info_rk (rkbh,rkmc,bz) VALUES ('{0}', '{1}', '{2}')",
+                                   user_add.XiNumber, text_box_rkmc.Text, text_box_bz.Text);
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
                     int count = comm.ExecuteNonQuery();
@@ -292,7 +292,7 @@ namespace 中医证治智能系统
                 button_save.IsEnabled = false;
                 try
                 {
-                    string sql_update = String.Format("UPDATE t_info_x SET xmc='{0}', bz ='{1}' WHERE xbh='{2}'", text_box_xmc.Text, text_box_bz.Text, useredit.XiNumber);
+                    string sql_update = String.Format("UPDATE t_info_rk SET rkmc='{0}', bz ='{1}' WHERE rkbh='{2}'", text_box_rkmc.Text, text_box_bz.Text, useredit.XiNumber);
 
                     conn.Open();
                     // 创建 Command 对象
@@ -317,7 +317,7 @@ namespace 中医证治智能系统
             }
             if (IsRepeat == true)
             {
-                Keyboard.Focus(text_box_xmc);
+                Keyboard.Focus(text_box_rkmc);
 
             }
         }
@@ -325,8 +325,8 @@ namespace 中医证治智能系统
         public void Is_Repeat()
         {
 
-            string username = text_box_xmc.Text.Trim();
-            string sql = String.Format("select count(*) from t_info_x where xmc = '{0}' and xbh!='{1}' ", username, useredit.XiNumber);
+            string username = text_box_rkmc.Text.Trim();
+            string sql = String.Format("select count(*) from t_info_rk where rkmc = '{0}' and rkbh!='{1}' ", username, useredit.XiNumber);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             int count = (int)comm.ExecuteScalar();
@@ -358,7 +358,7 @@ namespace 中医证治智能系统
                         Text_Clear();
                         try
                         {
-                            string sql = String.Format("delete from t_info_x where xbh = '{0}'", userinfo.XiNumber);
+                            string sql = String.Format("delete from t_info_rk where rkbh = '{0}'", userinfo.XiNumber);
                             conn.Open();
                             SqlCommand comm = new SqlCommand(sql, conn);
                             int count = comm.ExecuteNonQuery();
@@ -387,16 +387,16 @@ namespace 中医证治智能系统
             Text_Readonly();
             if (IsEdit == true)
             {
-                //string number = text_block_xbh.Text;
-                string sql = String.Format("select * from t_info_x where xbh = '{0}'", useredit.XiNumber);
+                //string number = text_block_rkbh.Text;
+                string sql = String.Format("select * from t_info_rk where rkbh = '{0}'", useredit.XiNumber);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
                 while (dr.Read())
                 {
-                    text_box_xmc.Text = dr["xmc"].ToString();
+                    text_box_rkmc.Text = dr["rkmc"].ToString();
                     text_box_bz.Text = dr["bz"].ToString();
-                    useredit.XiName = text_box_xmc.Text;
+                    useredit.XiName = text_box_rkmc.Text;
 
                 }
                 dr.Close();

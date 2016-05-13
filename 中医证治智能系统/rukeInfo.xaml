@@ -59,8 +59,8 @@
                     <Label Content="入科名称：" HorizontalAlignment="Left" Margin="38,10,0,0" VerticalAlignment="Top" Height="31" Width="79" VerticalContentAlignment="Center"/>
                     <Label Content="备注：" Margin="38,65,591,101" VerticalContentAlignment="Center" RenderTransformOrigin="0.54,0.96"/>
                     <Label Content="入科编号：" Margin="318,10,311,156"/>
-                    <TextBox  Name="text_box_xmc" HorizontalAlignment="Left" Height="25" Margin="122,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="177" LostFocus="text_box_xmc_LostFocus"/>
-                    <TextBlock  Name="text_block_xbh" HorizontalAlignment="Left" Background="{DynamicResource ButtonNormalBackground}" Height="25" Margin="415,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="177" LostFocus="text_box_bz_LostFocus"/>
+                    <TextBox  Name="text_box_rkmc" HorizontalAlignment="Left" Height="25" Margin="122,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="177" LostFocus="text_box_xmc_LostFocus"/>
+                    <TextBlock  Name="text_block_rkbh" HorizontalAlignment="Left" Background="{DynamicResource ButtonNormalBackground}" Height="25" Margin="415,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="177" LostFocus="text_box_bz_LostFocus"/>
                     <TextBox  Name="text_box_bz" Margin="122,71,116,10"/>
                 </Grid>
             </GroupBox>
