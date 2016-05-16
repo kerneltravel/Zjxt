@@ -49,17 +49,17 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>CUEF4cA5ecMNuu414WOtNKArdWo=</dsig:DigestValue>
+        <dsig:DigestValue>6VO1G+U+HoTiLfWc96W7ixkVMxc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="中医证治智能系统.exe.config" size="393">
+  <file name="中医证治智能系统.exe.config" size="391">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>vMrgKnBCFwlB26cuY7velibP/Rw=</dsig:DigestValue>
+      <dsig:DigestValue>5qfws5HC7EjxM3IuENh6OPDonKM=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

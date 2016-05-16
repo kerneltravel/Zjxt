@@ -1486,7 +1486,8 @@ namespace 中医证治智能系统
         /// 功能：内伤推理子过程，如果有结果推出，返回true，否则返回false
         /// </summary>
         public bool ns_tl()
-        {//调用内伤系推理存储过程（根据主诉推理）
+        {
+            //调用内伤系推理存储过程（根据主诉推理）
             String sql = String.Format("exec p_x_zs @id =  '{0}'", number);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);

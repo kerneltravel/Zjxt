@@ -177,6 +177,9 @@ namespace 中医证治智能系统
             this.Close();
         }
 
+        /// <summary>
+        /// 功能：删除
+        /// </summary>
         private void delete_search_Click(object sender, RoutedEventArgs e)
         {
 
@@ -197,18 +200,19 @@ namespace 中医证治智能系统
                             conn.Open();
                             SqlCommand comm = new SqlCommand(sql, conn);
                             int count = comm.ExecuteNonQuery();
-                            if (count > 0)
-                            {
-                                MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                            }
+                            //if (count > 0)
+                            //{
+                            //    MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);                                
+                            //}
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("删除失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                            //MessageBox.Show("删除失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         finally
                         {
                             conn.Close();
+                            lv.SelectedIndex = 0;
                         }
 
                     }
@@ -280,6 +284,9 @@ namespace 中医证治智能系统
 
         }
 
+        /// <summary>
+        /// 功能：添加
+        /// </summary>
         private void add_input_Click(object sender, RoutedEventArgs e)
         {
             Text_Editable();
@@ -289,15 +296,15 @@ namespace 中医证治智能系统
 
                 text_bz.Text = "";
                 save_input.IsEnabled = true;
-                string sql = String.Format("select max(djfhbjbh) from t_info_zybj");
+                string sql = String.Format("select max(zybjbh) from t_info_zybj");
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
 
                 while (dr.Read())
                 {
-                    text_bjbh.Text = String.Format("{0:000000}", Convert.ToInt64(dr[0]) + 1);
-                    User_Edit = new UserInfo(String.Format("{0:000000}", Convert.ToInt64(dr[0]) + 1), "", "");
+                    text_bjbh.Text = String.Format("{000000}", Convert.ToInt64(dr[0]) + 1);
+                    User_Edit = new UserInfo(String.Format("{000000}", Convert.ToInt64(dr[0]) + 1), "", "");
                     listCustomer.Add(User_Edit);
                 }
                 dr.Close();
@@ -308,6 +315,9 @@ namespace 中医证治智能系统
             }
         }
 
+        /// <summary>
+        /// 功能：保存
+        /// </summary>
         private void save_input_Click(object sender, RoutedEventArgs e)
         {
             if (text_bjmc.Text == "")

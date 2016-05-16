@@ -205,6 +205,7 @@ namespace 中医证治智能系统
                         finally
                         {
                             conn.Close();
+                            lv.SelectedIndex = 0;
                         }
                     }
                 }

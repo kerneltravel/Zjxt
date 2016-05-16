@@ -557,14 +557,14 @@ namespace 中医证治智能系统
                         conn.Open();
                         SqlCommand comm = new SqlCommand(sql, conn);
                         int count = comm.ExecuteNonQuery();
-                        if (count > 0)
-                        {
-                            MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
+                        //if (count > 0)
+                        //{
+                        //    MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                        //}
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show("删除失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                        //MessageBox.Show("删除失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     finally
                     {
@@ -707,9 +707,6 @@ namespace 中医证治智能系统
             if(!IsModify)
             {
                 IsAdd = true;
-                // 【增加】操作中，【保存】和【取消】应设置为可用
-                input_save.IsEnabled = true;
-                input_cancel.IsEnabled = true;
                 //  清空编辑框
                 //input_bmlx.Text = "";
                 input_bmbh.Text = "";
@@ -727,6 +724,9 @@ namespace 中医证治智能系统
                 {
                     if (input_bmlx.Text.Trim() == "外感病名")
                     {
+                        // 【增加】操作中，【保存】和【取消】应设置为可用
+                        input_save.IsEnabled = true;
+                        input_cancel.IsEnabled = true;
                         string sql = String.Format("select max(bmbh) from t_info_bm where bmlx = 0");
                         conn.Open();
                         SqlCommand comm = new SqlCommand(sql, conn);
@@ -742,6 +742,9 @@ namespace 中医证治智能系统
                     }
                     if(input_bmlx.Text.Trim() == "内伤病名")
                     {
+                        // 【增加】操作中，【保存】和【取消】应设置为可用
+                        input_save.IsEnabled = true;
+                        input_cancel.IsEnabled = true;
                         string sql = String.Format("select max(bmbh) from t_info_bm where bmlx = 1");
                         conn.Open();
                         SqlCommand comm = new SqlCommand(sql, conn);

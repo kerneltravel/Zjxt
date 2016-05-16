@@ -197,18 +197,19 @@ namespace 中医证治智能系统
                             conn.Open();
                             SqlCommand comm = new SqlCommand(sql, conn);
                             int count = comm.ExecuteNonQuery();
-                            if (count > 0)
-                            {
-                                MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                            }
+                            //if (count > 0)
+                            //{
+                            //    MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                            //}
                         }
                         catch (Exception)
                         {
-                            MessageBox.Show("删除失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                            //MessageBox.Show("删除失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                         }
                         finally
                         {
                             conn.Close();
+                            lv.SelectedIndex = 0;
                         }
 
                     }
