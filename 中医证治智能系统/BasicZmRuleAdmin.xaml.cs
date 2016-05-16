@@ -144,10 +144,10 @@ namespace 中医证治智能系统
         {
             // 刷新
             nodes.Clear();
-            // 四级树写入【病名】（四种病名）
+            // 四级树写入【病名】
             // 先取出条件类型并存入数组
-            //【tjlx】0：症象 1：基本病机 2：复合病机 3：病名
-            string[] m_tjlx = new string[5] { "", "", "", "", "" };
+            //【tjlx】0：症象 1：基本病机 2：复合病机 3：病名 4：多级复合病机 5：证用病机
+            string[] m_tjlx = new string[7] { "", "", "", "", "" ,"" ,""};
             int i = 0;
             string sql = String.Format("select distinct tjlx from t_rule_jbzm where jbzmbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}' "
                 , m_jbzmbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
@@ -253,11 +253,47 @@ namespace 中医证治智能系统
                             conn.Close();
                         }
                         break;
+                    case "4": //【多级复合病机】
+                        {
+                            sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.djfhbjbh, min(t1.djfhbjmc) from t_info_djfhbj as t1 inner join t_rule_jbzm as t2 on t2.djfhbjbh = t1.djfhbjbh where jbzmbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.djfhbjbh", m_jbzmbh);
+                            conn.Open();
+                            comm = new SqlCommand(sql, conn);
+                            dr = comm.ExecuteReader();
+                            while (dr.Read())
+                            {
+                                nodes.Add(new Node
+                                {
+                                    ID = Convert.ToInt32(dr["ff"].ToString() + dr["djfhbjbh"].ToString()),
+                                    Name = dr["djfhbjbh"].ToString() + "  " + dr[4].ToString(),
+                                });
+                            }
+                            dr.Close();
+                            conn.Close();
+                        }
+                        break;
+                    case "5": //【证用病机】
+                        {
+                            sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zybjbh, min(t1.zybjmc) from t_info_zybj as t1 inner join t_rule_jbzm as t2 on t2.zybjbh = t1.zybjbh where jbzmbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zybjbh", m_jbzmbh);
+                            conn.Open();
+                            comm = new SqlCommand(sql, conn);
+                            dr = comm.ExecuteReader();
+                            while (dr.Read())
+                            {
+                                nodes.Add(new Node
+                                {
+                                    ID = Convert.ToInt32(dr["ff"].ToString() + dr["zybjbh"].ToString()),
+                                    Name = dr["zybjbh"].ToString() + "  " + dr[4].ToString(),
+                                });
+                            }
+                            dr.Close();
+                            conn.Close();
+                        }
+                        break;
                 }
             }
 
             // 五级树写入【同一编号不同名称】
-            m_tjlx = new string[5] { "", "", "", "", "" };
+            m_tjlx = new string[7] { "", "", "", "", "" ,"" ,"" };
             i = 0;
             sql = String.Format("select distinct tjlx from t_rule_jbzm where jbzmbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}'"
                 , m_jbzmbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
@@ -368,6 +404,46 @@ namespace 中医证治智能系统
                             conn.Close();
                         }
                         break;
+                    case "4": //【多级复合病机】
+                        {
+                            sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.djfhbjbh, min(t1.djfhbjmc) from t_info_djfhbj as t1 inner join t_rule_jbzm as t2 on t2.djfhbjbh = t1.djfhbjbh where jbzmbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}'  group by t2.ff, t2.blgz, t2.tjzb, t2.djfhbjbh"
+                                , m_jbzmbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
+                            conn.Open();
+                            comm = new SqlCommand(sql, conn);
+                            dr = comm.ExecuteReader();
+                            while (dr.Read())
+                            {
+                                nodes.Add(new Node
+                                {
+                                    ID = Convert.ToInt32(dr["djfhbjbh"].ToString()),
+                                    Name = dr["djfhbjbh"].ToString() + "  " + dr[4].ToString(),
+                                    ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["djfhbjbh"].ToString())
+                                });
+                            }
+                            dr.Close();
+                            conn.Close();
+                        }
+                        break;
+                    case "5": //【证用病机】
+                        {
+                            sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zybjbh, min(t1.zybjmc) from t_info_zybj as t1 inner join t_rule_jbzm as t2 on t2.zybjbh = t1.zybjbh where jbzmbh = '{0}' and  ff = '{1}' and blgz = '{2}' and tjzb = '{3}'  group by t2.ff, t2.blgz, t2.tjzb, t2.zybjbh"
+                                , m_jbzmbh, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
+                            conn.Open();
+                            comm = new SqlCommand(sql, conn);
+                            dr = comm.ExecuteReader();
+                            while (dr.Read())
+                            {
+                                nodes.Add(new Node
+                                {
+                                    ID = Convert.ToInt32(dr["zybjbh"].ToString()),
+                                    Name = dr["zybjbh"].ToString() + "  " + dr[4].ToString(),
+                                    ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["zybjbh"].ToString())
+                                });
+                            }
+                            dr.Close();
+                            conn.Close();
+                        }
+                        break;
                 }
             }
             // 调用创建树函数
@@ -454,6 +530,18 @@ namespace 中医证治智能系统
                         , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_tjbh, m_jbzmbh);
                     }
                     break;
+                case "5": //【多级复合病机】
+                    {
+                        sql = String.Format("select count(*) from t_rule_jbzm where ff = '{0}' and blgz = '{1}' and tjzb ='{2}'and djfhbjbh ='{3}' and jbzmbh = '{4}'"
+                        , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_tjbh, m_jbzmbh);
+                    }
+                    break;
+                case "6": //【证用病机】
+                    {
+                        sql = String.Format("select count(*) from t_rule_jbzm where ff = '{0}' and blgz = '{1}' and tjzb ='{2}'and zybjbh ='{3}' and jbzmbh = '{4}'"
+                        , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex, m_tjbh, m_jbzmbh);
+                    }
+                    break;
             }
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
@@ -507,6 +595,8 @@ namespace 中医证治智能系统
             comb_tjlx.Items.Add("基本病机");
             comb_tjlx.Items.Add("复合病机");
             comb_tjlx.Items.Add("病名");
+            comb_tjlx.Items.Add("多级复合病机");
+            comb_tjlx.Items.Add("证用病机");
             // 读取病名编号和病名类型
             string sql = String.Format("select jbzmbh, jbzmlx from t_info_jbzm where jbzmmc = '{0}'", jbzmmc.Text.Trim());
             conn.Open();
@@ -585,10 +675,10 @@ namespace 中医证治智能系统
                 dr.Close();
                 conn.Close();
 
-                // 四级树写入【病名】（四种病名）
+                // 四级树写入【病名】
                 // 先取出条件类型并存入数组
-                //【tjlx】0：症象 1：基本病机 2：复合病机 3：病名
-                string[] m_tjlx = new string[5] { "", "", "", "" ,""};
+                //【tjlx】0：症象 1：基本病机 2：复合病机 3：病名 4：多级复合病机 5：证用病机
+                string[] m_tjlx = new string[7] { "", "", "", "" ,"" ,"" ,""};
                 int i = 0;
                 sql = String.Format("select distinct tjlx from t_rule_jbzm where jbzmbh = '{0}'", m_jbzmbh);
                 conn.Open();
@@ -694,11 +784,49 @@ namespace 中医证治智能系统
                                 conn.Close();
                             }
                             break;
+                        case "4": //【多级复合病机】
+                            {
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.djfhbjbh, min(t1.djfhbjmc) from t_info_djfhbj as t1 inner join t_rule_jbzm as t2 on t2.djfhbjbh = t1.djfhbjbh where jbzmbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.djfhbjbh", m_jbzmbh);
+                                conn.Open();
+                                comm = new SqlCommand(sql, conn);
+                                dr = comm.ExecuteReader();
+                                while (dr.Read())
+                                {
+                                    nodes.Add(new Node
+                                    {
+                                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["djfhbjbh"].ToString()),
+                                        Name = dr["djfhbjbh"].ToString() + "  " + dr[4].ToString() + "【多级复合病机】",
+                                        ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
+                                    });
+                                }
+                                dr.Close();
+                                conn.Close();
+                            }
+                            break;
+                        case "5": //【证用病机】
+                            {
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zybjbh, min(t1.zybjmc) from t_info_zybj as t1 inner join t_rule_jbzm as t2 on t2.zybjbh = t1.zybjbh where jbzmbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zybjbh", m_jbzmbh);
+                                conn.Open();
+                                comm = new SqlCommand(sql, conn);
+                                dr = comm.ExecuteReader();
+                                while (dr.Read())
+                                {
+                                    nodes.Add(new Node
+                                    {
+                                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["zybjbh"].ToString()),
+                                        Name = dr["zybjbh"].ToString() + "  " + dr[4].ToString() + "【证用病机】",
+                                        ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
+                                    });
+                                }
+                                dr.Close();
+                                conn.Close();
+                            }
+                            break;
                     }
                 }
 
                 // 五级树写入【同一编号不同名称】
-                m_tjlx = new string[5] { "", "", "", "", "" };
+                m_tjlx = new string[7] { "", "", "", "", "", "", "" };
                 i = 0;
                 sql = String.Format("select distinct tjlx from t_rule_jbzm where jbzmbh = '{0}'", m_jbzmbh);
                 conn.Open();
@@ -747,6 +875,16 @@ namespace 中医证治智能系统
                             }
                             break;
                         case "3": //【病名】
+                            {
+                                // 同一编号对应唯一名称，不需任何添加
+                            }
+                            break;
+                        case "4": //【多级复合病机】
+                            {
+                                // 同一编号对应唯一名称，不需任何添加
+                            }
+                            break;
+                        case "5": //【证用病机】
                             {
                                 // 同一编号对应唯一名称，不需任何添加
                             }
@@ -1031,34 +1169,51 @@ namespace 中医证治智能系统
                                     }
                                     else
                                     {
-                                        // 症象
-                                        if (comb_tjlx.SelectedIndex == 1)
+                                        switch (comb_tjlx.SelectedIndex)
                                         {
-                                            Info_Symptom symptom = new Info_Symptom();
-                                            symptom.PassValuesEvent += new Info_Symptom.PassValuesHandler(ReceiveValues1);
-                                            symptom.Show();
-                                        }
-                                        // 基本病机
-                                        if (comb_tjlx.SelectedIndex == 2)
-                                        {
-                                            BasicBingji basicbingji = new BasicBingji();
-                                            basicbingji.PassValuesEvent += new BasicBingji.PassValuesHandler(ReceiveValues2);
-                                            basicbingji.Show();
-                                        }
-                                        // 复合病机
-                                        if (comb_tjlx.SelectedIndex == 3)
-                                        {
-                                            FuheBingji fuhebingji = new FuheBingji();
-                                            fuhebingji.PassValuesEvent += new FuheBingji.PassValuesHandler(ReceiveValues3);
-                                            fuhebingji.Show();
-                                        }
-                                        // 病名
-                                        if (comb_tjlx.SelectedIndex == 4)
-                                        {
-                                            DiseaseInfoAdmin diseaseinfoadmin = new DiseaseInfoAdmin();
-                                            diseaseinfoadmin.PassValuesEvent += new DiseaseInfoAdmin.PassValuesHandler(ReceiveValues4);
-                                            diseaseinfoadmin.Show();
-                                        }
+                                            case 1:// 症象
+                                                {
+                                                    Info_Symptom symptom = new Info_Symptom();
+                                                    symptom.PassValuesEvent += new Info_Symptom.PassValuesHandler(ReceiveValues1);
+                                                    symptom.Show();
+                                                }
+                                                break;
+                                            case 2: // 基本病机
+                                                {
+                                                    BasicBingji basicbingji = new BasicBingji();
+                                                    basicbingji.PassValuesEvent += new BasicBingji.PassValuesHandler(ReceiveValues2);
+                                                    basicbingji.Show();
+                                                }
+                                                break;
+                                            case 3:// 复合病机
+                                                {
+                                                    FuheBingji fuhebingji = new FuheBingji();
+                                                    fuhebingji.PassValuesEvent += new FuheBingji.PassValuesHandler(ReceiveValues3);
+                                                    fuhebingji.Show();
+                                                }
+                                                break;
+                                            case 4:// 病名
+                                                {
+                                                    DiseaseInfoAdmin diseaseinfoadmin = new DiseaseInfoAdmin();
+                                                    diseaseinfoadmin.PassValuesEvent += new DiseaseInfoAdmin.PassValuesHandler(ReceiveValues4);
+                                                    diseaseinfoadmin.Show();
+                                                }
+                                                break;
+                                            case 5:// 多级复合病机
+                                                {
+                                                    djfhbjInfo djfhbjinfo = new djfhbjInfo();
+                                                    djfhbjinfo.PassValuesEvent += new djfhbjInfo.PassValuesHandler(ReceiveValues5);
+                                                    djfhbjinfo.Show();
+                                                }
+                                                break;
+                                            case 6:// 证用病机
+                                                {
+                                                    zybjInfo zybjinfo = new zybjInfo();
+                                                    zybjinfo.PassValuesEvent += new zybjInfo.PassValuesHandler(ReceiveValues6);
+                                                    zybjinfo.Show();
+                                                }
+                                                break;
+                                        }                                                                       
                                     }
                                 }
                             }
@@ -1109,6 +1264,26 @@ namespace 中医证治智能系统
         }
 
         /// <summary>
+        /// 功能：实现条件名称的读取和显示
+        /// </summary>
+        private void ReceiveValues5(object sender, djfhbjInfo.PassValuesEventArgs e)
+        {
+            tjmc.Text = e.Name;
+            m_tjbh = e.Number;
+            IsAdd = true;
+        }
+
+        /// <summary>
+        /// 功能：实现条件名称的读取和显示
+        /// </summary>
+        private void ReceiveValues6(object sender, zybjInfo.PassValuesEventArgs e)
+        {
+            tjmc.Text = e.Name;
+            m_tjbh = e.Number;
+            IsAdd = true;
+        }
+
+        /// <summary>
         /// 功能：【添加】功能
         /// </summary>
         private void btn_add_Click(object sender, RoutedEventArgs e)
@@ -1148,6 +1323,18 @@ namespace 中医证治智能系统
                                     , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_jbzmbh, (comb_tjlx.SelectedIndex - 1).ToString());
                             }
                             break;
+                        case "5": //【多级复合病机】
+                            {
+                                sql = String.Format("insert into t_rule_jbzm ( ff, blgz, djfhbjbh, tjzb, znfz, gzfz, jbzmbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
+                                    , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_jbzmbh, (comb_tjlx.SelectedIndex - 1).ToString());
+                            }
+                            break;
+                        case "6": //【证用病机】
+                            {
+                                sql = String.Format("insert into t_rule_jbzm ( ff, blgz, zybjbh, tjzb, znfz, gzfz, jbzmbh, tjlx) values( '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')"
+                                    , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, m_tjbh, comb_zbs.SelectedIndex, comb_zlfz.Text, comb_tjfz.Text, m_jbzmbh, (comb_tjlx.SelectedIndex - 1).ToString());
+                            }
+                            break;
                     }
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
@@ -1168,9 +1355,10 @@ namespace 中医证治智能系统
             Node node = treeview1.SelectedItem as Node;
             if (node != null && node is Node)
             {
+                // node.ID是由方法数和编号组成，故需要作处理node.ID.ToString().Substring(1)
                 string sql = "";
-                sql = String.Format("select distinct tjlx from t_rule_jbzm where zxbh = '{0}' or jbbjbh = '{1}' or fhbjbh = '{2}' or bmbh = '{3}'"
-                                , node.ID.ToString().Substring(1), node.ID.ToString().Substring(1), node.ID.ToString().Substring(1), node.ID.ToString().Substring(1));
+                sql = String.Format("select distinct tjlx from t_rule_jbzm where zxbh = '{0}' or jbbjbh = '{1}' or fhbjbh = '{2}' or bmbh = '{3}' or djfhbjbh = '{4}' or zybjbh = '{5}'"
+                                , node.ID.ToString().Substring(1), node.ID.ToString().Substring(1), node.ID.ToString().Substring(1), node.ID.ToString().Substring(1), node.ID.ToString().Substring(1) , node.ID.ToString().Substring(1));
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
@@ -1203,6 +1391,18 @@ namespace 中医证治智能系统
                     case "4": //【病名】
                         {
                             sql = String.Format("delete from t_rule_jbzm where ff = '{0}' and blgz = '{1}' and bmbh = '{2}' and tjzb = '{3}' and jbzmbh = '{4}'"
+                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, node.ID.ToString().Substring(1), comb_zbs.SelectedIndex, m_jbzmbh);
+                        }
+                        break;
+                    case "5": //【多级复合病机】
+                        {
+                            sql = String.Format("delete from t_rule_jbzm where ff = '{0}' and blgz = '{1}' and djfhbjbh = '{2}' and tjzb = '{3}' and jbzmbh = '{4}'"
+                                , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, node.ID.ToString().Substring(1), comb_zbs.SelectedIndex, m_jbzmbh);
+                        }
+                        break;
+                    case "6": //【证用病机】
+                        {
+                            sql = String.Format("delete from t_rule_jbzm where ff = '{0}' and blgz = '{1}' and zybjbh = '{2}' and tjzb = '{3}' and jbzmbh = '{4}'"
                                 , comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, node.ID.ToString().Substring(1), comb_zbs.SelectedIndex, m_jbzmbh);
                         }
                         break;
@@ -1301,8 +1501,8 @@ namespace 中医证治智能系统
 
                 // 四级树写入【病名】（四种病名）
                 // 先取出条件类型并存入数组
-                //【tjlx】0：症象 1：基本病机 2：复合病机 3：病名
-                string[] m_tjlx = new string[5] { "", "", "", "", "" };
+                //【tjlx】0：症象 1：基本病机 2：复合病机 3：病名 4：多级复合病机 5：证用病机
+                string[] m_tjlx = new string[7] { "", "", "", "", "", "", "" };
                 int i = 0;
                 sql = String.Format("select distinct tjlx from t_rule_jbzm where jbzmbh = '{0}'", m_jbzmbh);
                 conn.Open();
@@ -1408,11 +1608,49 @@ namespace 中医证治智能系统
                                 conn.Close();
                             }
                             break;
+                        case "4": //【多级复合病机】
+                            {
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.djfhbjbh, min(t1.djfhbjmc) from t_info_djfhbj as t1 inner join t_rule_jbzm as t2 on t2.djfhbjbh = t1.djfhbjbh where jbzmbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.djfhbjbh", m_jbzmbh);
+                                conn.Open();
+                                comm = new SqlCommand(sql, conn);
+                                dr = comm.ExecuteReader();
+                                while (dr.Read())
+                                {
+                                    nodes.Add(new Node
+                                    {
+                                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["djfhbjbh"].ToString()),
+                                        Name = dr["djfhbjbh"].ToString() + "  " + dr[4].ToString() + "【多级复合病机】",
+                                        ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
+                                    });
+                                }
+                                dr.Close();
+                                conn.Close();
+                            }
+                            break;
+                        case "5": //【证用病机】
+                            {
+                                sql = String.Format("select t2.ff, t2.blgz, t2.tjzb, t2.zybjbh, min(t1.zybjmc) from t_info_zybj as t1 inner join t_rule_jbzm as t2 on t2.zybjbh = t1.zybjbh where jbzmbh = '{0}' group by t2.ff, t2.blgz, t2.tjzb, t2.zybjbh", m_jbzmbh);
+                                conn.Open();
+                                comm = new SqlCommand(sql, conn);
+                                dr = comm.ExecuteReader();
+                                while (dr.Read())
+                                {
+                                    nodes.Add(new Node
+                                    {
+                                        ID = Convert.ToInt32(dr["ff"].ToString() + dr["zybjbh"].ToString()),
+                                        Name = dr["zybjbh"].ToString() + "  " + dr[4].ToString() + "【证用病机】",
+                                        ParentID = Convert.ToInt32(dr["ff"].ToString() + dr["blgz"].ToString() + dr["tjzb"].ToString())
+                                    });
+                                }
+                                dr.Close();
+                                conn.Close();
+                            }
+                            break;
                     }
                 }
 
                 // 五级树写入【同一编号不同名称】
-                m_tjlx = new string[5] { "", "", "", "", "" };
+                m_tjlx = new string[7] { "", "", "", "", "", "", "" };
                 i = 0;
                 sql = String.Format("select distinct tjlx from t_rule_jbzm where jbzmbh = '{0}'", m_jbzmbh);
                 conn.Open();
@@ -1461,6 +1699,16 @@ namespace 中医证治智能系统
                             }
                             break;
                         case "3": //【病名】
+                            {
+                                // 同一编号对应唯一名称，不需任何添加
+                            }
+                            break;
+                        case "4": //【多级复合病机】
+                            {
+                                // 同一编号对应唯一名称，不需任何添加
+                            }
+                            break;
+                        case "5": //【证用病机】
                             {
                                 // 同一编号对应唯一名称，不需任何添加
                             }

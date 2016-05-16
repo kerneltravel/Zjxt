@@ -55,8 +55,8 @@
                     <ListView  Name="lv" Grid.Row="4" Margin="0,0,6,0" Grid.ColumnSpan="2" SelectionChanged="lv_SelectionChanged">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn  DisplayMemberBinding="{Binding Path=BingjiNumber}" Header="基本病机编号" Width="150"/>
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=BingjiName}" Header="基本病机名称" Width="300"/>
+                                <GridViewColumn  DisplayMemberBinding="{Binding Path=BingjiNumber}" Header="复合病机编号" Width="150"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=BingjiName}" Header="复合病机名称" Width="300"/>
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=Beizu}" Header="备注" Width="400"/>
                             </GridView>
                         </ListView.View>
