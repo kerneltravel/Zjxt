@@ -45,12 +45,18 @@ namespace 中医证治智能系统
         bool iszstime = false;
         bool iszs = false;
         string temp = "";
+        // 外感方法(进入外感所满足的判断规则(1:A,2:B,3:C,4:D))
         int wg_ff = 0;
         int count = 0;
         int fhbj = 0;
         int count_zm = 0;
         int count_bm = 0;
         int count_hfyw = 0;
+        int count_fhbj = 0;   // 复合病机数
+        int count_wgjbzm = 0; // 外感基本证名数
+        int count_nsjbzm = 0; // 内伤基本证名数
+        int count_jlbm = 0;   // 甲类病名数
+        int count_ylbm = 0;   // 乙类病名数
         int flagpp = 0; //标记是否有病名推出
         // 全局变量，用于用户添加、修改功能存储信息
         ZdInfo Zd_Edit = new ZdInfo("", "");
@@ -869,24 +875,20 @@ namespace 中医证治智能系统
                 zz.Text = "";
                 listZd.Clear();
                 bljs.Text = "";
+                // 调用判断外感/内伤存储过程p_zd_judgewg记录结果病类型
                 sql = String.Format("exec p_zd_judgewg @id ='{0}' ", number);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
-                while (dr.Read())
-                {
-                    MessageBox.Show("调用判断外感/内伤存储过程p_zd_judgewg");
-                }
+                while (dr.Read()){ }
                 dr.Close();
                 conn.Close();
+                // 调用基本病机推理存储过程p_zd_jbbj
                 sql = String.Format("exec p_zd_jbbj @id = '{0}' ", number);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
-                while (dr.Read())
-                {
-                    MessageBox.Show("调用基本病机推理存储过程p_zd_jbbj");
-                }
+                while (dr.Read()) { }
                 dr.Close();
                 conn.Close();
                 sql = String.Format("select xxbh from t_bl_mx where id ='{0}'and xxdllx = '1'and xxxllx = '0'", number);
@@ -899,67 +901,69 @@ namespace 中医证治智能系统
                 }
                 dr.Close();
                 conn.Close();
-                if (temp == "0")//病名类型为外感，则根据成立的方法调用外感病名推理
+                // 病名类型为外感，则根据成立的方法调用外感病名推理
+                if (temp == "0")
                 {
-                    sql = String.Format("select xxbh from t_bl_mx where id = '{0}' and xxdllx = '1' and xxxllx ='b' order by xxbh desc", number);       //外感推理方法数
+                    // 外感规则所成立的方法(对应的编号)
+                    sql = String.Format("select xxbh from t_bl_mx where id = '{0}' and xxdllx = '1' and xxxllx ='b' order by xxbh desc", number);       
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     dr = comm.ExecuteReader();
                     while (dr.Read())
                     {
-                        temp = dr[0].ToString();
+                        temp = dr[0].ToString(); // 取对应成立方法的最小编号
                     }
                     dr.Close();
                     conn.Close();
+                    // 根据外感成立方法(取最小编号)调用外感病名推理子过程p_wg_bmtl
+                    /* 疑问待确定？？？？？？？？？？？？？？？
+                     * 当外感成立方法的最小编号为1或2时，视为A类；
+                     * 最小编号为3时，视为B类
+                     * 最小编号为4时，视为C类
+                     * 最小编号为5时，视为D类
+                     * 目前，没有最小编号超过5的
+                     */
                     wg_ff = Convert.ToInt16(temp);
                     switch (wg_ff)
                     {
-                        case 1:
-                        case 2:
+                        case 1: // A类
+                        case 2: // A类
                             sql = String.Format("exec p_wg_bmtl @id = '{0}', @wg_ff = 1", number);
                             conn.Open();
                             comm = new SqlCommand(sql, conn);
                             dr = comm.ExecuteReader();
                             while (dr.Read())
-                            {
-                                MessageBox.Show("调用外感病名推理存储过程p_wg_bmtl");
-                            }
+                            { }
                             dr.Close();
                             conn.Close();
                             break;
-                        case 3:
+                        case 3: // B类
                             sql = String.Format("exec p_wg_bmtl @id = '{0}', @wg_ff = 2", number);
                             conn.Open();
                             comm = new SqlCommand(sql, conn);
                             dr = comm.ExecuteReader();
                             while (dr.Read())
-                            {
-                                MessageBox.Show("调用外感病名推理存储过程p_wg_bmtl");
-                            }
+                            { }
                             dr.Close();
                             conn.Close();
                             break;
-                        case 4:
+                        case 4: // C类
                             sql = String.Format("exec p_wg_bmtl @id = '{0}', @wg_ff = 3", number);
                             conn.Open();
                             comm = new SqlCommand(sql, conn);
                             dr = comm.ExecuteReader();
                             while (dr.Read())
-                            {
-                                MessageBox.Show("调用外感病名推理存储过程p_wg_bmtl");
-                            }
+                            { }
                             dr.Close();
                             conn.Close();
                             break;
-                        case 5:
+                        case 5: // D类
                             sql = String.Format("exec p_wg_bmtl @id = '{0}', @wg_ff = 4", number);
                             conn.Open();
                             comm = new SqlCommand(sql, conn);
                             dr = comm.ExecuteReader();
                             while (dr.Read())
-                            {
-                                MessageBox.Show("调用外感病名推理存储过程p_wg_bmtl");
-                            }
+                            { }
                             dr.Close();
                             conn.Close();
                             break;
@@ -967,18 +971,17 @@ namespace 中医证治智能系统
                             break;
                     }
                 }
-                //如果存在病史，调用病史推理外感病名存储过程p_wgbm_bs
+                // 调用病史推理外感病名子过程p_wgbm_bs，记录外感病名
                 sql = String.Format("exec p_wgbm_bs @id = '{0}'", number);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
                 while (dr.Read())
-                {
-                    MessageBox.Show("病史推理外感病名");
-                }
+                { }
                 dr.Close();
                 conn.Close();
-                sql = String.Format("select xxbh from t_bl_mx where id = '{0}' and xxdllx = '1' and xxxllx ='0'", number);        //再次获取病名类型
+                // 再次获取病名类型
+                sql = String.Format("select xxbh from t_bl_mx where id = '{0}' and xxdllx = '1' and xxxllx ='0'", number);        
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 dr = comm.ExecuteReader();
@@ -988,123 +991,99 @@ namespace 中医证治智能系统
                 }
                 dr.Close();
                 conn.Close();
-                //病名类型为外感
+                // 病名类型为外感
                 if (temp == "0")
                 {
-                    //调用外感推理子程序wg_tl
-                    if (wg_tl())//外感推理有结果时，进外感后续处理
+                    // 调用外感推理子程序wg_tl
+                    // 1.当外感推理子程序有结果时，则进外感后续处理
+                    // 2.当外感推理子程序无结果时，则调用内伤推理子程序
+                    if (wg_tl())
                     {
-                        //判断是否有外感证名推出
-                        sql = String.Format("select count(*) from t_bl_mx a, t_info_jbzm b where a.id = '{0}'and a.xxdllx = '1' and a.xxxllx = '8' and a.xxbh = b.jbzmbh and b.jbzmlx = '0'", number);  //外感基本证名
+                        // 判断是否有外感基本证名推出
+                        sql = String.Format("select count(*) from t_bl_mx a, t_info_jbzm b where a.id = '{0}'and a.xxdllx = '1' and a.xxxllx = '8' and a.xxbh = b.jbzmbh and b.jbzmlx = '0'", number);
                         conn.Open();
                         comm = new SqlCommand(sql, conn);
                         dr = comm.ExecuteReader();
                         while (dr.Read())
                         {
-                            count = Convert.ToInt16(dr[0].ToString());
+                            count_wgjbzm = Convert.ToInt16(dr[0].ToString());
                         }
                         dr.Close();
                         conn.Close();
-                        //判断是否有复合病机推出
-                        sql = String.Format("select count(*) from t_bl_mx a where a.id = '{0}'and a.xxdllx = '1' and a.xxxllx = '7'", number);      //基本证名编号
+                        // 判断是否有复合病机推出
+                        sql = String.Format("select count(*) from t_bl_mx a where a.id = '{0}'and a.xxdllx = '1' and a.xxxllx = '7'", number);
                         conn.Open();
                         comm = new SqlCommand(sql, conn);
                         dr = comm.ExecuteReader();
                         while (dr.Read())
                         {
-                            wg_ff = Convert.ToInt16(dr[0].ToString());
+                            count_fhbj = Convert.ToInt16(dr[0].ToString());
                         }
                         dr.Close();
                         conn.Close();
-                        if (count == 0)
+                        if (count_wgjbzm == 0)
                         {
-                            //如果没有外感证名成立，则近似
-                            if (wg_ff == 0)//如果没有复合病机成立，则先近似推理复合病机
+                            // 如果没有外感证名成立，则近似
+                            if (count_fhbj == 0)//如果没有复合病机成立，则先近似推理复合病机
                             {
-                                //复合病机近似处理
+                                // 复合病机近似处理
                                 sql = String.Format("exec p_fhbj_jstl @id = '{0}'", number);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
                                 while (dr.Read())
-                                {
-                                    MessageBox.Show("复合病机近似处理");
-                                }
+                                { }
                                 dr.Close();
                                 conn.Close();
-                                //清除基本证名临时表
-                                sql = String.Format("delete from t_ls_jbzm where id = '{0}'", number);
-                                conn.Open();
-                                comm = new SqlCommand(sql, conn);
-                                dr = comm.ExecuteReader();
-                                while (dr.Read())
-                                {
-                                    MessageBox.Show("清除基本证名临时表");
-                                }
-                                dr.Close();
-                                conn.Close();
-                                //重新调用外感基本证名推理
+                                // 重新调用外感基本证名推理子过程
                                 sql = String.Format("exec p_wg_zm_tl @id = '{0}'", number);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
                                 while (dr.Read())
-                                {
-                                    MessageBox.Show("重新调用外感基本证名推理");
-                                }
+                                { }
                                 dr.Close();
                                 conn.Close();
-                                //再次判断是否有外感证名推出
-                                sql = String.Format("select count(*) from t_bl_mx a, t_info_jbzm b where a.id = '{0}'and a.xxdllx = '1' and a.xxxllx = '8' and a.xxbh = b.jbzmbh and b.jbzmlx = '0'", number);  //外感基本证名
+                                // 再次判断是否有外感证名推出
+                                sql = String.Format("select count(*) from t_bl_mx a, t_info_jbzm b where a.id = '{0}'and a.xxdllx = '1' and a.xxxllx = '8' and a.xxbh = b.jbzmbh and b.jbzmlx = '0'", number); 
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
                                 while (dr.Read())
                                 {
-                                    count = Convert.ToInt16(dr[0].ToString());
+                                    count_wgjbzm = Convert.ToInt16(dr[0].ToString());
                                 }
                                 dr.Close();
                                 conn.Close();
-                                if (count == 0)//如果外感基本证名还不成立，则调外感基本证名近似推理
+                                // 如果外感基本证名还不成立，则调用外感基本证名近似推理
+                                if (count_wgjbzm == 0)
                                 {
-                                    sql = String.Format("exec p_wg_zm_jstl @id = '{0}'", number);  //外感基本证名
+                                    // 调用外感基本证名近似推理
+                                    sql = String.Format("exec p_wg_zm_jstl @id = '{0}'", number); 
                                     conn.Open();
                                     comm = new SqlCommand(sql, conn);
                                     dr = comm.ExecuteReader();
                                     while (dr.Read())
-                                    {
-                                        MessageBox.Show("外感基本证名近似推理");
-                                    }
+                                    { }
                                     dr.Close();
-                                    conn.Close();
-                                    //更新近似度为8
-                                    sql = String.Format("update t_bl set zt = ''8'' where id = '{0}'", number);
-                                    conn.Open();
-                                    comm = new SqlCommand(sql, conn);
-                                    int count1 = comm.ExecuteNonQuery();
-                                    if (count1 > 0)
-                                    {
-                                        //MessageBox.Show("更新近似度为8");
-                                    }
-                                    dr.Close();
-                                    conn.Close();
+                                    conn.Close();                                  
                                 }
                             }
-                            else//如果有复合病机成立，则调外感基本证名近似推理
+                            else // 如果有复合病机成立，则调用外感基本证名近似推理
                             {
+                                // 调用外感基本证名近似推理
                                 sql = String.Format("exec p_wg_zm_jstl @id = '{0}'", number);
                                 conn.Open();
                                 comm = new SqlCommand(sql, conn);
                                 dr = comm.ExecuteReader();
                                 while (dr.Read())
-                                {
-                                    MessageBox.Show("外感基本证名近似推理");
-                                }
+                                { }
                                 dr.Close();
                                 conn.Close();
                             }
-                        }
-                        wg_hstl();//外感后续推理过程
+                        } 
+                        // 外感后续推理过程
+                        wg_hstl(); 
                     }
                     //----------------------------外感推理全部结束--------------------------
                     else//外感推理没有结果时，进内伤推理，进了内伤后就不出内伤了
@@ -1115,34 +1094,7 @@ namespace 中医证治智能系统
                     program_ns();
                 }
                 else
-                    MessageBox.Show("病名类型推理失败，请检查！");
-                ////将服法添加到病历明细表
-                //sql = String.Format("insert t_bl_mx (id,xxdllx,xxxllx,xxbh) select	id = '{0}',xxdllx = '2',xxxllx = '5', xxbh = a.ff from t_info_jbcfxx a, t_bl_mx b where b.id = '{0}'and b.xxdllx = '2' and b.xxxllx = '4' and a.jbcfbh = b.xxbh", number);
-                //conn.Open();
-                //comm = new SqlCommand(sql, conn);
-                //int count2 = comm.ExecuteNonQuery();
-                //if (count2 > 0)
-                //{
-
-                //    MessageBox.Show("诊断完毕");
-                //}
-                //dr.Close();
-                //conn.Close();
-
-                ////显示结果
-                ////更新病历类型
-                ////sql = String.Format("update t_bl set bllx='0' where id='{0}'", number);
-                ////conn.Open();
-                ////comm = new SqlCommand(sql, conn);
-                ////int count3 = comm.ExecuteNonQuery();
-                ////if (count3 > 0)
-                ////{
-                ////    MessageBox.Show("更新成功");
-                ////}
-                ////dr.Close();
-                ////conn.Close();
-                //display_bl result = new display_bl(number, oldnumber);
-                //result.Show();           
+                    MessageBox.Show("病名类型推理失败，请检查！");                         
             }
         }
 
@@ -1151,40 +1103,34 @@ namespace 中医证治智能系统
         /// </summary>
         public void wg_hstl()
         {
-            //调用证名合并推理子过程
+            // 调用证名合并推理子过程
             string sql = String.Format("exec p_zmhb @id = '{0}'", number);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             SqlDataReader dr = comm.ExecuteReader();
             while (dr.Read())
-            {
-                MessageBox.Show("证名合并推理子过程");
-            }
+            { }
             dr.Close();
             conn.Close();
-            //调用根据已推出外感病名来选择基本证名的子过程
+            // 调用根据已推出外感病名来选择基本证名的子过程
             sql = String.Format("exec p_wg_bm_zm_tl @id = '{0}'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
             while (dr.Read())
-            {
-                MessageBox.Show("外感病名来选择基本证名");
-            }
+            { }
             dr.Close();
             conn.Close();
-            //调用处方推理子过程
+            // 调用处方推理子过程
             sql = String.Format("exec p_zd_cftl @id = '{0}'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
             while (dr.Read())
-            {
-                MessageBox.Show("处方推理子过程");
-            }
+            { }
             dr.Close();
             conn.Close();
-            //互反药物选择
+            // 互反药物选择
             sql = String.Format("select count(*) from temp_fywcl");
             conn.Open();
             comm = new SqlCommand(sql, conn);
@@ -1212,23 +1158,11 @@ namespace 中医证治智能系统
                 int count2 = comm.ExecuteNonQuery();
                 if (count2 > 0)
                 {
-                    MessageBox.Show("诊断完毕");
+                    //MessageBox.Show("诊断完毕");
                 }
                 dr.Close();
                 conn.Close();
-
                 //显示结果
-                //更新病历类型
-                //sql = String.Format("update t_bl set bllx='0' where id='{0}'", number);
-                //conn.Open();
-                //comm = new SqlCommand(sql, conn);
-                //int count3 = comm.ExecuteNonQuery();
-                //if (count3 > 0)
-                //{
-                //    MessageBox.Show("更新成功");
-                //}
-                //dr.Close();
-                //conn.Close();
                 display_bl result = new display_bl(number, oldnumber);
                 result.Show();
             }
@@ -1268,22 +1202,10 @@ namespace 中医证治智能系统
             int count2 = comm.ExecuteNonQuery();
             if (count2 > 0)
             {
-                MessageBox.Show("诊断完毕");
+                // MessageBox.Show("诊断完毕");
             }
             conn.Close();
-
             //显示结果
-            //更新病历类型
-            //sql = String.Format("update t_bl set bllx='0' where id='{0}'", number);
-            //conn.Open();
-            //comm = new SqlCommand(sql, conn);
-            //int count3 = comm.ExecuteNonQuery();
-            //if (count3 > 0)
-            //{
-            //    MessageBox.Show("更新成功");
-            //}
-            //dr.Close();
-            //conn.Close();
             display_bl result1 = new display_bl(number, oldnumber);
             result1.Show();
         }
@@ -1293,40 +1215,35 @@ namespace 中医证治智能系统
         /// </summary>
         public bool wg_tl()
         {
-            //调用系推理存储过程（根据症象推理）p_x_zx
+            // 调用系推理存储过程（根据症象推理）p_x_zx
             string sql = String.Format("exec p_x_zx @id = '{0}'", number);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             SqlDataReader dr = comm.ExecuteReader();
             while (dr.Read())
-            {
-                MessageBox.Show("根据症象推理");
-            }
+            { }
             dr.Close();
             conn.Close();
-            //调用复合病机推理存储过程p_zd_fhbj
+            // 调用复合病机推理存储过程p_zd_fhbj
             sql = String.Format("exec p_zd_fhbj @id = '{0}'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
             while (dr.Read())
-            {
-                MessageBox.Show("复合病机推理存储过程p_zd_fhbj");
-            }
+            { }
             dr.Close();
             conn.Close();
-            //调用外感基本证名推理存储过程
+            // 调用外感基本证名推理存储过程
             sql = String.Format("exec p_wg_zm_tl @id = '{0}'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
             while (dr.Read())
-            {
-                MessageBox.Show("外感基本证名推理存储过程");
-            }
+            { }
             dr.Close();
             conn.Close();
-            //判断外感病名、外感证名是否推出，推出则返回true，否则返回false
+            // 判断外感病名、外感证名是否推出，推出则返回true，否则返回false
+            // 1.外感病名
             sql = String.Format("select count(*) from t_bl_mx where id = '{0}' and xxdllx = '1' and xxxllx = '4'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
@@ -1337,7 +1254,8 @@ namespace 中医证治智能系统
             }
             dr.Close();
             conn.Close();
-            sql = String.Format("select count(*) from t_bl_mx a, t_info_jbzm b where a.id = '{0} 'and a.xxdllx = '1' and a.xxxllx = '8' and a.xxbh = b.jbzmbh and b.jbzmlx ='0'", number);  //外感基本证名
+            // 2.外感证名
+            sql = String.Format("select count(*) from t_bl_mx a, t_info_jbzm b where a.id = '{0} 'and a.xxdllx = '1' and a.xxxllx = '8' and a.xxbh = b.jbzmbh and b.jbzmlx ='0'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
@@ -1358,124 +1276,78 @@ namespace 中医证治智能系统
         /// </summary>
         public void program_ns() 
         {
-            if (ns_tl())//内伤推理有结果时，进内伤后续处理
+            if (ns_tl()) //内伤推理有结果时，进内伤后续处理
             {
                 ns_hstl();
             }
-            else//内伤证名没有结果时，进内伤近似处理
+            else // 内伤证名没有结果时，进内伤近似处理
             {
-                //判断是否有证名推出
-                string sql = String.Format("select count(*) from t_bl_mx a, t_info_jbzm b where a.id = '{0}'and a.xxdllx = '1' and a.xxxllx = '8'and a.xxbh = b.jbzmbh and b.jbzmlx = '1'", number);  //内伤基本证名
+                // 判断是否有复合病机成立
+                string sql = String.Format("select count(*) from t_bl_mx a where a.id ='{0}' and a.xxdllx = '1' and a.xxxllx = '7'", number);           
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 SqlDataReader dr = comm.ExecuteReader();
                 while (dr.Read())
                 {
-                    count = Convert.ToInt16(dr[0].ToString());
+                    count_fhbj = Convert.ToInt16(dr[0].ToString());
                 }
                 dr.Close();
                 conn.Close();
-                sql = String.Format("select count(*) from t_bl_mx a where a.id ='{0}' and a.xxdllx = '1' and a.xxxllx = '7'", number);           //复合病机编号
-                conn.Open();
-                comm = new SqlCommand(sql, conn);
-                dr = comm.ExecuteReader();
-                while (dr.Read())
+                // 如果没有复合病机成立，则先近似推理复合病机
+                if (fhbj == 0)
                 {
-                    fhbj = Convert.ToInt16(dr[0].ToString());
+                    // 复合病机近似处理
+                    sql = String.Format("exec p_fhbj_jstl @id = '{0}'", number);           
+                    conn.Open();
+                    comm = new SqlCommand(sql, conn);
+                    dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    { }
+                    dr.Close();
+                    conn.Close();
+                    // 重新调用内伤基本证名推理子过程
+                    sql = String.Format("exec p_ns_zm_tl @id = '{0}'", number);           
+                    conn.Open();
+                    comm = new SqlCommand(sql, conn);
+                    dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    { }
+                    dr.Close();
+                    conn.Close();
+                    // 再次判断是否有内伤证名推出
+                    sql = String.Format("select count(*) from t_bl_mx a, t_info_jbzm b where a.id = '{0}' and a.xxdllx = '1' and a.xxxllx = '8' and a.xxbh = b.jbzmbh and b.jbzmlx = '1'", number);  
+                    conn.Open();
+                    comm = new SqlCommand(sql, conn);
+                    dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        count_nsjbzm = Convert.ToInt16(dr[0].ToString());
+                    }
+                    dr.Close();
+                    conn.Close();
+                    // 如果内伤基本证名还不成立，则调内伤基本证名近似推理
+                    if (count_nsjbzm == 0)
+                    {
+                        sql = String.Format("exec p_ns_zm_jstl @id = '{0}'", number);
+                        conn.Open();
+                        comm = new SqlCommand(sql, conn);
+                        dr = comm.ExecuteReader();
+                        while (dr.Read())
+                        { }
+                        dr.Close();
+                        conn.Close();
+                    }
                 }
-                dr.Close();
-                conn.Close();
-                if (count == 0)//如果没有证名成立，则近似
+                else // 如果有复合病机成立，则调用内伤基本证名近似推理
                 {
-                    if (fhbj == 0)//如果没有复合病机成立，则先近似推理复合病机
-                    {
-                        sql = String.Format("exec p_fhbj_jstl @id = '{0}'", number);           ////复合病机近似处理
-                        conn.Open();
-                        comm = new SqlCommand(sql, conn);
-                        dr = comm.ExecuteReader();
-                        while (dr.Read())
-                        {
-                            MessageBox.Show("复合病机近似处理");
-                        }
-                        dr.Close();
-                        conn.Close();
-                        sql = String.Format("delete from t_ls_jbzm where id = '{0}'", number);           //清除基本证名临时表
-                        conn.Open();
-                        comm = new SqlCommand(sql, conn);
-                        int count4 = comm.ExecuteNonQuery();
-                        if (count4 > 0)
-                        {
-                            MessageBox.Show("清除基本证名临时表");
-                        }
-                        dr.Close();
-                        conn.Close();
-                        sql = String.Format("exec p_ns_zm_tl @id =  '{0}'", number);           //重新调用基本证名推理
-                        conn.Open();
-                        comm = new SqlCommand(sql, conn);
-                        dr = comm.ExecuteReader();
-                        while (dr.Read())
-                        {
-                            MessageBox.Show("重新调用基本证名推理");
-                        }
-                        dr.Close();
-                        conn.Close();
-                        sql = String.Format("exec p_ns_zm_tl @id =  '{0}'", number);           //重新调用基本证名推理
-                        conn.Open();
-                        comm = new SqlCommand(sql, conn);
-                        dr = comm.ExecuteReader();
-                        while (dr.Read())
-                        {
-                            MessageBox.Show("重新调用基本证名推理");
-                        }
-                        dr.Close();
-                        conn.Close();
-                        sql = String.Format("select count(*) from t_bl_mx a, t_info_jbzm b where a.id = '{0}' and a.xxdllx = '1' and a.xxxllx = '8' and a.xxbh = b.jbzmbh and b.jbzmlx = '1'", number);  //内伤基本证名//再次判断是否有证名推出
-                        conn.Open();
-                        comm = new SqlCommand(sql, conn);
-                        dr = comm.ExecuteReader();
-                        while (dr.Read())
-                        {
-                            count = Convert.ToInt16(dr[0].ToString());
-                        }
-                        dr.Close();
-                        conn.Close();
-                        if (count == 0)//如果ns基本证名还不成立，则调ns基本证名近似推理
-                        {
-                            sql = String.Format("exec p_ns_zm_jstl @id =  '{0}'", number);
-                            conn.Open();
-                            comm = new SqlCommand(sql, conn);
-                            dr = comm.ExecuteReader();
-                            while (dr.Read())
-                            {
-                                MessageBox.Show("基本证名近似推理");
-                            }
-                            dr.Close();
-                            conn.Close();
-                            sql = String.Format("update t_bl set zt = '8' where id = '{0}'", number);
-                            conn.Open();
-                            comm = new SqlCommand(sql, conn);
-                            int count1 = comm.ExecuteNonQuery();
-                            if (count1 > 0)
-                            {
-                                MessageBox.Show("更新近似度为8");
-                            }
-                            dr.Close();
-                            conn.Close();
-                        }
-                    }
-                    else        //如果有复合病机成立，则调ns基本证名近似推理
-                    {
-                        sql = String.Format("exec p_ns_zm_jstl @id =  '{0}'", number);
-                        conn.Open();
-                        comm = new SqlCommand(sql, conn);
-                        dr = comm.ExecuteReader();
-                        while (dr.Read())
-                        {
-                            MessageBox.Show("基本证名近似推理");
-                        }
-                        dr.Close();
-                        conn.Close();
-                    }
+                    sql = String.Format("exec p_ns_zm_jstl @id = '{0}'", number);
+                    conn.Open();
+                    comm = new SqlCommand(sql, conn);
+                    dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    { }
+                    dr.Close();
+                    conn.Close();
                 }
                 //调用内伤后续处理过程
                 ns_hstl();
@@ -1487,80 +1359,86 @@ namespace 中医证治智能系统
         /// </summary>
         public bool ns_tl()
         {
-            //调用内伤系推理存储过程（根据主诉推理）
-            String sql = String.Format("exec p_x_zs @id =  '{0}'", number);
+            // 调用内伤系推理存储过程（根据主诉推理）
+            String sql = String.Format("exec p_x_zs @id = '{0}'", number);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             SqlDataReader dr = comm.ExecuteReader();
             while (dr.Read())
-            {
-                MessageBox.Show("主诉推理");
-            }
+            { }
             dr.Close();
             conn.Close();
-            sql = String.Format("exec p_x_zx @id =  '{0}'", number);//调用内伤系推理存储过程（根据症象推理）
+            // 调用内伤系推理存储过程（根据症象推理）
+            sql = String.Format("exec p_x_zx @id = '{0}'", number);
+            conn.Open();
+            comm = new SqlCommand(sql, conn);
+            dr = comm.ExecuteReader();
+            while (dr.Read())
+            { }
+            dr.Close();
+            conn.Close();
+            // 调用内伤病名推理子存储过程
+            // 1.甲类病名推理
+            sql = String.Format("exec p_ns_jlbm @id = '{0}'", number); 
+            conn.Open();
+            comm = new SqlCommand(sql, conn);
+            dr = comm.ExecuteReader();
+            while (dr.Read())
+            { }
+            dr.Close();
+            conn.Close();
+            // 2.乙类病名推理
+            sql = String.Format("exec p_ns_ylbm @id = '{0}'", number); 
+            conn.Open(); 
+            comm = new SqlCommand(sql, conn);
+            dr = comm.ExecuteReader();
+            while (dr.Read())
+            { }
+            dr.Close();
+            conn.Close();
+            // 调用复合病机推理存储过程
+            sql = String.Format("exec p_zd_fhbj @id = '{0}'", number);
+            conn.Open();
+            comm = new SqlCommand(sql, conn);
+            dr = comm.ExecuteReader();
+            while (dr.Read())
+            { }
+            dr.Close();
+            conn.Close();
+            // 调用内伤证名推理存储过程
+            sql = String.Format("exec p_ns_zm_tl @id = '{0}'", number);
+            conn.Open();
+            comm = new SqlCommand(sql, conn);
+            dr = comm.ExecuteReader();
+            while (dr.Read())
+            { }
+            dr.Close();
+            conn.Close();
+            // 判断内伤病名、内伤证名是否推出，推出则返回true，否则返回false
+            // 1.1 甲类病名
+            sql = String.Format("select count(*) from t_bl_mx where id = '{0}' and xxdllx = '1' and xxxllx = '5'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                MessageBox.Show("症象推理");
+                count_jlbm = Convert.ToInt16(dr[0].ToString());
             }
             dr.Close();
             conn.Close();
-            //调用内伤病名推理子存储过程
-            sql = String.Format("exec p_ns_jlbm @id =  '{0}'", number);//甲类病名推理
+            // 1.2 乙类病名
+            sql = String.Format("select count(*) from t_bl_mx where id = '{0}' and xxdllx = '1' and xxxllx = '6'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                MessageBox.Show("甲类病名推理");
+                count_ylbm = Convert.ToInt16(dr[0].ToString());
             }
             dr.Close();
             conn.Close();
-            sql = String.Format("exec p_ns_ylbm @id =  '{0}'", number);//乙类病名推理
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                MessageBox.Show("乙类病名推理");
-            }
-            dr.Close();
-            conn.Close();
-            sql = String.Format("exec p_zd_fhbj @id =  '{0}'", number);//调用复合病机推理存储过程
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                MessageBox.Show("调用复合病机推理存储过程");
-            }
-            dr.Close();
-            conn.Close();
-            sql = String.Format("exec p_ns_zm_tl @id =  '{0}'", number);//调用内伤证名推理存储过程
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                MessageBox.Show("调用内伤证名推理存储过程");
-            }
-            dr.Close();
-            conn.Close();
-            sql = String.Format("exec p_ns_zm_tl @id =  '{0}'", number);//调用内伤证名推理存储过程
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                MessageBox.Show("调用内伤证名推理存储过程");
-            }
-            dr.Close();
-            conn.Close();
-            //判断内伤病名、内伤证名是否推出，推出则返回true，否则返回false
-            sql = String.Format("select count(*) from t_bl_mx a, t_info_jbzm b where a.id = '{0}'  and a.xxdllx = '1' and a.xxxllx = '8' and a.xxbh = b.jbzmbh  and b.jbzmlx = '1'", number);  //内伤基本证名
+            // 2.内伤证名
+            sql = String.Format("select count(*) from t_bl_mx a, t_info_jbzm b where a.id = '{0}'  and a.xxdllx = '1' and a.xxxllx = '8' and a.xxbh = b.jbzmbh  and b.jbzmlx = '1'", number);  
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
@@ -1570,10 +1448,10 @@ namespace 中医证治智能系统
             }
             dr.Close();
             conn.Close();
-            if (count_zm > 0)
-                return true;
-            else
+            if (count_jlbm <= 0 && count_ylbm <= 0 && count_zm <= 0)
                 return false;
+            else
+                return true;
         }
 
         /// <summary>
@@ -1581,36 +1459,31 @@ namespace 中医证治智能系统
         /// </summary>
         public void ns_hstl()
         {
-            //调用证名合并推理子过程
-            String sql = String.Format("exec p_zmhb @id =  '{0}'", number);
+            // 调用证名合并推理子过程
+            String sql = String.Format("exec p_zmhb @id = '{0}'", number);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
             SqlDataReader dr = comm.ExecuteReader();
             while (dr.Read())
-            {
-                MessageBox.Show("证名合并推理");
-            }
+            { }
             dr.Close();
             conn.Close();
-            //调用根据已推出内伤病名来选择基本证名的子过程
-            sql = String.Format("exec p_ns_bm_zm_tl @id =  '{0}'", number);
+            // 调用根据已推出内伤病名来选择基本证名的子过程
+            sql = String.Format("exec p_ns_bm_zm_tl @id = '{0}'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
             while (dr.Read())
-            {
-                MessageBox.Show("内伤病名来选择基本证名");
-            }
+            { }
             dr.Close();
             conn.Close();
+            // 内伤病名选择证名(新规则)
             sql = String.Format("exec pp @id =  '{0}'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
             while (dr.Read())
-            {
-                MessageBox.Show("内伤病名来选择基本证名");
-            }
+            { }
             dr.Close();
             conn.Close();
             /******************************************/
@@ -1638,8 +1511,8 @@ namespace 中医证治智能系统
                 conn.Close();
             }
             /******************************************/
-            //调用处方推理子过程
-            sql = String.Format("exec p_zd_cftl @id =  '{0}'", number);
+            // 调用处方推理子过程
+            sql = String.Format("exec p_zd_cftl @id = '{0}'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
@@ -1675,26 +1548,9 @@ namespace 中医证治智能系统
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
                 int count2 = comm.ExecuteNonQuery();
-                //if (count2 > 0)
-                //{
-
-                //    MessageBox.Show("诊断完毕");
-                //}
                 dr.Close();
                 conn.Close();
-
-                //显示结果
-                //更新病历类型
-                //sql = String.Format("update t_bl set bllx='0' where id='{0}'", number);
-                //conn.Open();
-                //comm = new SqlCommand(sql, conn);
-                //int count3 = comm.ExecuteNonQuery();
-                //if (count3 > 0)
-                //{
-                //    MessageBox.Show("更新成功");
-                //}
-                //dr.Close();
-                //conn.Close();
+                // 病历显示
                 display_bl result = new display_bl(number, oldnumber);
                 result.Show();
             }
