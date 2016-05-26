@@ -86,10 +86,10 @@
                     <ComboBox x:Name="search_xsjb" HorizontalAlignment="Left" Margin="360,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="120" Height="24">
                         <ComboBoxItem Content="全部"/>
                         <ComboBoxItem Content="甲"/>
-                        <ComboBoxItem Content="乙1"/>
-                        <ComboBoxItem Content="乙2"/>
-                        <ComboBoxItem Content="乙3"/>
-                        <ComboBoxItem Content="乙4"/>
+                        <ComboBoxItem Content="乙1(外邪实证)"/>
+                        <ComboBoxItem Content="乙2(内六淫实证)"/>
+                        <ComboBoxItem Content="乙3(气滞血淤实证)"/>
+                        <ComboBoxItem Content="乙4(水饮实证)"/>
                     </ComboBox>
                     <Label Content="病机因素：" HorizontalAlignment="Left" Margin="526,0,0,0" Grid.Row="2" VerticalAlignment="Top" Height="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Width="90" Grid.ColumnSpan="2"/>
                     <ComboBox x:Name="search_bjys" HorizontalAlignment="Left" Margin="47,10,0,0" Grid.Row="2" VerticalAlignment="Top" Width="120" Height="24" Grid.Column="1">
@@ -173,10 +173,10 @@
                         <Label Content="证名分类：" HorizontalAlignment="Left" Margin="164,154,0,0" VerticalAlignment="Top" Height="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Width="89"/>
                         <ComboBox x:Name="input_xsjb" HorizontalAlignment="Left" Margin="260,163,0,0" VerticalAlignment="Top" Width="384" Height="24">
                             <ComboBoxItem Content="甲"/>
-                            <ComboBoxItem Content="乙1"/>
-                            <ComboBoxItem Content="乙2"/>
-                            <ComboBoxItem Content="乙3"/>
-                            <ComboBoxItem Content="乙4"/>
+                            <ComboBoxItem Content="乙1(外邪实证)"/>
+                            <ComboBoxItem Content="乙2(内六淫实证)"/>
+                            <ComboBoxItem Content="乙3(气滞血淤实证)"/>
+                            <ComboBoxItem Content="乙4(水饮实证)"/>
                         </ComboBox>
                         <Label Content="病机因素：" HorizontalAlignment="Left" Margin="163,193,0,0" VerticalAlignment="Top" Height="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Width="90" RenderTransformOrigin="0.55,-0.5"/>
                         <ComboBox x:Name="input_bjys" HorizontalAlignment="Left" Margin="260,202,0,0" VerticalAlignment="Top" Width="384" Height="24">

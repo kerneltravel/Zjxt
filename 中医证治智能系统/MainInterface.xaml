@@ -247,7 +247,7 @@
                                     <ImageBrush ImageSource="Resources\prescription.ico" Stretch="Uniform"/>
                                 </Button.Background>
                             </Button>
-                            <Button Name="FanywRuleAdmin" Content="反药物规则管理" Height="93" Style="{DynamicResource Buttonlist}" VerticalAlignment="Top" Click="FanywRuleAdmin_Click" FontWeight="Bold" HorizontalAlignment="Left" Width="78">
+                            <Button Name="FanywRuleAdmin" Content="药物取舍规则管理" Height="93" Style="{DynamicResource Buttonlist}" VerticalAlignment="Top" Click="FanywRuleAdmin_Click" FontWeight="Bold" HorizontalAlignment="Left" Width="78">
                                 <Button.Background>
                                     <ImageBrush ImageSource="Resources\prescription.ico" Stretch="Uniform"/>
                                 </Button.Background>

@@ -218,16 +218,16 @@ namespace 中医证治智能系统
                     Xsjb = "甲";
                     break;
                 case "2":
-                    Xsjb = "乙1";
+                    Xsjb = "乙1(外邪实证)";
                     break;
                 case "3":
-                    Xsjb = "乙2";
+                    Xsjb = "乙2(内六淫实证)";
                     break;
                 case "4":
-                    Xsjb = "乙3";
+                    Xsjb = "乙3(气滞血淤实证)";
                     break;
                 case "5":
-                    Xsjb = "乙4";
+                    Xsjb = "乙4(水饮实证)";
                     break;
             }
             return Xsjb;
