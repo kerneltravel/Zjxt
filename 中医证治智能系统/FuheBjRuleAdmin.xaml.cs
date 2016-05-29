@@ -1042,7 +1042,9 @@ namespace 中医证治智能系统
                                                 break;
                                             case "2": //【系】
                                                 {
-                                                    // 待解决
+                                                    XiInfoAdmin xi = new XiInfoAdmin();
+                                                    xi.PassValuesEvent += new XiInfoAdmin.PassValuesHandler(ReceiveValues2);
+                                                    xi.Show();  
                                                 }
                                                 break;
                                             case "3": //【基本病机】
@@ -1073,6 +1075,16 @@ namespace 中医证治智能系统
         /// 功能：实现症象名称的读取和显示
         /// </summary>
         private void ReceiveValues1(object sender, Info_Symptom.PassValuesEventArgs e)
+        {
+            tjmc.Text = e.Name;
+            m_tjbh = e.Number;
+            IsAdd = true;
+        }
+
+        /// <summary>
+        /// 功能：实现系名称的读取和显示
+        /// </summary>
+        private void ReceiveValues2(object sender, XiInfoAdmin.PassValuesEventArgs e)
         {
             tjmc.Text = e.Name;
             m_tjbh = e.Number;
@@ -1551,26 +1563,26 @@ namespace 中医证治智能系统
         /// </summary>
         private void comb_tjlx_DropDownClosed(object sender, EventArgs e)
         {
-            if (comb_tjlx.Text.ToString() == "系") 
-            {
-                tjmc_xi.Visibility = Visibility.Visible;
-                btn_tjmc.Visibility = Visibility.Hidden;
-                tjmc.Visibility = Visibility.Hidden;
-                string sql = String.Format("select xmc from t_info_rk");
-                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-                DataSet ds = new DataSet();
-                ds.Clear();
-                da.Fill(ds);
-                tjmc_xi.ItemsSource = ds.Tables[0].DefaultView;
-                tjmc_xi.DisplayMemberPath = "rkmc";
-                tjmc_xi.SelectedValuePath = "rkbh";
-            }
-            else
-            {
-                tjmc_xi.Visibility = Visibility.Hidden;
-                btn_tjmc.Visibility = Visibility.Visible;
-                tjmc.Visibility = Visibility.Visible;
-            }
+            //if (comb_tjlx.Text.ToString() == "系") 
+            //{
+            //    tjmc_xi.Visibility = Visibility.Visible;
+            //    btn_tjmc.Visibility = Visibility.Hidden;
+            //    tjmc.Visibility = Visibility.Hidden;
+            //    string sql = String.Format("select xmc from t_info_x");
+            //    SqlDataAdapter da = new SqlDataAdapter(sql, conn);
+            //    DataSet ds = new DataSet();
+            //    ds.Clear();
+            //    da.Fill(ds);
+            //    tjmc_xi.ItemsSource = ds.Tables[0].DefaultView;
+            //    tjmc_xi.DisplayMemberPath = "xmc";
+            //    tjmc_xi.SelectedValuePath = "xbh";
+            //}
+            //else
+            //{
+            //    tjmc_xi.Visibility = Visibility.Hidden;
+            //    btn_tjmc.Visibility = Visibility.Visible;
+            //    tjmc.Visibility = Visibility.Visible;
+            //}
         }
 
         /// <summary>
