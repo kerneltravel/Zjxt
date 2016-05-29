@@ -1112,7 +1112,9 @@ namespace 中医证治智能系统
                                                 break;
                                             case "2": //【系】
                                                 {
-                                                    // 待解决
+                                                    XiInfoAdmin xi = new XiInfoAdmin();
+                                                    xi.PassValuesEvent += new XiInfoAdmin.PassValuesHandler(ReceiveValues2);
+                                                    xi.Show();
                                                 }
                                                 break;
                                             case "3": //【基本病机】
@@ -1150,6 +1152,16 @@ namespace 中医证治智能系统
         /// 功能：实现症象名称的读取和显示
         /// </summary>
         private void ReceiveValues1(object sender, Info_Symptom.PassValuesEventArgs e)
+        {
+            tjmc.Text = e.Name;
+            m_tjbh = e.Number;
+            IsAdd = true;
+        }
+
+        /// <summary>
+        /// 功能：实现系名称的读取和显示
+        /// </summary>
+        private void ReceiveValues2(object sender, XiInfoAdmin.PassValuesEventArgs e)
         {
             tjmc.Text = e.Name;
             m_tjbh = e.Number;
