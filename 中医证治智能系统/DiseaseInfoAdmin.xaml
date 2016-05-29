@@ -60,7 +60,7 @@
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=DiseaseNumber}" Header="病名编号" Width="150" />
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=Bingmjb}" Header="病名级别" Width="100" />
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=Neisbmlx}" Header="内伤病名类型" Width="100"/>
-                                <GridViewColumn DisplayMemberBinding="{Binding Path=Xi}" Header="系" Width="150"/>
+                                <GridViewColumn DisplayMemberBinding="{Binding Path=Xi}" Header="科别" Width="150"/>
                                 <GridViewColumn DisplayMemberBinding="{Binding Path=DiseaseName}" Header="病名名称" Width="300"/>
                             </GridView>
                         </ListView.View>
@@ -71,8 +71,8 @@
                         <ComboBoxItem>甲类病名</ComboBoxItem>
                         <ComboBoxItem>乙类病名</ComboBoxItem>
                     </ComboBox>
-                    <Label Content="系：" HorizontalAlignment="Left" Margin="448,43,0,0" Grid.Row="1" VerticalAlignment="Top" Height="40" VerticalContentAlignment="Center" Width="70"/>
-                    <ComboBox Name="search_xi" HorizontalAlignment="Left" Margin="481,52,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120" Height="24" DropDownOpened="search_xi_DropDownOpened"/>
+                    <Label Content="科别：" HorizontalAlignment="Left" Margin="450,43,0,0" Grid.Row="1" VerticalAlignment="Top" Height="40" VerticalContentAlignment="Center" Width="45"/>
+                    <ComboBox Name="search_xi" HorizontalAlignment="Left" Margin="500,52,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120" Height="24" DropDownOpened="search_xi_DropDownOpened"/>
                     <Grid HorizontalAlignment="Left" Height="25" Grid.Row="2" VerticalAlignment="Top" Width="842" Background="{DynamicResource TabItemHotBackground}">
                         <Label Content="查询结果" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                         <Label Content="记录数：" HorizontalAlignment="Left" Margin="99,0,0,0" VerticalAlignment="Top"/>
@@ -143,7 +143,7 @@
                         <TextBox Name="input_bmbh" HorizontalAlignment="Left" Height="24" Margin="283,140,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
                         <Label Content="病名名称：" HorizontalAlignment="Left" Margin="445,140,0,0" VerticalAlignment="Top"/>
                         <TextBox Name="input_bmmc" HorizontalAlignment="Left" Height="24" Margin="544,140,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-                        <Label Content="系：" HorizontalAlignment="Left" Margin="208,234,0,0" VerticalAlignment="Top"/>
+                        <Label Content="科别：" HorizontalAlignment="Left" Margin="208,234,0,0" VerticalAlignment="Top"/>
                         <ComboBox Name="input_xi" HorizontalAlignment="Left" Margin="283,236,0,0" VerticalAlignment="Top" Width="120" Height="24"/>
                         <Label Content="内伤病名类型：" HorizontalAlignment="Left" Margin="445,188,0,0" VerticalAlignment="Top"/>
                         <ComboBox Name="input_nsbmlx" HorizontalAlignment="Left" Margin="544,188,0,0" VerticalAlignment="Top" Width="120" Height="24">

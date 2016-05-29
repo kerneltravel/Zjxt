@@ -1556,14 +1556,14 @@ namespace 中医证治智能系统
                 tjmc_xi.Visibility = Visibility.Visible;
                 btn_tjmc.Visibility = Visibility.Hidden;
                 tjmc.Visibility = Visibility.Hidden;
-                string sql = String.Format("select xmc from t_info_x");
+                string sql = String.Format("select xmc from t_info_rk");
                 SqlDataAdapter da = new SqlDataAdapter(sql, conn);
                 DataSet ds = new DataSet();
                 ds.Clear();
                 da.Fill(ds);
                 tjmc_xi.ItemsSource = ds.Tables[0].DefaultView;
-                tjmc_xi.DisplayMemberPath = "xmc";
-                tjmc_xi.SelectedValuePath = "xbh";
+                tjmc_xi.DisplayMemberPath = "rkmc";
+                tjmc_xi.SelectedValuePath = "rkbh";
             }
             else
             {
