@@ -891,6 +891,7 @@ namespace 中医证治智能系统
                 while (dr.Read()) { }
                 dr.Close();
                 conn.Close();
+                // 读取病名类型
                 sql = String.Format("select xxbh from t_bl_mx where id ='{0}'and xxdllx = '1'and xxxllx = '0'", number);
                 conn.Open();
                 comm = new SqlCommand(sql, conn);
@@ -916,60 +917,28 @@ namespace 中医证治智能系统
                     dr.Close();
                     conn.Close();
                     // 根据外感成立方法(取最小编号)调用外感病名推理子过程p_wg_bmtl
-                    /* 疑问待确定？？？？？？？？？？？？？？？
-                     * 当外感成立方法的最小编号为1或2时，视为A类；
-                     * 最小编号为3时，视为B类
-                     * 最小编号为4时，视为C类
-                     * 最小编号为5时，视为D类
-                     * 目前，没有最小编号超过5的
-                     */
                     wg_ff = Convert.ToInt16(temp);
-                    switch (wg_ff)
+                    // 进行外感病名级别推理：危(1)、急(2)、重(3)、轻(4)
+                    // 先进行外感病名级别“危”推理
+                    wgbm_tl(wg_ff, 1);
+                    // 判断“危”推理是否有外感病名推出，若没有，则进行“急”推理
+                    if (!Is_wgbm())
                     {
-                        case 1: // A类
-                        case 2: // A类
-                            sql = String.Format("exec p_wg_bmtl @id = '{0}', @wg_ff = 1", number);
-                            conn.Open();
-                            comm = new SqlCommand(sql, conn);
-                            dr = comm.ExecuteReader();
-                            while (dr.Read())
-                            { }
-                            dr.Close();
-                            conn.Close();
-                            break;
-                        case 3: // B类
-                            sql = String.Format("exec p_wg_bmtl @id = '{0}', @wg_ff = 2", number);
-                            conn.Open();
-                            comm = new SqlCommand(sql, conn);
-                            dr = comm.ExecuteReader();
-                            while (dr.Read())
-                            { }
-                            dr.Close();
-                            conn.Close();
-                            break;
-                        case 4: // C类
-                            sql = String.Format("exec p_wg_bmtl @id = '{0}', @wg_ff = 3", number);
-                            conn.Open();
-                            comm = new SqlCommand(sql, conn);
-                            dr = comm.ExecuteReader();
-                            while (dr.Read())
-                            { }
-                            dr.Close();
-                            conn.Close();
-                            break;
-                        case 5: // D类
-                            sql = String.Format("exec p_wg_bmtl @id = '{0}', @wg_ff = 4", number);
-                            conn.Open();
-                            comm = new SqlCommand(sql, conn);
-                            dr = comm.ExecuteReader();
-                            while (dr.Read())
-                            { }
-                            dr.Close();
-                            conn.Close();
-                            break;
-                        default:
-                            break;
-                    }
+                        // 进行外感病名级别“急”推理
+                        wgbm_tl(wg_ff, 2);
+                        // 判断“急”推理是否有外感病名推出，若没有，则进行“重”推理
+                        if (!Is_wgbm())
+                        {
+                            // 进行外感病名级别“重”推理
+                            wgbm_tl(wg_ff, 3);
+                            // 判断“重”推理是否有外感病名推出，若没有，则进行“轻”推理
+                            if (!Is_wgbm())
+                            {
+                                // 进行外感病名级别“轻”推理
+                                wgbm_tl(wg_ff, 4);                           
+                            }
+                        }
+                    }                                                         
                 }
                 // 调用病史推理外感病名子过程p_wgbm_bs，记录外感病名
                 sql = String.Format("exec p_wgbm_bs @id = '{0}'", number);
@@ -1096,6 +1065,89 @@ namespace 中医证治智能系统
                 else
                     MessageBox.Show("病名类型推理失败，请检查！");                         
             }
+        }
+
+        /// <summary>
+        /// 功能：根据外感成立方法(取最小编号)调用外感病名推理子过程p_wg_bmtl
+        /// 说明：疑问待确定？？？？？？？？？？？？？？？                      
+        ///       当外感成立方法的最小编号为1或2时，视为A类；
+        ///       最小编号为3时，视为B类
+        ///       最小编号为4时，视为C类
+        ///       最小编号为5时，视为D类
+        ///       目前，没有最小编号超过5的              
+        /// </summary>
+        public void wgbm_tl(int wg_ff, int bmjb) 
+        {
+            String sql;
+            SqlCommand comm;
+            SqlDataReader dr;
+            switch (wg_ff)
+            {
+                case 1: // A类
+                case 2: // A类
+                    sql = String.Format("exec p_wg_bmtl @id = '{0}', @wg_ff = 1, @bmjb = '{1}'", number, bmjb);
+                    conn.Open();
+                    comm = new SqlCommand(sql, conn);
+                    dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    { }
+                    dr.Close();
+                    conn.Close();
+                    break;
+                case 3: // B类
+                    sql = String.Format("exec p_wg_bmtl @id = '{0}', @wg_ff = 2, @bmjb = '{1}'", number, bmjb);
+                    conn.Open();
+                    comm = new SqlCommand(sql, conn);
+                    dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    { }
+                    dr.Close();
+                    conn.Close();
+                    break;
+                case 4: // C类
+                    sql = String.Format("exec p_wg_bmtl @id = '{0}', @wg_ff = 3, @bmjb = '{1}'", number, bmjb);
+                    conn.Open();
+                    comm = new SqlCommand(sql, conn);
+                    dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    { }
+                    dr.Close();
+                    conn.Close();
+                    break;
+                case 5: // D类
+                    sql = String.Format("exec p_wg_bmtl @id = '{0}', @wg_ff = 4, @bmjb = '{1}'", number, bmjb);
+                    conn.Open();
+                    comm = new SqlCommand(sql, conn);
+                    dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    { }
+                    dr.Close();
+                    conn.Close();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 功能：判断外感病名是否推出
+        /// </summary>
+        public bool Is_wgbm() 
+        {
+            String sql = String.Format("select count(*) from t_bl_mx where id = '{0}' and xxdllx = '1' and xxxllx = '4'", number);
+            conn.Open();
+            SqlCommand comm = new SqlCommand(sql, conn);
+            SqlDataReader dr = comm.ExecuteReader();
+            while (dr.Read())
+            {
+                count_bm = Convert.ToInt16(dr[0].ToString());
+            }
+            dr.Close();
+            conn.Close();
+            if (count_bm <= 0)
+                return false;
+            else
+                return true;
         }
 
         /// <summary>
@@ -1378,8 +1430,10 @@ namespace 中医证治智能系统
             dr.Close();
             conn.Close();
             // 调用内伤病名推理子存储过程
+            // 先进行病名级别：危(1)、急(2)、重(3)、轻(4)，再进行病名类别推理：甲类、乙类
+            // 先进行病名级别“危”推理
             // 1.甲类病名推理
-            sql = String.Format("exec p_ns_jlbm @id = '{0}'", number); 
+            sql = String.Format("exec p_ns_jlbm @id = '{0}', @bmjb = '1'", number);
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
@@ -1388,14 +1442,80 @@ namespace 中医证治智能系统
             dr.Close();
             conn.Close();
             // 2.乙类病名推理
-            sql = String.Format("exec p_ns_ylbm @id = '{0}'", number); 
-            conn.Open(); 
+            sql = String.Format("exec p_ns_ylbm @id = '{0}', @bmjb = '1'", number);
+            conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
             while (dr.Read())
             { }
             dr.Close();
             conn.Close();
+            // 判断“危”推理是否有内伤病名推出，若没有，则进行“急”推理
+            if (!Is_nsbm()) 
+            {
+                // 1.甲类病名推理
+                sql = String.Format("exec p_ns_jlbm @id = '{0}', @bmjb = '2'", number);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                dr = comm.ExecuteReader();
+                while (dr.Read())
+                { }
+                dr.Close();
+                conn.Close();
+                // 2.乙类病名推理
+                sql = String.Format("exec p_ns_ylbm @id = '{0}', @bmjb = '2'", number);
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                dr = comm.ExecuteReader();
+                while (dr.Read())
+                { }
+                dr.Close();
+                conn.Close();
+                // 判断“急”推理是否有内伤病名推出，若没有，则进行“重”推理
+                if (!Is_nsbm())
+                {
+                    // 1.甲类病名推理
+                    sql = String.Format("exec p_ns_jlbm @id = '{0}', @bmjb = '3'", number);
+                    conn.Open();
+                    comm = new SqlCommand(sql, conn);
+                    dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    { }
+                    dr.Close();
+                    conn.Close();
+                    // 2.乙类病名推理
+                    sql = String.Format("exec p_ns_ylbm @id = '{0}', @bmjb = '3'", number);
+                    conn.Open();
+                    comm = new SqlCommand(sql, conn);
+                    dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    { }
+                    dr.Close();
+                    conn.Close();
+                    // 判断“重”推理是否有内伤病名推出，若没有，则进行“轻”推理
+                    if (!Is_nsbm())
+                    {
+                        // 1.甲类病名推理
+                        sql = String.Format("exec p_ns_jlbm @id = '{0}', @bmjb = '4'", number);
+                        conn.Open();
+                        comm = new SqlCommand(sql, conn);
+                        dr = comm.ExecuteReader();
+                        while (dr.Read())
+                        { }
+                        dr.Close();
+                        conn.Close();
+                        // 2.乙类病名推理
+                        sql = String.Format("exec p_ns_ylbm @id = '{0}', @bmjb = '4'", number);
+                        conn.Open();
+                        comm = new SqlCommand(sql, conn);
+                        dr = comm.ExecuteReader();
+                        while (dr.Read())
+                        { }
+                        dr.Close();
+                        conn.Close();
+                    }
+                }
+            }
             // 调用复合病机推理存储过程
             sql = String.Format("exec p_zd_fhbj @id = '{0}'", number);
             conn.Open();
@@ -1449,6 +1569,38 @@ namespace 中医证治智能系统
             dr.Close();
             conn.Close();
             if (count_jlbm <= 0 && count_ylbm <= 0 && count_zm <= 0)
+                return false;
+            else
+                return true;
+        }
+
+        /// <summary>
+        /// 功能：判断是否有内伤病名推出，推出则返回true，否则返回false
+        /// </summary>
+        public bool Is_nsbm() {
+            // 1.甲类病名
+            String sql = String.Format("select count(*) from t_bl_mx where id = '{0}' and xxdllx = '1' and xxxllx = '5'", number);
+            conn.Open();
+            SqlCommand comm = new SqlCommand(sql, conn);
+            SqlDataReader dr = comm.ExecuteReader();
+            while (dr.Read())
+            {
+                count_jlbm = Convert.ToInt16(dr[0].ToString());
+            }
+            dr.Close();
+            conn.Close();
+            // 2.乙类病名
+            sql = String.Format("select count(*) from t_bl_mx where id = '{0}' and xxdllx = '1' and xxxllx = '6'", number);
+            conn.Open();
+            comm = new SqlCommand(sql, conn);
+            dr = comm.ExecuteReader();
+            while (dr.Read())
+            {
+                count_ylbm = Convert.ToInt16(dr[0].ToString());
+            }
+            dr.Close();
+            conn.Close();
+            if (count_jlbm <= 0 && count_ylbm <= 0)
                 return false;
             else
                 return true;

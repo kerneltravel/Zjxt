@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SqlClient; 
 using System.Configuration;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -227,6 +227,9 @@ namespace 中医证治智能系统
             }
             dr.Close();
             conn1.Close();
+
+            diagnosisresult1 += "\n";
+
             /// 3.治法：
             /// 3.1中医治法（根据中医基本证名得出对应的治法）
             diagnosisresult1 += "\n" + "  " + "治法：";
@@ -342,7 +345,7 @@ namespace 中医证治智能系统
             conn1.Close();
             
             // 结尾处
-            diagnosisresult1 += "\n" + "                                                                   医师：__________";
+            diagnosisresult1 += "\n" + "\n" + "\n" + "                                                                                                    医师：__________";
             // 显示结果
             jieguo.Text = diagnosisresult1;
             

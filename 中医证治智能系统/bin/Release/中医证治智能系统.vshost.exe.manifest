@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="中医证治智能系统.exe" size="2674128">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="中医证治智能系统.exe" size="2676176">
       <assemblyIdentity name="中医证治智能系统" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>LMd7DwuAu/haKI+Q0cGa6dBVPvA=</dsig:DigestValue>
+        <dsig:DigestValue>qKoD6odRGf0yDaudCu2fDwxATWs=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
