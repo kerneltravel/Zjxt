@@ -1004,6 +1004,24 @@ namespace 中医证治智能系统
                                 { }
                                 dr.Close();
                                 conn.Close();
+                                // 多级复合病机近似处理
+                                sql = String.Format("exec p_djfhbj_jstl @id = '{0}'", number);
+                                conn.Open();
+                                comm = new SqlCommand(sql, conn);
+                                dr = comm.ExecuteReader();
+                                while (dr.Read())
+                                { }
+                                dr.Close();
+                                conn.Close();
+                                // 证用病机近似处理
+                                sql = String.Format("exec p_zybj_jstl @id = '{0}'", number);
+                                conn.Open();
+                                comm = new SqlCommand(sql, conn);
+                                dr = comm.ExecuteReader();
+                                while (dr.Read())
+                                { }
+                                dr.Close();
+                                conn.Close();
                                 // 重新调用外感基本证名推理子过程
                                 sql = String.Format("exec p_wg_zm_tl @id = '{0}'", number);
                                 conn.Open();
@@ -1285,6 +1303,24 @@ namespace 中医证治智能系统
             { }
             dr.Close();
             conn.Close();
+            // 调用多级复合病机推理存储过程p_zd_djfhbj
+            sql = String.Format("exec p_zd_djfhbj @id = '{0}'", number);
+            conn.Open();
+            comm = new SqlCommand(sql, conn);
+            dr = comm.ExecuteReader();
+            while (dr.Read())
+            { }
+            dr.Close();
+            conn.Close();
+            // 调用证用病机推理存储过程p_zd_zybj
+            sql = String.Format("exec p_zd_zybj @id = '{0}'", number);
+            conn.Open();
+            comm = new SqlCommand(sql, conn);
+            dr = comm.ExecuteReader();
+            while (dr.Read())
+            { }
+            dr.Close();
+            conn.Close();
             // 调用外感基本证名推理存储过程
             sql = String.Format("exec p_wg_zm_tl @id = '{0}'", number);
             conn.Open();
@@ -1350,6 +1386,24 @@ namespace 中医证治智能系统
                 {
                     // 复合病机近似处理
                     sql = String.Format("exec p_fhbj_jstl @id = '{0}'", number);           
+                    conn.Open();
+                    comm = new SqlCommand(sql, conn);
+                    dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    { }
+                    dr.Close();
+                    conn.Close();
+                    // 多级复合病机近似处理
+                    sql = String.Format("exec p_djfhbj_jstl @id = '{0}'", number);
+                    conn.Open();
+                    comm = new SqlCommand(sql, conn);
+                    dr = comm.ExecuteReader();
+                    while (dr.Read())
+                    { }
+                    dr.Close();
+                    conn.Close();
+                    // 证用病机近似处理
+                    sql = String.Format("exec p_zybj_jstl @id = '{0}'", number);
                     conn.Open();
                     comm = new SqlCommand(sql, conn);
                     dr = comm.ExecuteReader();
@@ -1525,6 +1579,24 @@ namespace 中医证治智能系统
             { }
             dr.Close();
             conn.Close();
+            // 调用多级复合病机推理存储过程
+            sql = String.Format("exec p_zd_djfhbj @id = '{0}'", number);
+            conn.Open();
+            comm = new SqlCommand(sql, conn);
+            dr = comm.ExecuteReader();
+            while (dr.Read())
+            { }
+            dr.Close();
+            conn.Close();
+            // 调用证用病机推理存储过程
+            sql = String.Format("exec p_zd_zybj @id = '{0}'", number);
+            conn.Open();
+            comm = new SqlCommand(sql, conn);
+            dr = comm.ExecuteReader();
+            while (dr.Read())
+            { }
+            dr.Close();
+            conn.Close();
             // 调用内伤证名推理存储过程
             sql = String.Format("exec p_ns_zm_tl @id = '{0}'", number);
             conn.Open();
@@ -1557,7 +1629,7 @@ namespace 中医证治智能系统
             }
             dr.Close();
             conn.Close();
-            // 2.内伤证名
+            // 2.基本证名
             sql = String.Format("select count(*) from t_bl_mx a, t_info_jbzm b where a.id = '{0}'  and a.xxdllx = '1' and a.xxxllx = '8' and a.xxbh = b.jbzmbh  and b.jbzmlx = '1'", number);  
             conn.Open();
             comm = new SqlCommand(sql, conn);
@@ -1620,15 +1692,15 @@ namespace 中医证治智能系统
             { }
             dr.Close();
             conn.Close();
-            // 调用根据已推出内伤病名来选择基本证名的子过程
-            sql = String.Format("exec p_ns_bm_zm_tl @id = '{0}'", number);
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            dr = comm.ExecuteReader();
-            while (dr.Read())
-            { }
-            dr.Close();
-            conn.Close();
+            //// 调用根据已推出内伤病名来选择基本证名的子过程
+            //sql = String.Format("exec p_ns_bm_zm_tl @id = '{0}'", number);
+            //conn.Open();
+            //comm = new SqlCommand(sql, conn);
+            //dr = comm.ExecuteReader();
+            //while (dr.Read())
+            //{ }
+            //dr.Close();
+            //conn.Close();
             // 内伤病名选择证名(新规则)
             sql = String.Format("exec pp @id =  '{0}'", number);
             conn.Open();
