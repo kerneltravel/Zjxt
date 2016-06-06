@@ -38,11 +38,8 @@ namespace 中医证治智能系统
         ObservableCollection<SymptomInfo> listSymptom2 = new ObservableCollection<SymptomInfo>();
         // 全局变量，用于存储症象信息
         SymptomInfo Symptom_Display = new SymptomInfo("", "", "");
-
-        //Node node = new Node();
         // 创建 List 集合实例
         List<Node> nodes = new List<Node>();
-
         Hashtable httree = new Hashtable(9000);
 
         bool isadd = false;
@@ -51,6 +48,7 @@ namespace 中医证治智能系统
         bool is_zxmc_edit = false;
         int nochange_item=0;
         string nochange_name = "";
+        string nochange_number = "";
         string zxlxforsave = "";
         string zxbhforsave = "";
         string zxmcforsave = "";
@@ -83,8 +81,6 @@ namespace 中医证治智能系统
 
         /// <summary>
         /// 功能：类的构造函数，用于初始化
-        /// 说明：1.通过三次数据库操作将数据从库中写入集合
-        ///       2.
         /// </summary>
         public Info_Symptom()
         {
@@ -100,11 +96,14 @@ namespace 中医证治智能系统
             SqlDataReader dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                nodes.Add(new Node { ID = Convert.ToInt32(dr["zxlxbh"]), Name = dr["zxlxmc"].ToString().Trim() });
+                nodes.Add(
+                    new Node { 
+                        ID = Convert.ToInt32(dr["zxlxbh"]), 
+                        Name = dr["zxlxmc"].ToString().Trim() 
+                    });
             }
             dr.Close();
             conn.Close();
-
             // 二级树写入
             sql = String.Format("select t1.zxbh ,t2.zxlxbh, min(t3.zxmc) from (t_info_zxxx as t1 inner join t_info_zxlx as t2 on t2.zxlxbh = t1.zxlxbh) inner join  t_info_zxmx as t3 on t1.zxbh = t3.zxbh group by t1.zxbh, t2.zxlxbh");
             conn.Open();
@@ -112,20 +111,17 @@ namespace 中医证治智能系统
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                //？？？ 有问题，数据库中的 zxlxbh = 30 对应的 zxbh 为空会出现问题，赋值为0问题解决
                 nodes.Add(
                     new Node { 
                         ID = Convert.ToInt32(dr["zxbh"]), 
                         Name = dr["zxbh"].ToString() + "  " + dr[2].ToString(), 
                         ParentID = Convert.ToInt32(dr["zxlxbh"])
                     });
-                //nodes.Add(new Node { ID = Convert.ToInt32(dr["zxbh"]), Name = dr["zxbh"].ToString() + "  " + "默认名称", ParentID = Convert.ToInt32(dr["zxlxbh"]) });
             }
             dr.Close();
             conn.Close();
-
             // 三级树写入
-            sql = String.Format("select t_info_zxmx.id,t_info_zxmx.zxmc,t_info_zxmx.zxbh from (t_info_zxxx inner join t_info_zxlx on t_info_zxlx.zxlxbh = t_info_zxxx.zxlxbh) inner join  t_info_zxmx on t_info_zxxx.zxbh = t_info_zxmx.zxbh order by t_info_zxmx.zxmc");
+            sql = String.Format("select t_info_zxmx.id,t_info_zxmx.zxmc,t_info_zxmx.zxbh from (t_info_zxxx inner join t_info_zxlx on t_info_zxlx.zxlxbh = t_info_zxxx.zxlxbh) inner join  t_info_zxmx on t_info_zxxx.zxbh = t_info_zxmx.zxbh order by t_info_zxmx.zxbh");
             conn.Open();
             comm = new SqlCommand(sql, conn);
             dr = comm.ExecuteReader();
@@ -159,7 +155,6 @@ namespace 中医证治智能系统
                     if (nodenum == 0)
                         ZXMC = newnode;
                 }
-
             }
             ZxMc.Text = ZXMC.Name;
             lv2.SelectedIndex = 0;
@@ -168,7 +163,6 @@ namespace 中医证治智能系统
         /// <summary>
         /// 功能：创建症象信息类
         /// 说明：1.SymptomTypes-->症象类型名称 SymptomNumber-->症象编号 SymptomName-->症象名称
-        ///       2.
         /// </summary>
         public class SymptomInfo : INotifyPropertyChanged
         {
@@ -239,14 +233,6 @@ namespace 中医证治智能系统
         /// </summary>
         private void combobox_symptom_types_search_DropDownOpened(object sender, EventArgs e)
         {
-            //string sql = String.Format("select zxlxbh, zxlxmc from t_info_zxlx");
-            //SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-            //DataSet ds = new DataSet();
-            //ds.Clear();
-            //da.Fill(ds);
-            //combobox_symptom_types_search.ItemsSource = ds.Tables[0].DefaultView;
-            //combobox_symptom_types_search.DisplayMemberPath = "zxlxmc";
-            //combobox_symptom_types_search.SelectedValuePath = "zxlxbh";
             combobox_symptom_types_search.Items.Clear();
             combobox_symptom_types_search.Items.Add("全部");
             string sql = String.Format("select zxlxbh, zxlxmc from t_info_zxlx");
@@ -264,7 +250,6 @@ namespace 中医证治智能系统
         /// <summary>
         /// 功能：搜索匹配项
         /// 说明：1.搜索前集合清空
-        ///       2.
         /// </summary>
         private void search_Click(object sender, RoutedEventArgs e)
         {
@@ -272,7 +257,6 @@ namespace 中医证治智能系统
             string sql;
             if (combobox_symptom_types_search.Text != "全部" && combobox_symptom_types_search.Text != "")
             {
-                //MessageBox.Show(combobox_symptom_types_search.Text.Trim().Substring(2));
                 if (combobox_symptom_types_search.Text.Substring(2).Trim() == "")
                 {
                     sql = String.Format("select * from (t_info_zxxx inner join t_info_zxlx on t_info_zxlx.zxlxbh = t_info_zxxx.zxlxbh) inner join  t_info_zxmx on t_info_zxxx.zxbh = t_info_zxmx.zxbh where zxmc like '%{0}%'",
@@ -344,48 +328,6 @@ namespace 中医证治智能系统
             public List<Node> Nodes { get; set; }
         }
 
-        ///// <summary>
-        ///// 功能：递归向下查找
-        ///// </summary>
-        //Node FindDownward(List<Node> nodes, int id)
-        //{
-        //    if (nodes == null)
-        //        return null;
-        //    for (int i = 0; i < nodes.Count; i++)
-        //    {
-        //        if (nodes[i].ID == id)
-        //        {
-        //            return nodes[i];
-        //        }
-        //        Node node = FindDownward(nodes[i].Nodes, id);
-        //        if (node != null)
-        //        {
-        //            return node;
-        //        }
-        //    }
-        //    return null;
-        //}
-
-        ///// <summary>
-        ///// 功能：绑定树
-        ///// </summary>        
-        //List<Node> Bind(List<Node> nodes)
-        //{
-        //    List<Node> outputList = new List<Node>();
-        //    for (int i = 0; i < nodes.Count; i++)
-        //    {
-        //        if (nodes[i].ParentID == -1)
-        //        {
-        //            outputList.Add(nodes[i]);
-        //        }
-        //        else
-        //        {
-        //            FindDownward(nodes, nodes[i].ParentID).Nodes.Add(nodes[i]);
-        //        }
-        //    }
-        //    return outputList;
-        //}
-
         /// <summary>
         /// 功能：实现 combobox 下拉绑定数据库并显示
         /// </summary>
@@ -399,10 +341,7 @@ namespace 中医证治智能系统
             combobox_symptom_types_input.ItemsSource = ds.Tables[0].DefaultView;
             combobox_symptom_types_input.DisplayMemberPath = "zxlxmc";
             combobox_symptom_types_input.SelectedValuePath = "zxlxbh";
-            
-
         }
-
 
         private void treeview1_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
@@ -558,11 +497,14 @@ namespace 中医证治智能系统
             SqlDataReader dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                nodes.Add(new Node { ID = Convert.ToInt32(dr["zxlxbh"]), Name = dr["zxlxmc"].ToString().Trim() });
+                nodes.Add(
+                    new Node { 
+                        ID = Convert.ToInt32(dr["zxlxbh"]), 
+                        Name = dr["zxlxmc"].ToString().Trim() 
+                    });
             }
             dr.Close();
             conn.Close();
-
             // 二级树写入
             sql = String.Format("select t1.zxbh ,t2.zxlxbh, min(t3.zxmc) from (t_info_zxxx as t1 inner join t_info_zxlx as t2 on t2.zxlxbh = t1.zxlxbh) inner join  t_info_zxmx as t3 on t1.zxbh = t3.zxbh group by t1.zxbh, t2.zxlxbh");
             conn.Open();
@@ -570,13 +512,14 @@ namespace 中医证治智能系统
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                //？？？ 有问题，数据库中的 zxlxbh = 30 对应的 zxbh 为空会出现问题，赋值为0问题解决
-                nodes.Add(new Node { ID = Convert.ToInt32(dr["zxbh"]), Name = dr["zxbh"].ToString() + "  " + dr[2].ToString(), ParentID = Convert.ToInt32(dr["zxlxbh"]) });
-                //nodes.Add(new Node { ID = Convert.ToInt32(dr["zxbh"]), Name = dr["zxbh"].ToString() + "  " + "默认名称", ParentID = Convert.ToInt32(dr["zxlxbh"]) });
+                nodes.Add(
+                    new Node { 
+                        ID = Convert.ToInt32(dr["zxbh"]), 
+                        Name = dr["zxbh"].ToString() + "  " + dr[2].ToString(), 
+                        ParentID = Convert.ToInt32(dr["zxlxbh"]) });
             }
             dr.Close();
             conn.Close();
-
             // 三级树写入
             sql = String.Format("select t_info_zxmx.id,t_info_zxmx.zxmc,t_info_zxmx.zxbh from (t_info_zxxx inner join t_info_zxlx on t_info_zxlx.zxlxbh = t_info_zxxx.zxlxbh) inner join  t_info_zxmx on t_info_zxxx.zxbh = t_info_zxmx.zxbh order by t_info_zxmx.zxmc");
             conn.Open();
@@ -584,7 +527,12 @@ namespace 中医证治智能系统
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                nodes.Add(new Node { ID = Convert.ToInt32(dr["id"]), Name = dr["zxmc"].ToString(), ParentID = Convert.ToInt32(dr["zxbh"]) });
+                nodes.Add(
+                    new Node {
+                        ID = Convert.ToInt32(dr["zxbh"].ToString() + dr["id"].ToString()), 
+                        Name = dr["zxmc"].ToString(), 
+                        ParentID = Convert.ToInt32(dr["zxbh"]) 
+                    });
             }
             dr.Close();
             conn.Close();
@@ -609,11 +557,6 @@ namespace 中医证治智能系统
             }
             ZxMc.Text = ZXMC.Name;
             lv2.SelectedIndex = 0;
-            //for (int i = 0; i < nodes.Count; i++)
-            //{
-            //    System.Windows.Controls.TreeViewItem treeItem = treeview1.SelectedItem as System.Windows.Controls.TreeViewItem;
-            //    treeItem.IsExpanded = true;
-            //}
         }
 
 
@@ -644,6 +587,7 @@ namespace 中医证治智能系统
         {
 
         }
+
         public void BuildENTree()
         {            
             Node parentnode1 = new Node();
@@ -708,9 +652,15 @@ namespace 中医证治智能系统
             }
         }
 
+        /// <summary>
+        /// 功能：回到症象类型开始处
+        /// </summary>
         private void zxlxsy_Click(object sender, RoutedEventArgs e)
         {
-            
+            zxbhsy.IsEnabled = false;
+            zxbhback.IsEnabled = false;
+            zxbhwy.IsEnabled = true;
+            zxbhfront.IsEnabled = true;
             lv2.ItemsSource = listSymptom2;
             listSymptom2.Clear();
             int nodenum = -1;
@@ -745,9 +695,15 @@ namespace 中医证治智能系统
             }
         }
 
+        /// <summary>
+        /// 功能：回到最后一个症象类型
+        /// </summary>
         private void zxlxwy_Click(object sender, RoutedEventArgs e)
         {
-            
+            zxbhsy.IsEnabled = false;
+            zxbhback.IsEnabled = false;
+            zxbhwy.IsEnabled = true;
+            zxbhfront.IsEnabled = true;
             lv2.ItemsSource = listSymptom2;
             listSymptom2.Clear();
             int nodenum = -1;
@@ -764,7 +720,7 @@ namespace 中医证治智能系统
                 }
 
             }
-            ZxBh.Text = "0130001";
+            ZxBh.Text = "0161001";
             zxlxmc.Text = "其它";
             ZxMc.Text = ZXMC.Name;
             lv2.SelectedIndex = 0;
@@ -869,10 +825,15 @@ namespace 中医证治智能系统
             zxbhback.IsEnabled = true;
         }
 
+        /// <summary>
+        /// 功能：回到上一个症象类型
+        /// </summary>
         private void zxlxback_Click(object sender, RoutedEventArgs e)
         {
-            
-                
+            zxbhsy.IsEnabled = false;
+            zxbhback.IsEnabled = false;
+            zxbhwy.IsEnabled = true;
+            zxbhfront.IsEnabled = true;
             int ZXLXBH = 0;
             lv2.ItemsSource = listSymptom2;
             listSymptom2.Clear();
@@ -936,9 +897,15 @@ namespace 中医证治智能系统
             }
         }
 
+        /// <summary>
+        /// 功能：回到下一个症象类型
+        /// </summary>
         private void zxlxfront_Click(object sender, RoutedEventArgs e)
         {
-            
+            zxbhsy.IsEnabled = false;
+            zxbhback.IsEnabled = false;
+            zxbhwy.IsEnabled = true;
+            zxbhfront.IsEnabled = true;
             int ZXLXBH = 0;
             lv2.ItemsSource = listSymptom2;
             listSymptom2.Clear();
@@ -1140,7 +1107,6 @@ namespace 中医证治智能系统
                     }
                  }
             }
-            
             ZxBh.Text = "0"+ZXBH;
             ZxMc.Text = ZXMC.Name;
             lv2.SelectedIndex = 0; 
@@ -1196,7 +1162,9 @@ namespace 中医证治智能系统
             lv2.SelectedIndex = 0;  
         }
 
-
+        /// <summary>
+        /// 功能：新增
+        /// </summary>
         private void add_Click(object sender, RoutedEventArgs e)
         {
             zxlxsy.IsEnabled = false;
@@ -1221,40 +1189,42 @@ namespace 中医证治智能系统
                 MessageBox.Show("请先保存！");
             else
             {
-            isadd = true;
-            string zxname = zxlxmc.Text;
-            int ZXLXBH = 0,ZXBH=0;
-            Keyboard.Focus(ZxMc);
-            ZxMc.Text="";
-            ZxMc.IsReadOnly = false;
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                Node newnode = (Node)httree[nodes[i].ID];
-                if (newnode.Name == zxname)
+                isadd = true;
+                string zxlxname = zxlxmc.Text;
+                int ZXLXBH = 0,ZXBH = 0;
+                Keyboard.Focus(ZxMc);
+                ZxMc.Text="";
+                ZxMc.IsReadOnly = false;
+                // 根据症象类型名称获取症象类型编号
+                string sql = String.Format("select * from t_info_zxlx where zxlxmc = '{0}'", zxlxname);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                SqlDataReader dr = comm.ExecuteReader();
+                while (dr.Read())
                 {
-                    ZXLXBH = newnode.ID;
+                    ZXLXBH = Convert.ToInt32(dr["zxlxbh"].ToString().Trim());
                 }
-            }
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                Node newnode = (Node)httree[nodes[i].ID];
-                if (newnode.ParentID == Convert.ToInt64(ZXLXBH))
+                dr.Close();
+                conn.Close();
+                // 获取对应症象类型下最大的症象编号
+                sql = String.Format("select max(zxbh) from t_info_zxxx where zxlxbh = '{0}'", String.Format("{0:00}", ZXLXBH));
+                conn.Open();
+                comm = new SqlCommand(sql, conn);
+                dr = comm.ExecuteReader();
+                while (dr.Read())
                 {
-                    if (newnode.ID > ZXBH)
-                        ZXBH = newnode.ID;
+                    ZXBH = Convert.ToInt32(dr[0].ToString());
                 }
-
+                dr.Close();
+                conn.Close();
+                ZXBH++;
+                ZxBh.Text = String.Format("{0:0000000}", ZXBH);
+                listSymptom2.Clear();
+                savebutton.IsEnabled = true;
+                del_zxbh.IsEnabled = false;
+                zxlxforsave = ZXLXBH.ToString();
+                zxbhforsave = ZxBh.Text;
             }
-            ZXBH++;
-            ZxBh.Text ="0"+ ZXBH.ToString();
-            listSymptom2.Clear();
-            savebutton.IsEnabled = true;
-            del_zxbh.IsEnabled = false;
-            zxlxforsave = ZXLXBH.ToString();
-            zxbhforsave = ZxBh.Text;
-            
-            }
-            
         }
 
         private void ZxMc_LostFocus(object sender, RoutedEventArgs e)
@@ -1273,6 +1243,9 @@ namespace 中医证治智能系统
             
         }
 
+        /// <summary>
+        /// 功能：保存
+        /// </summary>
         private void save_Click(object sender, RoutedEventArgs e)
         {
             if (ZxMc.Text == "")
@@ -1294,12 +1267,12 @@ namespace 中医证治智能系统
                     int count = comm.ExecuteNonQuery();
                     if (count > 0)
                     {
-                        MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                        //MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("添加失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //MessageBox.Show("添加失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 finally
                 {
@@ -1314,7 +1287,7 @@ namespace 中医证治智能系统
                     int count = comm.ExecuteNonQuery();
                     if (count > 0)
                     {
-                        MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                        //MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                         savebutton.IsEnabled = false;
                         del_zxbh.IsEnabled = true;
                         zxlxsy.IsEnabled = true;
@@ -1333,7 +1306,7 @@ namespace 中医证治智能系统
                 }
                 catch (Exception)
                 {
-                    MessageBox.Show("添加失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    //MessageBox.Show("添加失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 finally
                 {
@@ -1500,14 +1473,6 @@ namespace 中医证治智能系统
                 lv2.SelectedIndex--;
                 nochange_item=lv2.SelectedIndex;
                 is_zxmc_add = true;
-                zxlxsy.IsEnabled = false;
-                zxlxback.IsEnabled = false;
-                zxlxfront.IsEnabled = false;
-                zxlxwy.IsEnabled = false;
-                zxbhsy.IsEnabled = false;
-                zxbhback.IsEnabled = false;
-                zxbhfront.IsEnabled = false;
-                zxbhwy.IsEnabled = false;
                 del_zxbh.IsEnabled = false;
                 addzxbh.IsEnabled = false;
                 zxmcsy.IsEnabled = false;
@@ -1522,13 +1487,17 @@ namespace 中医证治智能系统
             
         }
 
+        /// <summary>
+        /// 功能：保存
+        /// </summary>
         private void savezxmc_Click(object sender, RoutedEventArgs e)
         {
-            Is_Repeat();
             if (ZxMc.Text == "")
                 MessageBox.Show("症象名称不能为空！");
-            if (IsRepeat== false&&ZxMc.Text!="")
+            Is_Repeat();
+            if (IsRepeat == false && ZxMc.Text != "")
             {
+                // 修改情况下的保存
                 if(is_zxmc_edit==true)
                 {
                     try
@@ -1547,9 +1516,9 @@ namespace 中医证治智能系统
                         conn.Open();
                         SqlCommand comm = new SqlCommand(sql, conn);
                         int count = comm.ExecuteNonQuery();
-                        if (count > 0)
+                        if (count >= 0)
                         {
-                            MessageBox.Show("修改成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                            //MessageBox.Show("修改成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                             is_zxmc_edit = false;
                             backzxmc.IsEnabled = false;
                             savezxmc.IsEnabled = false;
@@ -1560,14 +1529,6 @@ namespace 中医证治智能系统
                             zxmcfront.IsEnabled = true;
                             zxmcwy.IsEnabled = true;
                             del_zxmc.IsEnabled = true;
-                            zxlxsy.IsEnabled = true;
-                            zxlxback.IsEnabled = true;
-                            zxlxfront.IsEnabled = true;
-                            zxlxwy.IsEnabled = true;
-                            zxbhsy.IsEnabled = true;
-                            zxbhback.IsEnabled = true;
-                            zxbhfront.IsEnabled = true;
-                            zxbhwy.IsEnabled = true;
                             del_zxbh.IsEnabled = true;
                             addzxbh.IsEnabled = true;
                         }
@@ -1581,7 +1542,8 @@ namespace 中医证治智能系统
                         conn.Close();
                     }
                 }
-                if(is_zxmc_add==true)
+                // 添加情况下的保存
+                if(is_zxmc_add == true)
                 {
                     try
                     {
@@ -1591,7 +1553,7 @@ namespace 中医证治智能系统
                         int count = comm.ExecuteNonQuery();
                         if (count > 0)
                         {
-                            MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                            //MessageBox.Show("添加成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                             is_zxmc_add = false;
                             backzxmc.IsEnabled = false;
                             savezxmc.IsEnabled = false;
@@ -1602,14 +1564,6 @@ namespace 中医证治智能系统
                             zxmcfront.IsEnabled = true;
                             zxmcwy.IsEnabled = true;
                             del_zxmc.IsEnabled = true;
-                            zxlxsy.IsEnabled = true;
-                            zxlxback.IsEnabled = true;
-                            zxlxfront.IsEnabled = true;
-                            zxlxwy.IsEnabled = true;
-                            zxbhsy.IsEnabled = true;
-                            zxbhback.IsEnabled = true;
-                            zxbhfront.IsEnabled = true;
-                            zxbhwy.IsEnabled = true;
                             del_zxbh.IsEnabled = true;
                             addzxbh.IsEnabled = true;
                         }
@@ -1635,20 +1589,26 @@ namespace 中医证治智能系统
         public void Is_Repeat()
         {
             string zxname = ZxMc.Text.Trim();
-            string sql = String.Format("select count(*) from t_info_zxmx where zxbh = '{0}' and zxmc='{1}' ",ZxBh.Text, ZxMc.Text);
-            conn.Open();
-            SqlCommand comm = new SqlCommand(sql, conn);
-            int count = (int)comm.ExecuteScalar();
-            if (count == 1)
+            if (zxname != nochange_name) 
             {
-                MessageBox.Show("该症象名称已存在！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                IsRepeat = true;
+                string sql = String.Format("select count(*) from t_info_zxmx where zxbh = '{0}' and zxmc='{1}'", ZxBh.Text, ZxMc.Text);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                int count = (int)comm.ExecuteScalar();
+                if (count == 1)
+                {
+                    MessageBox.Show("该症象名称已存在！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    IsRepeat = true;
+                }
+                else
+                    IsRepeat = false;
+                conn.Close();
             }
-            else
-                IsRepeat = false;
-            conn.Close();
         }
 
+        /// <summary>
+        /// 功能：删除明细
+        /// </summary>
         private void del_zxmc_Click(object sender, RoutedEventArgs e)
         {
             bool IsEmpty = true;
@@ -1664,7 +1624,7 @@ namespace 中医证治智能系统
                     int count = comm.ExecuteNonQuery();
                     if (count > 0)
                     {
-                        MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                        //MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
                 catch (Exception)
@@ -1710,13 +1670,15 @@ namespace 中医证治智能系统
                     lv2.SelectedIndex++;
                     listSymptom2.RemoveAt(lv2.SelectedIndex-1);   
                 }
-                             
                 SymptomInfo Sel_Info = lv2.SelectedItem as SymptomInfo;
                 ZxMc.Text = Sel_Info.SymptomName;
                 reftree();
             }
         }
 
+        /// <summary>
+        /// 功能：取消
+        /// </summary>
         private void backzxmc_Click(object sender, RoutedEventArgs e)
         {
             if(is_zxmc_add||is_zxmc_edit)
@@ -1751,82 +1713,10 @@ namespace 中医证治智能系统
                 zxmcfront.IsEnabled = true;
                 zxmcwy.IsEnabled = true;
                 del_zxmc.IsEnabled = true;
-                zxlxsy.IsEnabled = true;
-                zxlxback.IsEnabled = true;
-                zxlxfront.IsEnabled = true;
-                zxlxwy.IsEnabled = true;
-                zxbhsy.IsEnabled = true;
-                zxbhback.IsEnabled = true;
-                zxbhfront.IsEnabled = true;
-                zxbhwy.IsEnabled = true;
                 del_zxbh.IsEnabled = true;
                 addzxbh.IsEnabled = true;
             }
-        }
-
-        private void shuaxin_Click(object sender, RoutedEventArgs e)
-        {
-            httree.Clear();
-            nodes.Clear();
-            // 一级树写入           
-            string sql = String.Format("select * from t_info_zxlx");
-            conn.Open();
-            SqlCommand comm = new SqlCommand(sql, conn);
-            SqlDataReader dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                nodes.Add(new Node { ID = Convert.ToInt32(dr["zxlxbh"]), Name = dr["zxlxmc"].ToString().Trim() });
-            }
-            dr.Close();
-            conn.Close();
-
-            // 二级树写入
-            sql = String.Format("select t1.zxbh ,t2.zxlxbh, min(t3.zxmc) from (t_info_zxxx as t1 inner join t_info_zxlx as t2 on t2.zxlxbh = t1.zxlxbh) inner join  t_info_zxmx as t3 on t1.zxbh = t3.zxbh group by t1.zxbh, t2.zxlxbh");
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                //？？？ 有问题，数据库中的 zxlxbh = 30 对应的 zxbh 为空会出现问题，赋值为0问题解决
-                nodes.Add(new Node { ID = Convert.ToInt32(dr["zxbh"]), Name = dr["zxbh"].ToString() + "  " + dr[2].ToString(), ParentID = Convert.ToInt32(dr["zxlxbh"]) });
-                //nodes.Add(new Node { ID = Convert.ToInt32(dr["zxbh"]), Name = dr["zxbh"].ToString() + "  " + "默认名称", ParentID = Convert.ToInt32(dr["zxlxbh"]) });
-            }
-            dr.Close();
-            conn.Close();
-
-            // 三级树写入
-            sql = String.Format("select t_info_zxmx.id,t_info_zxmx.zxmc,t_info_zxmx.zxbh from (t_info_zxxx inner join t_info_zxlx on t_info_zxlx.zxlxbh = t_info_zxxx.zxlxbh) inner join  t_info_zxmx on t_info_zxxx.zxbh = t_info_zxmx.zxbh order by t_info_zxmx.zxmc");
-            conn.Open();
-            comm = new SqlCommand(sql, conn);
-            dr = comm.ExecuteReader();
-            while (dr.Read())
-            {
-                nodes.Add(new Node { ID = Convert.ToInt32(dr["id"]), Name = dr["zxmc"].ToString(), ParentID = Convert.ToInt32(dr["zxbh"]) });
-            }
-            dr.Close();
-            conn.Close();
-            BuildENTree();
-            Text_Readonly();
-            lv2.ItemsSource = listSymptom2;
-            listSymptom2.Clear();
-            string ZXBH = ZxBh.Text;
-            int nodenum = -1;
-            Node ZXMC = new Node();
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                Node newnode = (Node)httree[nodes[i].ID];
-                if (newnode.ParentID == Convert.ToInt64(ZXBH))
-                {
-                    listSymptom2.Add(new SymptomInfo("0" + newnode.ParentID.ToString(), newnode.Name));
-                    nodenum++;
-                    if (nodenum == 0)
-                        ZXMC = newnode;
-                }
-
-            }
-            ZxMc.Text = ZXMC.Name;
-            lv2.SelectedIndex = 0;
-        }
+        } 
 
         private void editzxmc_Click(object sender, RoutedEventArgs e)
         {
@@ -1836,22 +1726,14 @@ namespace 中医证治智能系统
             }
             else
             {
-
                 ZxMc.Text = "";
                 ZxMc.IsReadOnly = false;
                 SymptomInfo Sel_Info = lv2.SelectedItem as SymptomInfo;
-                nochange_name=Sel_Info.SymptomName;
+                nochange_name = Sel_Info.SymptomName;
+                nochange_number = Sel_Info.SymptomNumber;
                 Sel_Info.SymptomName= ZxMc.Text;
                 nochange_item = lv2.SelectedIndex;
                 is_zxmc_edit = true;
-                zxlxsy.IsEnabled = false;
-                zxlxback.IsEnabled = false;
-                zxlxfront.IsEnabled = false;
-                zxlxwy.IsEnabled = false;
-                zxbhsy.IsEnabled = false;
-                zxbhback.IsEnabled = false;
-                zxbhfront.IsEnabled = false;
-                zxbhwy.IsEnabled = false;
                 del_zxbh.IsEnabled = false;
                 addzxbh.IsEnabled = false;
                 zxmcsy.IsEnabled = false;
@@ -1864,6 +1746,10 @@ namespace 中医证治智能系统
                 del_zxmc.IsEnabled = false;
             }
         }
+
+        /// <summary>
+        /// 功能：刷新树
+        /// </summary>
         public void reftree()
         {
             httree.Clear();
@@ -1875,11 +1761,14 @@ namespace 中医证治智能系统
             SqlDataReader dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                nodes.Add(new Node { ID = Convert.ToInt32(dr["zxlxbh"]), Name = dr["zxlxmc"].ToString().Trim() });
+                nodes.Add(
+                    new Node { 
+                        ID = Convert.ToInt32(dr["zxlxbh"]), 
+                        Name = dr["zxlxmc"].ToString().Trim() 
+                    });
             }
             dr.Close();
             conn.Close();
-
             // 二级树写入
             sql = String.Format("select t1.zxbh ,t2.zxlxbh, min(t3.zxmc) from (t_info_zxxx as t1 inner join t_info_zxlx as t2 on t2.zxlxbh = t1.zxlxbh) inner join  t_info_zxmx as t3 on t1.zxbh = t3.zxbh group by t1.zxbh, t2.zxlxbh");
             conn.Open();
@@ -1887,13 +1776,15 @@ namespace 中医证治智能系统
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                //？？？ 有问题，数据库中的 zxlxbh = 30 对应的 zxbh 为空会出现问题，赋值为0问题解决
-                nodes.Add(new Node { ID = Convert.ToInt32(dr["zxbh"]), Name = dr["zxbh"].ToString() + "  " + dr[2].ToString(), ParentID = Convert.ToInt32(dr["zxlxbh"]) });
-                //nodes.Add(new Node { ID = Convert.ToInt32(dr["zxbh"]), Name = dr["zxbh"].ToString() + "  " + "默认名称", ParentID = Convert.ToInt32(dr["zxlxbh"]) });
+                nodes.Add(
+                    new Node { 
+                        ID = Convert.ToInt32(dr["zxbh"]), 
+                        Name = dr["zxbh"].ToString() + "  " + dr[2].ToString(), 
+                        ParentID = Convert.ToInt32(dr["zxlxbh"]) 
+                    });
             }
             dr.Close();
             conn.Close();
-
             // 三级树写入
             sql = String.Format("select t_info_zxmx.id,t_info_zxmx.zxmc,t_info_zxmx.zxbh from (t_info_zxxx inner join t_info_zxlx on t_info_zxlx.zxlxbh = t_info_zxxx.zxlxbh) inner join  t_info_zxmx on t_info_zxxx.zxbh = t_info_zxmx.zxbh order by t_info_zxmx.zxmc");
             conn.Open();
@@ -1901,12 +1792,38 @@ namespace 中医证治智能系统
             dr = comm.ExecuteReader();
             while (dr.Read())
             {
-                nodes.Add(new Node { ID = Convert.ToInt32(dr["id"]), Name = dr["zxmc"].ToString(), ParentID = Convert.ToInt32(dr["zxbh"]) });
+                nodes.Add(
+                    new Node {
+                        ID = Convert.ToInt32(dr["zxbh"].ToString() + dr["id"].ToString()), 
+                        Name = dr["zxmc"].ToString(), 
+                        ParentID = Convert.ToInt32(dr["zxbh"])
+                    });
             }
             dr.Close();
             conn.Close();
             BuildENTree();
             Text_Readonly();
+        }
+
+        /// <summary>
+        /// 功能：刷新子树lv2
+        /// </summary>
+        public void refreshlv() 
+        {
+            listSymptom2.Clear();
+            String sql = String.Format("select zxbh, zxmc from t_info_zxmx where zxbh = '{0}' order by zxmc", ZxBh.Text);
+            conn.Open();
+            SqlCommand comm = new SqlCommand(sql, conn);
+            SqlDataReader dr = comm.ExecuteReader();
+            while (dr.Read())
+            {
+                listSymptom2.Add(
+                    new SymptomInfo("0" + dr["zxbh"].ToString(), dr["zxmc"].ToString())
+                    );
+            }
+            dr.Close();
+            conn.Close();            
+            lv2.ItemsSource = listSymptom2;
         }
     }
 }

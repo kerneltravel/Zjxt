@@ -96,16 +96,16 @@
                         <Label Content="症 象 信 息 录 入" Grid.Row="0" HorizontalAlignment="Center" Margin="144,0,162,0" FontSize="20" FontWeight="SemiBold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Width="210"/>
                         <Label Content="症象类型名称：" Grid.Row="1" HorizontalAlignment="Left" Margin="10,18,0,0" VerticalAlignment="Top" Height="25"/>
                         <TextBox Name="zxlxmc" Grid.Row="1" HorizontalAlignment="Left" Height="25" Margin="99,18,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120"/>
-                        <Button Name="zxlxsy" Click="zxlxsy_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="236,21,0,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="zxlxsy" Click="zxlxsy_Click" ToolTip="开始" IsEnabled="False" HorizontalAlignment="Left" Margin="236,21,0,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/beginning.ico"/>
                         </Button>
-                        <Button Name="zxlxback" Click="zxlxback_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="277,21,0,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="zxlxback" Click="zxlxback_Click" ToolTip="下一个" IsEnabled="False" HorizontalAlignment="Left" Margin="277,21,0,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/angle_left.ico"/>
                         </Button>
-                        <Button Name="zxlxfront" Click="zxlxfront_Click" HorizontalAlignment="Left" Margin="318,21,0,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="zxlxfront" Click="zxlxfront_Click" ToolTip="上一个" HorizontalAlignment="Left" Margin="318,21,0,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/angle_right.ico"/>
                         </Button>
-                        <Button Name="zxlxwy" Click="zxlxwy_Click" HorizontalAlignment="Left" Margin="359,21,0,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="zxlxwy" Click="zxlxwy_Click" ToolTip="结尾" HorizontalAlignment="Left" Margin="359,21,0,0" Grid.Row="1" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/last.ico"/>
                         </Button>
                         <Button x:Name="back_Copy" Margin="437,15,18,15" HorizontalAlignment="Center" Click="back_Click" Grid.Row="1" >
@@ -120,46 +120,43 @@
                         <Button Name="del_zxbh" Click="delete_Click" Content="删除" HorizontalAlignment="Left" Margin="463,19,0,0" Grid.Row="2" VerticalAlignment="Top" Width="36" Height="25"/>
                         <Label Content="症象名称：" Grid.Row="3" HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top" Height="25"/>
                         <TextBox Name="ZxMc" LostFocus="ZxMc_LostFocus" Grid.Row="3" HorizontalAlignment="Left" Height="25" Margin="99,19,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="309"/>
-                        <Button Name="zxbhsy" Click="zxbhsy_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="236,21,0,0" Grid.Row="2" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="zxbhsy" Click="zxbhsy_Click" ToolTip="开始" IsEnabled="False" HorizontalAlignment="Left" Margin="236,21,0,0" Grid.Row="2" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/beginning.ico"/>
                         </Button>
-                        <Button Name="zxbhback" Click="zxbhback_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="277,21,0,0" Grid.Row="2" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="zxbhback" Click="zxbhback_Click" ToolTip="上一个" IsEnabled="False" HorizontalAlignment="Left" Margin="277,21,0,0" Grid.Row="2" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/angle_left.ico"/>
                         </Button>
-                        <Button Name="zxbhfront" Click="zxbhfront_Click" HorizontalAlignment="Left" Margin="318,21,0,0" Grid.Row="2" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="zxbhfront" Click="zxbhfront_Click" ToolTip="下一个" HorizontalAlignment="Left" Margin="318,21,0,0" Grid.Row="2" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/angle_right.ico"/>
                         </Button>
-                        <Button Name="zxbhwy" Click="zxbhwy_Click" HorizontalAlignment="Left" Margin="359,21,0,0" Grid.Row="2" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="zxbhwy" Click="zxbhwy_Click" ToolTip="结尾" HorizontalAlignment="Left" Margin="359,21,0,0" Grid.Row="2" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/last.ico"/>
                         </Button>
-                        <Button Name="zxmcsy" Click="zxmcsy_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="44,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="zxmcsy" Click="zxmcsy_Click" ToolTip="开始" IsEnabled="False" HorizontalAlignment="Left" Margin="85,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/beginning.ico"/>
                         </Button>
-                        <Button Name="zxmcback" Click="zxmcback_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="85,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="zxmcback" Click="zxmcback_Click" ToolTip="上一个" IsEnabled="False" HorizontalAlignment="Left" Margin="126,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/angle_left.ico"/>
                         </Button>
-                        <Button Name="zxmcfront" Click="zxmcfront_Click" HorizontalAlignment="Left" Margin="126,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="zxmcfront" Click="zxmcfront_Click" ToolTip="下一个" HorizontalAlignment="Left" Margin="167,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/angle_right.ico"/>
                         </Button>
-                        <Button Name="zxmcwy" Click="zxmcwy_Click" HorizontalAlignment="Left" Margin="167,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="zxmcwy" Click="zxmcwy_Click" ToolTip="结尾" HorizontalAlignment="Left" Margin="208,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/last.ico"/>
                         </Button>
-                        <Button Name="addzxmc" Click="addzxmc_Click"  HorizontalAlignment="Left" Margin="208,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="addzxmc" Click="addzxmc_Click" ToolTip="增加"  HorizontalAlignment="Left" Margin="249,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/plus.ico"/>
                         </Button>
-                        <Button Name="editzxmc" Click="editzxmc_Click" HorizontalAlignment="Left" Margin="249,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="editzxmc" Click="editzxmc_Click" ToolTip="修改" HorizontalAlignment="Left" Margin="290,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="15" Source="Resources/arrow_up.ico"/>
                         </Button>
-                        <Button Name="savezxmc" Click="savezxmc_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="290,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="savezxmc" Click="savezxmc_Click" ToolTip="保存" IsEnabled="False" HorizontalAlignment="Left" Margin="331,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/correct.ico"/>
                         </Button>
-                        <Button Name="backzxmc" Click="backzxmc_Click" IsEnabled="False" HorizontalAlignment="Left" Margin="331,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
+                        <Button Name="backzxmc" Click="backzxmc_Click" ToolTip="取消" IsEnabled="False" HorizontalAlignment="Left" Margin="372,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
                             <Image Height="13" Width="31" Source="Resources/error.ico"/>
                         </Button>
-                        <Button Name="shuaxin" Click="shuaxin_Click" HorizontalAlignment="Left" Margin="372,60,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="19">
-                            <Image Height="13" Width="31" Source="Resources/curve.ico"/>
-                        </Button>
-                        <Button Name="del_zxmc" Click="del_zxmc_Click" Content="删除明细" HorizontalAlignment="Left" Margin="441,57,0,0" Grid.Row="3" VerticalAlignment="Top" Width="57" Height="25"/>
+                        <Button Name="del_zxmc" Click="del_zxmc_Click" Content="删除明细" HorizontalAlignment="Left" Margin="437,57,0,0" Grid.Row="3" VerticalAlignment="Top" Width="57" Height="25"/>
                         <ListView Name="lv2" HorizontalAlignment="Left" Height="282" Margin="10,19,0,0" Grid.Row="4" VerticalAlignment="Top" Width="488" SelectionChanged="ListView_SelectionChanged">
                             <ListView.View>
                                 <GridView AllowsColumnReorder="True">
@@ -168,7 +165,7 @@
                                 </GridView>
                             </ListView.View>
                         </ListView>
-                        <Button Name="savebutton" Click="save_Click" Content="保存" HorizontalAlignment="Left" Margin="422,2,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="25"/>
+                        <Button Name="savebutton" Click="save_Click" Content="保存" HorizontalAlignment="Left" Margin="422,19,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="25"/>
                     </Grid>
                 </Grid>
             </TabItem>
