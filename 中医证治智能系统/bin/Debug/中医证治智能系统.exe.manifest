@@ -42,24 +42,24 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="中医证治智能系统.exe" size="2784208">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="中医证治智能系统.exe" size="2850256">
       <assemblyIdentity name="中医证治智能系统" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>175GwrjCuWgcSd3cU8KevN+CZsEo1rtfbQPFhS6G5ps=</dsig:DigestValue>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>+XTyze6lO9m1xM8RDLTyCL2jCro=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="中医证治智能系统.exe.config" size="405">
+  <file name="中医证治智能系统.exe.config" size="391">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
-      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>H7hSNXKyf2LLHmNMIk+p2p8GnbwLYGklU7iof+Gu34Y=</dsig:DigestValue>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>5qfws5HC7EjxM3IuENh6OPDonKM=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

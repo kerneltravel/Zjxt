@@ -1336,7 +1336,7 @@ namespace 中医证治智能系统
                     if (count > 0)
                     {
                         Isdel++;
-                        MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                        //MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
                 catch (Exception)
@@ -1356,7 +1356,7 @@ namespace 中医证治智能系统
                     if (count > 0&&Isdel==1)
                     {
                         Isdel++;
-                        MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                        //MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
                 catch (Exception)
@@ -1469,8 +1469,8 @@ namespace 中医证治智能系统
                 
                 ZxMc.Text = "";
                 ZxMc.IsReadOnly = false;
-                listSymptom2.Insert(lv2.SelectedIndex,new SymptomInfo(ZxBh.Text,""));
-                lv2.SelectedIndex--;
+                listSymptom2.Insert(0,new SymptomInfo(ZxBh.Text,""));
+                lv2.SelectedIndex = 0;
                 nochange_item=lv2.SelectedIndex;
                 is_zxmc_add = true;
                 del_zxbh.IsEnabled = false;
@@ -1588,22 +1588,22 @@ namespace 中医证治智能系统
         /// </summary>
         public void Is_Repeat()
         {
-            string zxname = ZxMc.Text.Trim();
-            if (zxname != nochange_name) 
-            {
-                string sql = String.Format("select count(*) from t_info_zxmx where zxbh = '{0}' and zxmc='{1}'", ZxBh.Text, ZxMc.Text);
-                conn.Open();
-                SqlCommand comm = new SqlCommand(sql, conn);
-                int count = (int)comm.ExecuteScalar();
-                if (count == 1)
-                {
-                    MessageBox.Show("该症象名称已存在！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-                    IsRepeat = true;
-                }
-                else
-                    IsRepeat = false;
-                conn.Close();
-            }
+            //string zxname = ZxMc.Text.Trim();
+            //if (zxname != nochange_name) 
+            //{
+            //    string sql = String.Format("select count(*) from t_info_zxmx where zxbh = '{0}' and zxmc='{1}'", ZxBh.Text, ZxMc.Text);
+            //    conn.Open();
+            //    SqlCommand comm = new SqlCommand(sql, conn);
+            //    int count = (int)comm.ExecuteScalar();
+            //    if (count == 1)
+            //    {
+            //        MessageBox.Show("该症象名称已存在！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+            //        IsRepeat = true;
+            //    }
+            //    else
+            //        IsRepeat = false;
+            //    conn.Close();
+            //}
         }
 
         /// <summary>
@@ -1618,6 +1618,7 @@ namespace 中医证治智能系统
             {
                 try
                 {
+                    // 删除表t_info_zxmx中对应的症象
                     string sql = String.Format("delete from t_info_zxmx where zxmc = '{0}'", ZxMc.Text);
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
@@ -1626,22 +1627,27 @@ namespace 中医证治智能系统
                     {
                         //MessageBox.Show("删除成功！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
+                    conn.Close();
                 }
                 catch (Exception)
                 {
                     MessageBox.Show("删除失败！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                finally
-                {
-                    conn.Close();
-                }
-                if (lv2.SelectedIndex == lv2.Items.Count - 1)
+                if (lv2.Items.Count > 1 && lv2.SelectedIndex == lv2.Items.Count - 1)
                 {
                     lv2.SelectedIndex--;
                     listSymptom2.RemoveAt(lv2.SelectedIndex + 1);
                 }
                 else if (lv2.Items.Count==1)
                 {
+                    // 删除表t_info_zxxx中对应的症象
+                    SymptomInfo Sel_Info1 = lv2.SelectedItem as SymptomInfo;
+                    String sql = String.Format("delete from t_info_zxxx where zxbh = '{0}'", Sel_Info1.SymptomNumber);
+                    conn.Open();
+                    SqlCommand comm = new SqlCommand(sql, conn);
+                    int count = comm.ExecuteNonQuery();
+                    conn.Close();
+                    listSymptom2.Clear();
                     while (IsEmpty)
                     {
                         IsEmpty = true;
