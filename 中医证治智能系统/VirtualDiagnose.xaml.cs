@@ -1022,7 +1022,7 @@ namespace 中医证治智能系统
                                     dr.Close();
                                     conn.Close();
                                     // 如果没有复合病机成立，则先近似推理
-                                    if (count_fhbj == 0) 
+                                    if (count_fhbj == 0)
                                     {
                                         // 复合病机近似处理
                                         sql = String.Format("exec p_fhbj_jstl @id = '{0}'", number);
@@ -1141,7 +1141,16 @@ namespace 中医证治智能系统
                                 count = comm.ExecuteNonQuery();
                                 conn.Close();
                             }
-                        } 
+                        }
+                        else if (count_bm == 0) // 外感基本证名成立，外感病名不成立
+                        {
+                            // 更新病历状态，外感基本证名成立，外感病名不成立
+                            sql = String.Format("update t_bl set zt = '{0}' where id ='{1}'", 3, number);
+                            conn.Open();
+                            comm = new SqlCommand(sql, conn);
+                            count = comm.ExecuteNonQuery();
+                            conn.Close();
+                        }
                         // 外感后续推理过程
                         wg_hstl(); 
                     }
@@ -1609,6 +1618,14 @@ namespace 中医证治智能系统
                         count = comm.ExecuteNonQuery();
                         conn.Close();
                     }
+                }else if( !Is_nsbm() ) // 内伤基本证名成立，内伤病名不成立
+                {
+                    // 更新病历状态，证名不成立，证用病机成立
+                    sql = String.Format("update t_bl set zt = '{0}' where id ='{1}'", 3, number);
+                    conn.Open();
+                    comm = new SqlCommand(sql, conn);
+                    count = comm.ExecuteNonQuery();
+                    conn.Close();
                 }
                 // 调用内伤后续处理过程
                 ns_hstl();
