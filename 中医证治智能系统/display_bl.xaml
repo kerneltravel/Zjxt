@@ -1,7 +1,7 @@
 ﻿<Window x:Class="中医证治智能系统.display_bl"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-         Title="中医证治智能系统【诊断结果显示】" Height="500" Width="600" WindowStartupLocation="CenterScreen">
+         Title="中医证治智能系统V2.0【诊断结果显示】" Height="500" Width="600" WindowStartupLocation="CenterScreen">
     <Grid>
 
         <Grid HorizontalAlignment="Left" Height="79" VerticalAlignment="Top" Width="592"  Background="{DynamicResource ButtonNormalBackground}">

@@ -1,7 +1,7 @@
 ﻿<Window x:Class="中医证治智能系统.Referral"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="中医证治智能系统【复诊】"  Height="700" Width="1000" WindowStartupLocation="CenterScreen">
+        Title="中医证治智能系统V2.0【复诊】"  Height="700" Width="1000" WindowStartupLocation="CenterScreen">
     <Grid Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="117"/>

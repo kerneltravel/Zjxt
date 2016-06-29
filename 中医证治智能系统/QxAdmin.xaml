@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"  
         mc:Ignorable="d"
-        Title="中医证治智能系统【权限组管理】" Height="700" Width="900" WindowStartupLocation="CenterScreen">
+        Title="中医证治智能系统V2.0【权限组管理】" Height="700" Width="900" WindowStartupLocation="CenterScreen">
     <Grid Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
         <ListBox Name="listbox" HorizontalAlignment="Left" Width="100" Background="{DynamicResource {x:Static SystemColors.ScrollBarBrushKey}}" Margin="0,26,0,0" SelectionChanged="listbox_SelectionChanged">
         </ListBox>

@@ -1,7 +1,7 @@
 ﻿<Window x:Class="中医证治智能系统.VirtualDiagnose"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="中医证治智能系统—【模拟诊断】" Height="700" Width="860" WindowStartupLocation="CenterScreen">
+        Title="中医证治智能系统V2.0—【模拟诊断】" Height="700" Width="860" WindowStartupLocation="CenterScreen">
 
     <Grid>
         <StackPanel HorizontalAlignment="Left" Height="37" VerticalAlignment="Top" Orientation="Horizontal" Width="852" Background="{DynamicResource ButtonNormalBackground}"/>

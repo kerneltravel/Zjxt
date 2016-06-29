@@ -11,7 +11,7 @@
                 <ResourceDictionary Source="sysbutton.xaml"/>
                 <!--<ResourceDictionary Source="MenuItemStyle.xaml"/>-->
                 <ResourceDictionary Source="ButtonResource.xaml"/>
-        </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

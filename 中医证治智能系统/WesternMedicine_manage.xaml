@@ -1,7 +1,7 @@
 ﻿<Window x:Class="中医证治智能系统.WesternMedicine_manage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="中医证治智能系统【西医证治管理】" Height="650" Width="900" WindowStartupLocation="CenterScreen">
+        Title="中医证治智能系统V2.0【西医证治管理】" Height="650" Width="900" WindowStartupLocation="CenterScreen">
     <Grid>
         <StackPanel Height="70" VerticalAlignment="Top" Orientation="Horizontal" Grid.ColumnSpan="2" Background="{DynamicResource ButtonNormalBackground}">
             <Button Name="button_add" Width="55" RenderTransformOrigin="0.505,0.355" Height="60" Click="Button_Click_Add">
