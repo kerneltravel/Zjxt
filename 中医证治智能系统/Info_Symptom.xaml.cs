@@ -1252,8 +1252,7 @@ namespace 中医证治智能系统
             {
                 MessageBox.Show("请输入症象名称！");
                 Keyboard.Focus(ZxMc);
-            }
-                
+            }              
             else
             {
                 isadd = false;
@@ -1261,7 +1260,7 @@ namespace 中医证治智能系统
                 //外键约束，比如B表存在一个字段b，有外键约束，引用于A表的主键a，那么在向B表插入数据时，字段b必须为A表中a已经存在的值，如过向b中存放一个a中没有的值，则会报违反外键约束。
                 try      
                 {
-                    string sql = String.Format("INSERT INTO t_info_zxxx (zxbh,zxlxbh) VALUES ('{0}', '{1}')", String.Format("{0:0000000}", zxbhforsave), String.Format("{0:00}", zxlxforsave));
+                    string sql = String.Format("INSERT INTO t_info_zxxx (zxbh,zxlxbh) VALUES ('{0}', '{1}')", String.Format("{0:0000000}", Convert.ToInt64(zxbhforsave)), String.Format("{0:00}", Convert.ToInt16(zxlxforsave)));
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
                     int count = comm.ExecuteNonQuery();
@@ -1281,7 +1280,7 @@ namespace 中医证治智能系统
                 }
                 try
                 {
-                    string sql = String.Format("INSERT INTO t_info_zxmx (zxbh,zxmc) VALUES ('{0}', '{1}')", String.Format("{0:0000000}", zxbhforsave), zxmcforsave);
+                    string sql = String.Format("INSERT INTO t_info_zxmx (zxbh,zxmc) VALUES ('{0}', '{1}')", String.Format("{0:0000000}", Convert.ToInt64(zxbhforsave)), zxmcforsave);
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
                     int count = comm.ExecuteNonQuery();
@@ -1313,7 +1312,7 @@ namespace 中医证治智能系统
                     conn.Close();
                     Text_Readonly();
                 }
-                reftree();
+                refreshlv();
             }
         }
 
@@ -1379,7 +1378,7 @@ namespace 中医证治智能系统
                                 if (newnode.ParentID == Convert.ToInt64(ZxBh.Text))
                                 {
                                     IsEmpty = false;
-                                    listSymptom2.Add(new SymptomInfo("0" + newnode.ParentID.ToString(), newnode.Name));
+                                    listSymptom2.Add(new SymptomInfo(String.Format("{0:00}", newnode.ParentID), newnode.Name));
                                     nodenum++;
                                     if (nodenum == 0)
                                         ZXMC = newnode;
@@ -1388,7 +1387,7 @@ namespace 中医证治智能系统
                             }
                     }
                     ZxMc.Text = ZXMC.Name;
-                    ZxBh.Text ="0"+ ZXMC.ParentID.ToString();
+                    ZxBh.Text = String.Format("{0:00}", ZXMC.ParentID);
                     lv2.SelectedIndex = 0;
 
                 }
@@ -1578,7 +1577,7 @@ namespace 中医证治智能系统
                     }
                 }
                 ZxMc.IsReadOnly = true;
-                reftree();
+                refreshlv();
             }
             
      
@@ -1614,12 +1613,13 @@ namespace 中医证治智能系统
             bool IsEmpty = true;
             Node ZXMC = new Node();
             int nodenum = -1;
+            SymptomInfo Sel_Info1 = lv2.SelectedItem as SymptomInfo;
             if (MessageBox.Show("确定要删除该项吗？", "确认", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
                 try
                 {
-                    // 删除表t_info_zxmx中对应的症象
-                    string sql = String.Format("delete from t_info_zxmx where zxmc = '{0}'", ZxMc.Text);
+                    // 删除表t_info_zxmx中对应的症象(既要满足症象编号又要满足症象名称)
+                    string sql = String.Format("delete from t_info_zxmx where zxmc = '{0}' and zxbh = '{1}'", ZxMc.Text, Sel_Info1.SymptomNumber);
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
                     int count = comm.ExecuteNonQuery();
@@ -1641,7 +1641,6 @@ namespace 中医证治智能系统
                 else if (lv2.Items.Count==1)
                 {
                     // 删除表t_info_zxxx中对应的症象
-                    SymptomInfo Sel_Info1 = lv2.SelectedItem as SymptomInfo;
                     String sql = String.Format("delete from t_info_zxxx where zxbh = '{0}'", Sel_Info1.SymptomNumber);
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
@@ -1678,7 +1677,7 @@ namespace 中医证治智能系统
                 }
                 SymptomInfo Sel_Info = lv2.SelectedItem as SymptomInfo;
                 ZxMc.Text = Sel_Info.SymptomName;
-                reftree();
+                refreshlv(); 
             }
         }
 
@@ -1701,7 +1700,7 @@ namespace 中医证治智能系统
                     Node newnode = (Node)httree[nodes[i].ID];
                     if (newnode.ParentID == Convert.ToInt64(ZXBH))
                     {
-                        listSymptom2.Add(new SymptomInfo("0" + newnode.ParentID.ToString(), newnode.Name));
+                        listSymptom2.Add(new SymptomInfo(String.Format("{0:00}",newnode.ParentID), newnode.Name));
                         nodenum++;
                         if (nodenum == 0)
                             ZXMC = newnode;
@@ -1824,7 +1823,7 @@ namespace 中医证治智能系统
             while (dr.Read())
             {
                 listSymptom2.Add(
-                    new SymptomInfo("0" + dr["zxbh"].ToString(), dr["zxmc"].ToString())
+                    new SymptomInfo(String.Format("{0:0000000}", Convert.ToInt64(dr["zxbh"].ToString())), dr["zxmc"].ToString())
                     );
             }
             dr.Close();
