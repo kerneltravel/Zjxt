@@ -1261,7 +1261,7 @@ namespace 中医证治智能系统
                 //外键约束，比如B表存在一个字段b，有外键约束，引用于A表的主键a，那么在向B表插入数据时，字段b必须为A表中a已经存在的值，如过向b中存放一个a中没有的值，则会报违反外键约束。
                 try      
                 {
-                    string sql = String.Format("INSERT INTO t_info_zxxx (zxbh,zxlxbh) VALUES ('{0}', '{1}')", zxbhforsave, "0" + zxlxforsave);
+                    string sql = String.Format("INSERT INTO t_info_zxxx (zxbh,zxlxbh) VALUES ('{0}', '{1}')", String.Format("{0:0000000}", zxbhforsave), String.Format("{0:00}", zxlxforsave));
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
                     int count = comm.ExecuteNonQuery();
@@ -1281,7 +1281,7 @@ namespace 中医证治智能系统
                 }
                 try
                 {
-                    string sql = String.Format("INSERT INTO t_info_zxmx (zxbh,zxmc) VALUES ('{0}', '{1}')", zxbhforsave, zxmcforsave);
+                    string sql = String.Format("INSERT INTO t_info_zxmx (zxbh,zxmc) VALUES ('{0}', '{1}')", String.Format("{0:0000000}", zxbhforsave), zxmcforsave);
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
                     int count = comm.ExecuteNonQuery();
