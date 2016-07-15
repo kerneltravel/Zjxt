@@ -1583,26 +1583,26 @@ namespace 中医证治智能系统
      
         }
         /// <summary>
-        /// 功能：防止姓名重复
+        /// 功能：防止症象名称重复
         /// </summary>
         public void Is_Repeat()
         {
-            //string zxname = ZxMc.Text.Trim();
-            //if (zxname != nochange_name) 
-            //{
-            //    string sql = String.Format("select count(*) from t_info_zxmx where zxbh = '{0}' and zxmc='{1}'", ZxBh.Text, ZxMc.Text);
-            //    conn.Open();
-            //    SqlCommand comm = new SqlCommand(sql, conn);
-            //    int count = (int)comm.ExecuteScalar();
-            //    if (count == 1)
-            //    {
-            //        MessageBox.Show("该症象名称已存在！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
-            //        IsRepeat = true;
-            //    }
-            //    else
-            //        IsRepeat = false;
-            //    conn.Close();
-            //}
+            string zxname = ZxMc.Text.Trim();
+            if (zxname != nochange_name)
+            {
+                string sql = String.Format("select count(*) from t_info_zxmx where zxbh = '{0}' and zxmc='{1}'", ZxBh.Text, ZxMc.Text);
+                conn.Open();
+                SqlCommand comm = new SqlCommand(sql, conn);
+                int count = (int)comm.ExecuteScalar();
+                if (count == 1)
+                {
+                    MessageBox.Show("该症象名称已存在！", "消息", MessageBoxButton.OK, MessageBoxImage.Information);
+                    IsRepeat = true;
+                }
+                else
+                    IsRepeat = false;
+                conn.Close();
+            }
         }
 
         /// <summary>
