@@ -1227,6 +1227,54 @@ namespace 中医证治智能系统
             }
         }
 
+        /// <summary>
+        /// 功能：取消
+        /// </summary>
+        private void cancelbutton_Click(object sender, RoutedEventArgs e)
+        {
+            if (isadd)
+            {
+                lv2.ItemsSource = listSymptom2;
+                listSymptom2.Clear();
+                string ZXBH = (Convert.ToInt64(ZxBh.Text) - 1).ToString();
+                ZxBh.Text = ZXBH;
+                int nodenum = -1;
+                Node ZXMC = new Node();
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    Node newnode = (Node)httree[nodes[i].ID];
+                    if (newnode.ParentID == Convert.ToInt64(ZXBH))
+                    {
+                        listSymptom2.Add(new SymptomInfo(String.Format("{0:00}", newnode.ParentID), newnode.Name));
+                        nodenum++;
+                        if (nodenum == 0)
+                            ZXMC = newnode;
+                    }
+
+                }
+                ZxMc.Text = ZXMC.Name;
+                lv2.SelectedIndex = nochange_item;
+                zxlxsy.IsEnabled = true;
+                zxlxback.IsEnabled = true;
+                zxlxfront.IsEnabled = true;
+                zxlxwy.IsEnabled = true;
+                zxbhsy.IsEnabled = true;
+                zxbhback.IsEnabled = true;
+                zxbhfront.IsEnabled = true;
+                zxbhwy.IsEnabled = true;
+                zxmcsy.IsEnabled = true;
+                zxmcback.IsEnabled = true;
+                zxmcfront.IsEnabled = true;
+                zxmcwy.IsEnabled = true;
+                backzxmc.IsEnabled = true;
+                savezxmc.IsEnabled = true;
+                ZxMc.IsReadOnly = true;
+                del_zxbh.IsEnabled = true;
+                savebutton.IsEnabled = false;
+                isadd = false;
+            }
+        }
+
         private void ZxMc_LostFocus(object sender, RoutedEventArgs e)
         {
             if (isadd)

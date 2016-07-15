@@ -166,6 +166,7 @@
                             </ListView.View>
                         </ListView>
                         <Button Name="savebutton" Click="save_Click" Content="保存" HorizontalAlignment="Left" Margin="422,19,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="25"/>
+                        <Button Name="cancelbutton" Content="取消" HorizontalAlignment="Left" Margin="463,19,0,0" Grid.Row="3" VerticalAlignment="Top" Width="36" Height="25" Click="cancelbutton_Click"/>
                     </Grid>
                 </Grid>
             </TabItem>
