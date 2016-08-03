@@ -37,7 +37,7 @@ namespace 中医证治智能系统
         private bool Access_Permission(string function) 
         {
             // 获取权限
-            string sql = String.Format("SELECT count(*) FROM ([zjxtserver].[dbo].[t_xtgl_czry] t1 inner join [zjxtserver].[dbo].[t_info_qxz] t2 on t1.qx = t2.qxzmc) inner join  [zjxtserver].[dbo].[t_info_qxzmx] t3 on t3.id = t2.subid where t1.name = '{0}' and t3.qxck = '{1}'"
+            string sql = String.Format("SELECT count(*) FROM (t_xtgl_czry t1 inner join t_info_qxz t2 on t1.qx = t2.qxzmc) inner join  t_info_qxzmx t3 on t3.id = t2.subid where t1.name = '{0}' and t3.qxck = '{1}'"
                 , Application.Current.Properties["user_name"].ToString(), function);
             conn.Open();
             SqlCommand comm = new SqlCommand(sql, conn);
