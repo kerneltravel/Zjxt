@@ -1669,7 +1669,7 @@ namespace 中医证治智能系统
                 try
                 {
                     // 删除表t_info_zxmx中对应的症象(既要满足症象编号又要满足症象名称)
-                    string sql = String.Format("delete from t_info_zxmx where zxmc = '{0}' and zxbh = '{1}'", ZxMc.Text, Sel_Info1.SymptomNumber);
+                    string sql = String.Format("delete from t_info_zxmx where zxmc = '{0}' and zxbh = '{1}'", Sel_Info1.SymptomName, Sel_Info1.SymptomNumber);
                     conn.Open();
                     SqlCommand comm = new SqlCommand(sql, conn);
                     int count = comm.ExecuteNonQuery();
@@ -1736,7 +1736,7 @@ namespace 中医证治智能系统
         /// </summary>
         private void backzxmc_Click(object sender, RoutedEventArgs e)
         {
-            if(is_zxmc_add||is_zxmc_edit)
+            if(is_zxmc_add || is_zxmc_edit)
             {
                 is_zxmc_edit = false;
                 is_zxmc_add = false;
