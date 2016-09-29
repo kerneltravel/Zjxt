@@ -355,14 +355,16 @@ namespace 中医证治智能系统
             Node ZXMC=item;//保存症象名称的testbox
             //显示症象类型
             Node ZxLx = item;
+            // 找出根结点名称
             while(ZxLx.ParentID!=-1&&ZxLx!=null)
             {
                 ZxLx = (Node)httree[ZxLx.ParentID];
             }
             zxlxmc.Text = ZxLx.Name;
 
-            //根据选择的树节点决定listview的内容
-            if(item.ParentID==-1)
+            // 根据选择的树节点决定listview的内容
+            // 一级树
+            if(item.ParentID == -1)
             {
                 if(item.ID <10)
                 ZXBH="010"+item.ID.ToString()+"001";
@@ -386,27 +388,8 @@ namespace 中医证治智能系统
                 lv2.SelectedIndex = 0;
                 ZxBh.Text =ZXBH;
             }
-            else if(item.ID<=0100000)
-            {
-                ZXBH = item.ParentID.ToString();
-                for (int i = 0; i < nodes.Count; i++)
-                {
-                    Node newnode = (Node)httree[nodes[i].ID];
-                    if (newnode.ParentID == Convert.ToInt64(ZXBH))
-                    {
-                        listSymptom2.Add(new SymptomInfo("0"+newnode.ParentID.ToString(), newnode.Name)); 
-                        if(item.ID!=newnode.ID&&x2==0)
-                             x1++;
-                        if(item.ID==newnode.ID)
-                            x2=1;
-                    }
-
-                }
-                lv2.SelectedIndex=x1;
-                ZxMc.Text = item.Name;
-                ZxBh.Text = "0" + ZXBH;
-            }
-            else if(item.ID>0100000)
+            // 二级树
+            else if (Convert.ToString(item.ID).Length == 6)
             {
                 ZXBH = item.ID.ToString();
                 for (int i = 0; i < nodes.Count; i++)
@@ -414,12 +397,12 @@ namespace 中医证治智能系统
                     Node newnode = (Node)httree[nodes[i].ID];
                     if (newnode.ParentID == Convert.ToInt64(ZXBH))
                     {
-                        listSymptom2.Add(new SymptomInfo("0"+newnode.ParentID.ToString(), newnode.Name));
+                        listSymptom2.Add(new SymptomInfo("0" + newnode.ParentID.ToString(), newnode.Name));
                         nodenum++;
                         if (nodenum == 0)
                             ZXMC = newnode;
                     }
-                    if(newnode.ID==Convert.ToInt64(ZXBH))
+                    if (newnode.ID == Convert.ToInt64(ZXBH))
                     {
                         if ((ZXBH == "1" + newnode.ParentID.ToString() + "001") || (ZXBH == "10" + newnode.ParentID.ToString() + "001"))
                         {
@@ -427,7 +410,7 @@ namespace 中医证治智能系统
                             zxbhsy.IsEnabled = false;
                             zxbhwy.IsEnabled = true;
                             zxbhfront.IsEnabled = true;
-                            
+
                         }
                         else
                         {
@@ -439,13 +422,13 @@ namespace 中医证治智能系统
                             Node newnode1 = (Node)httree[nodes[j].ID];
                             if (newnode1.ParentID == newnode.ParentID)
                             {
-                                
+
                                 if (newnode1.ID > maxid)
                                     maxid = newnode1.ID;
 
                             }
                         }
-                        if(maxid.ToString()==ZXBH)
+                        if (maxid.ToString() == ZXBH)
                         {
                             zxbhback.IsEnabled = true;
                             zxbhsy.IsEnabled = true;
@@ -458,12 +441,31 @@ namespace 中医证治智能系统
                             zxbhfront.IsEnabled = true;
                         }
                     }
-
                 }
                 lv2.SelectedIndex = 0;
-                ZxMc.Text=ZXMC.Name;
-                ZxBh.Text ="0"+ ZXBH;
+                ZxMc.Text = ZXMC.Name;
+                ZxBh.Text = "0" + ZXBH;
             }
+            // 三级树
+            else {
+                ZXBH = item.ParentID.ToString();
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    Node newnode = (Node)httree[nodes[i].ID];
+                    if (newnode.ParentID == Convert.ToInt64(ZXBH))
+                    {
+                        listSymptom2.Add(new SymptomInfo("0" + newnode.ParentID.ToString(), newnode.Name));
+                        if (item.ID != newnode.ID && x2 == 0)
+                            x1++;
+                        if (item.ID == newnode.ID)
+                            x2 = 1;
+                    }
+                }
+                lv2.SelectedIndex = x1;
+                ZxMc.Text = item.Name;
+                ZxBh.Text = "0" + ZXBH;
+            }
+            
             if (zxlxmc.Text.Trim() == "其它")
             {
                 zxlxwy.IsEnabled = false;

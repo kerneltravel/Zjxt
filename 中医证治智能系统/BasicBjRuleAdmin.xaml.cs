@@ -872,8 +872,8 @@ namespace 中医证治智能系统
         {
             if (comb_ffs.SelectedIndex != 0 && comb_tjs.SelectedIndex != 0 && comb_zbs.SelectedIndex != 0)
             {
-                String sql = String.Format("update t_rule_jbbj set znfz = '{0}' where jbbjbh = '{1}' and ff = '{2}' and tjzb = '{3}'"
-                                    , comb_zlfz.Text, bjNumber, comb_ffs.SelectedIndex, comb_zbs.SelectedIndex);
+                String sql = String.Format("update t_rule_jbbj set znfz = '{0}' where jbbjbh = '{1}' and ff = '{2}' and blgz = '{3}' and tjzb = '{4}'"
+                                    , comb_zlfz.Text, bjNumber, comb_ffs.SelectedIndex, comb_tjs.SelectedIndex, comb_zbs.SelectedIndex);
                 conn.Open();
                 SqlCommand comm = new SqlCommand(sql, conn);
                 int count = comm.ExecuteNonQuery();
